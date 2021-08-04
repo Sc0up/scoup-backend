@@ -7,8 +7,12 @@ import lombok.Getter;
 public class UserBaseResponse {
 
     private String nickname;
+
     private String username;
+
     private String email;
+
     private ImageResponse avatarUrl;
+
     private String password;
 }

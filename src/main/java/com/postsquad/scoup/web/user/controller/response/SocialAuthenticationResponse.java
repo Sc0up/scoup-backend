@@ -6,6 +6,8 @@ import lombok.Getter;
 public class SocialAuthenticationResponse {
 
     private String username;
+
     private String email;
+
     private String avatarUrl;
 }

@@ -7,5 +7,5 @@ import java.util.List;
 @Getter
 public class ScheduleResponses {
 
-    List<ScheduleResponse> scheduleResponses;
+    private List<ScheduleResponse> scheduleResponses;
 }
