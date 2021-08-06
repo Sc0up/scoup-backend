@@ -24,8 +24,8 @@ public class SignUpRequest {
     @NotEmpty
     private String email;
 
-    private String avatarUrl;
-
     @NotEmpty
     private String password;
+
+    private String avatarUrl;
 }
