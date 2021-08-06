@@ -1,12 +1,14 @@
 package com.postsquad.scoup.web.user.controller.request;
 
 import com.postsquad.scoup.web.image.controller.ImageResponse;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 @Getter
+@Builder
 public class SignUpRequest {
 
     @NotEmpty
