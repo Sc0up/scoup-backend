@@ -10,6 +10,7 @@ assignees: ''
 ### 인수 조건
 SECTION|CONTENT
 --|--
+**Target**|
 **Given**| 
 **When**|
 **Then**|
