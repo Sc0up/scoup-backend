@@ -10,27 +10,30 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"nickname"}, name = "UK_USER_NICKNAME"),
+        @UniqueConstraint(columnNames = {"email"}, name = "UK_USER_EMAIL"),
+})
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 10)
+    @Column(length = 10, nullable = false)
     private String nickname;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String username;
 
-    @Column(length = 255)
+    @Column(length = 255, nullable = false)
     private String email;
 
     @Column(length = 1000)
     private String avatarUrl;
 
-    @Column(length = 30)
+    @Column(length = 30, nullable = false)
     private String password;
-
 
     @Builder
     public User(Long id, String nickname, String username, String email, String avatarUrl, String password) {
