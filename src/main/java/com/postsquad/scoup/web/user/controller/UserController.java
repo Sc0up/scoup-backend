@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -18,7 +20,7 @@ public class UserController {
     @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
     // FIXME: https://github.com/Sc0up/scoup-backend/issues/18 논의 결과에 따라 수정 필요
-    public long signUp(@RequestBody SignUpRequest signUpRequest) {
+    public long signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
         return userService.signIn(signUpRequest);
     }
 }

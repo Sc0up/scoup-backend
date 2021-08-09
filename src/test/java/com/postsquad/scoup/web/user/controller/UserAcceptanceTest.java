@@ -1,11 +1,13 @@
 package com.postsquad.scoup.web.user.controller;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.internal.mapping.Jackson2Mapper;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +18,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -24,6 +27,11 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private com.fasterxml.jackson.databind.ObjectMapper objectMapperInner;
+
+    protected io.restassured.mapper.ObjectMapper objectMapper = new Jackson2Mapper((type, charset) -> objectMapperInner);
 
     @AfterEach
     void tearDown() {
@@ -61,16 +69,123 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                         SignUpRequest.builder()
                                 .nickname("nickname")
                                 .username("username")
-                                .email("email")
+                                .email("email@email")
                                 .password("password")
                                 .build(),
                         User.builder()
                                 .id(1L)
                                 .nickname("nickname")
                                 .username("username")
-                                .email("email")
+                                .email("email@email")
                                 .password("password")
                                 .build()
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("signUpWithValidationProvider")
+    @DisplayName("회원가입 DTO validation")
+    void signUpWithValidation(String desc, SignUpRequest givenSignUpRequest, ErrorResponse expectedResponse) {
+        String path = "/api/sign-up";
+        RequestSpecification givenRequest = RestAssured.given()
+                .baseUri(BASE_URL)
+                .port(port)
+                .basePath(path)
+                .contentType(ContentType.JSON)
+                .body(givenSignUpRequest);
+
+        Response actualResponse = givenRequest.when()
+                .log().all(true)
+                .post();
+
+        actualResponse.then()
+                .log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+        then(actualResponse.as(ErrorResponse.class, objectMapper))
+                .as("회원가입 결과 : %s", desc)
+                .usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .ignoringFields("timestamp")
+                .isEqualTo(expectedResponse);
+    }
+
+    static Stream<Arguments> signUpWithValidationProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "실패 - nickname 없음",
+                        SignUpRequest.builder()
+                                .username("username")
+                                .email("email@email")
+                                .password("password")
+                                .build(),
+                        ErrorResponse.builder()
+                                .message("Bad Request")
+                                .statusCode(400)
+                                .errors(Arrays.asList("nickname: 비어 있을 수 없습니다"))
+                                .build()
+                ), Arguments.of(
+                        "실패 - username 없음",
+                        SignUpRequest.builder()
+                                .nickname("nickname")
+                                .email("email@email")
+                                .password("password")
+                                .build(),
+                        ErrorResponse.builder()
+                                .message("Bad Request")
+                                .statusCode(400)
+                                .errors(Arrays.asList("username: 비어 있을 수 없습니다"))
+                                .build()
+                ), Arguments.of(
+                        "실패 - email 없음",
+                        SignUpRequest.builder()
+                                .nickname("nickname")
+                                .username("username")
+                                .password("password")
+                                .build(),
+                        ErrorResponse.builder()
+                                .message("Bad Request")
+                                .statusCode(400)
+                                .errors(Arrays.asList("email: 비어 있을 수 없습니다"))
+                                .build()
+                ), Arguments.of(
+                        "실패 - password 없음",
+                        SignUpRequest.builder()
+                                .nickname("nickname")
+                                .username("username")
+                                .email("email@email")
+                                .build(),
+                        ErrorResponse.builder()
+                                .message("Bad Request")
+                                .statusCode(400)
+                                .errors(Arrays.asList("password: 비어 있을 수 없습니다"))
+                                .build()
+                ), Arguments.of(
+                        "실패 - email 형식 다름",
+                        SignUpRequest.builder()
+                                .nickname("nickname")
+                                .username("username")
+                                .email("email")
+                                .password("password")
+                                .build(),
+                        ErrorResponse.builder()
+                                .message("Bad Request")
+                                .statusCode(400)
+                                .errors(Arrays.asList("email: 올바른 형식의 이메일 주소여야 합니다"))
+                                .build()
+                ), Arguments.of(
+                        "실패 - 모두 없음",
+                        SignUpRequest.builder()
+                                .build(),
+                        ErrorResponse.builder()
+                                .message("Bad Request")
+                                .statusCode(400)
+                                .errors(Arrays.asList(
+                                        "nickname: 비어 있을 수 없습니다",
+                                        "email: 비어 있을 수 없습니다",
+                                        "password: 비어 있을 수 없습니다",
+                                        "username: 비어 있을 수 없습니다"
+                                )).build()
                 )
         );
     }
