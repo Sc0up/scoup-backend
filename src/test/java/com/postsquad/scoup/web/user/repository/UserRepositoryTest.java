@@ -42,7 +42,7 @@ class UserRepositoryTest {
 
     @ParameterizedTest
     @MethodSource("saveWithNotnullViolationProvider")
-    void saveWithNotnullViolation(User givenUser) {
+    void saveWithNotnullViolation(String desc, User givenUser) {
         // given
 
         // when
@@ -50,36 +50,42 @@ class UserRepositoryTest {
 
         // then
         thenThrownBy(throwingCallable)
+                .as("Not null 제약 : %s", desc)
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     static Stream<Arguments> saveWithNotnullViolationProvider() {
         return Stream.of(
                 Arguments.of(
+                        "닉네임 없는 경우",
                         User.builder()
                                 .username("username")
                                 .email("email")
                                 .password("password")
                                 .build()
                 ), Arguments.of(
+                        "사용자명 없는 경우",
                         User.builder()
                                 .nickname("nickname")
                                 .email("email")
                                 .password("password")
                                 .build()
                 ), Arguments.of(
+                        "이메일 없는 경우",
                         User.builder()
                                 .nickname("nickname")
                                 .username("username")
                                 .password("password")
                                 .build()
                 ), Arguments.of(
+                        "비밀번호 없는 경우",
                         User.builder()
                                 .nickname("nickname")
                                 .username("username")
                                 .email("email")
                                 .build()
                 ), Arguments.of(
+                        "아무것도 없는 경우",
                         User.builder()
                                 .build()
                 )
@@ -88,7 +94,7 @@ class UserRepositoryTest {
 
     @ParameterizedTest
     @MethodSource("saveWithUniqueConstraintViolationProvider")
-    void saveWithUniqueConstraintViolation(User givenUser, User givenUserForThrowingException) {
+    void saveWithUniqueConstraintViolation(String desc, User givenUser, User givenUserForThrowingException) {
         // given
         userRepository.save(givenUser);
 
@@ -97,12 +103,14 @@ class UserRepositoryTest {
 
         // then
         thenThrownBy(throwingCallable)
+                .as("유니크 제약 : %s", desc)
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     static Stream<Arguments> saveWithUniqueConstraintViolationProvider() {
         return Stream.of(
                 Arguments.of(
+                        "닉네임 중복",
                         User.builder()
                                 .nickname("nickname")
                                 .username("username")
