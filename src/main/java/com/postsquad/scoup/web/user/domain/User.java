@@ -35,13 +35,17 @@ public class User {
     @Column(length = 30, nullable = false)
     private String password;
 
-    @Builder
-    public User(Long id, String nickname, String username, String email, String avatarUrl, String password) {
+    protected User(Long id, String nickname, String username, String email, String avatarUrl, String password) {
         this.id = id;
         this.nickname = nickname;
         this.username = username;
         this.email = email;
         this.avatarUrl = avatarUrl;
         this.password = password;
+    }
+
+    @Builder
+    public static User of(Long id, String nickname, String username, String email, String avatarUrl, String password) {
+        return new User(id, nickname, username, email, avatarUrl, password);
     }
 }
