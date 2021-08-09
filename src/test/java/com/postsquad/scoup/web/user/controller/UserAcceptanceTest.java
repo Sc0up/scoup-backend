@@ -42,6 +42,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @MethodSource("signUpProvider")
     @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다.")
     void signUp(String desc, SignUpRequest givenSignUpRequest, User expectedUser) {
+        // given
         String path = "/api/sign-up";
         RequestSpecification givenRequest = RestAssured.given()
                 .baseUri(BASE_URL)
@@ -50,10 +51,12 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .contentType(ContentType.JSON)
                 .body(givenSignUpRequest);
 
+        // when
         Response actualResponse = givenRequest.when()
                 .log().all(true)
                 .post();
 
+        // then
         actualResponse.then()
                 .statusCode(HttpStatus.CREATED.value());
         then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
@@ -87,6 +90,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @MethodSource("signUpWithValidationProvider")
     @DisplayName("회원가입 DTO validation")
     void signUpWithValidation(String desc, SignUpRequest givenSignUpRequest, ErrorResponse expectedResponse) {
+        // given
         String path = "/api/sign-up";
         RequestSpecification givenRequest = RestAssured.given()
                 .baseUri(BASE_URL)
@@ -95,10 +99,12 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .contentType(ContentType.JSON)
                 .body(givenSignUpRequest);
 
+        // when
         Response actualResponse = givenRequest.when()
                 .log().all(true)
                 .post();
 
+        //then
         actualResponse.then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
