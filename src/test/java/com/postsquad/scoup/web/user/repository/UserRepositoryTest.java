@@ -123,6 +123,20 @@ class UserRepositoryTest {
                                 .email("email2")
                                 .password("password")
                                 .build()
+                ), Arguments.of(
+                        "이메일 중복",
+                        User.builder()
+                                .nickname("nickname")
+                                .username("username")
+                                .email("email")
+                                .password("password")
+                                .build(),
+                        User.builder()
+                                .nickname("nickname2")
+                                .username("username")
+                                .email("email")
+                                .password("password")
+                                .build()
                 )
         );
     }
