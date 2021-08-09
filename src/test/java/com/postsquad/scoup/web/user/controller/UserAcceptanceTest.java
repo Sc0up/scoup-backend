@@ -8,6 +8,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,6 +24,11 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @Autowired
     UserRepository userRepository;
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+    }
 
     @ParameterizedTest
     @MethodSource("signUpProvider")
@@ -60,6 +66,10 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .build(),
                         User.builder()
                                 .id(1L)
+                                .nickname("nickname")
+                                .username("username")
+                                .email("email")
+                                .password("password")
                                 .build()
                 )
         );
