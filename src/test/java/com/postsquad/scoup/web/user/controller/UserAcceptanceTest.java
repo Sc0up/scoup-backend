@@ -47,8 +47,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .post();
 
         actualResponse.then()
-                .statusCode(HttpStatus.NO_CONTENT.value());
-        then(userRepository.findById(expectedUser.getId()).orElse(null))
+                .statusCode(HttpStatus.CREATED.value());
+        then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
                 .as("회원가입 결과 : %s", desc)
                 .usingRecursiveComparison()
                 .isEqualTo(expectedUser);

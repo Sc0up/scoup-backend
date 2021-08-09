@@ -16,8 +16,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/sign-up")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void signUp(@RequestBody SignUpRequest signUpRequest) {
-        userService.signIn(signUpRequest);
+    @ResponseStatus(HttpStatus.CREATED)
+    // FIXME: https://github.com/Sc0up/scoup-backend/issues/18 논의 결과에 따라 수정 필요
+    public long signUp(@RequestBody SignUpRequest signUpRequest) {
+        return userService.signIn(signUpRequest);
     }
 }

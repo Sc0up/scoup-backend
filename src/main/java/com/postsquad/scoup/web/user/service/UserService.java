@@ -12,7 +12,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public void signIn(SignUpRequest signUpRequest) {
-        userRepository.save(UserFactory.from(signUpRequest));
+    public long signIn(SignUpRequest signUpRequest) {
+        return userRepository.save(UserFactory.from(signUpRequest)).getId();
     }
 }
