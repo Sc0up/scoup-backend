@@ -1,7 +1,7 @@
 package com.postsquad.scoup.web.user.repository;
 
 import com.postsquad.scoup.web.user.domain.User;
-import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,6 +12,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.assertj.core.api.BDDAssertions.thenThrownBy;
+
 @DataJpaTest
 class UserRepositoryTest {
 
@@ -20,6 +23,7 @@ class UserRepositoryTest {
 
     @Test
     void save() {
+        // given
         User user = User.builder()
                 .nickname("nickname")
                 .username("username")
@@ -27,18 +31,26 @@ class UserRepositoryTest {
                 .password("password")
                 .build();
 
+        // when
         userRepository.save(user);
 
-        Assertions.assertThat(userRepository.findById(user.getId()).get())
+        // then
+        then(userRepository.findById(user.getId()).get())
                 .usingRecursiveComparison()
                 .isEqualTo(user);
     }
 
     @ParameterizedTest
     @MethodSource("saveWithNotnullViolationProvider")
-    void saveWithNotnullViolation(User user) {
-        Assertions.assertThatExceptionOfType(DataIntegrityViolationException.class)
-                .isThrownBy(() -> userRepository.save(user));
+    void saveWithNotnullViolation(User givenUser) {
+        // given
+
+        // when
+        ThrowableAssert.ThrowingCallable throwingCallable = () -> userRepository.save(givenUser);
+
+        // then
+        thenThrownBy(throwingCallable)
+                .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     static Stream<Arguments> saveWithNotnullViolationProvider() {
@@ -76,11 +88,16 @@ class UserRepositoryTest {
 
     @ParameterizedTest
     @MethodSource("saveWithUniqueConstraintViolationProvider")
-    void saveWithUniqueConstraintViolation(User firstUser, User secondUser) {
-        userRepository.save(firstUser);
+    void saveWithUniqueConstraintViolation(User givenUser, User givenUserForThrowingException) {
+        // given
+        userRepository.save(givenUser);
 
-        Assertions.assertThatExceptionOfType(DataIntegrityViolationException.class)
-                .isThrownBy(() -> userRepository.save(secondUser));
+        // when
+        ThrowableAssert.ThrowingCallable throwingCallable = () -> userRepository.save(givenUserForThrowingException);
+
+        // then
+        thenThrownBy(throwingCallable)
+                .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     static Stream<Arguments> saveWithUniqueConstraintViolationProvider() {
