@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.common;
+package com.postsquad.scoup.web.error.controller.response;
 
 import lombok.Builder;
 import lombok.Data;
