@@ -42,7 +42,7 @@ class UserRepositoryTest {
 
     @ParameterizedTest
     @MethodSource("saveWithNotnullViolationProvider")
-    void saveWithNotnullViolation(String desc, User givenUser) {
+    void saveWithNotnullViolation(String description, User givenUser) {
         // given
 
         // when
@@ -50,7 +50,7 @@ class UserRepositoryTest {
 
         // then
         thenThrownBy(throwingCallable)
-                .as("Not null 제약 : %s", desc)
+                .as("Not null 제약 : %s", description)
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
@@ -94,7 +94,7 @@ class UserRepositoryTest {
 
     @ParameterizedTest
     @MethodSource("saveWithUniqueConstraintViolationProvider")
-    void saveWithUniqueConstraintViolation(String desc, User givenUser, User givenUserForThrowingException) {
+    void saveWithUniqueConstraintViolation(String description, User givenUser, User givenUserForThrowingException) {
         // given
         userRepository.save(givenUser);
 
@@ -103,7 +103,7 @@ class UserRepositoryTest {
 
         // then
         thenThrownBy(throwingCallable)
-                .as("유니크 제약 : %s", desc)
+                .as("유니크 제약 : %s", description)
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 

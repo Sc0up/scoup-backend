@@ -41,7 +41,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ParameterizedTest
     @MethodSource("signUpProvider")
     @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다.")
-    void signUp(String desc, SignUpRequest givenSignUpRequest, User expectedUser) {
+    void signUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
         // given
         String path = "/api/sign-up";
         RequestSpecification givenRequest = RestAssured.given()
@@ -60,7 +60,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                 .statusCode(HttpStatus.CREATED.value());
         then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
-                .as("회원가입 결과 : %s", desc)
+                .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
                 .isEqualTo(expectedUser);
     }
@@ -89,7 +89,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ParameterizedTest
     @MethodSource("signUpWithValidationProvider")
     @DisplayName("회원가입 DTO validation")
-    void signUpWithValidation(String desc, SignUpRequest givenSignUpRequest, ErrorResponse expectedResponse) {
+    void signUpWithValidation(String description, SignUpRequest givenSignUpRequest, ErrorResponse expectedResponse) {
         // given
         String path = "/api/sign-up";
         RequestSpecification givenRequest = RestAssured.given()
@@ -109,7 +109,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
         then(actualResponse.as(ErrorResponse.class, objectMapper))
-                .as("회원가입 결과 : %s", desc)
+                .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
                 .ignoringFields("timestamp")
