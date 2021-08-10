@@ -56,6 +56,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
+                .ignoringFields(new String[]{"createdDateTime", "modifiedDateTime", "id"})
                 .isEqualTo(expectedUser);
     }
 
@@ -70,7 +71,6 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         User.builder()
-                                .id(1L)
                                 .nickname("nickname")
                                 .username("username")
                                 .email("email@email")
