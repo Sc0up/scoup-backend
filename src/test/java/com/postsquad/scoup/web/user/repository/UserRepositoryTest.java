@@ -43,8 +43,6 @@ class UserRepositoryTest {
     @ParameterizedTest
     @MethodSource("saveWithNotnullViolationProvider")
     void saveWithNotnullViolation(String description, User givenUser) {
-        // given
-
         // when
         ThrowableAssert.ThrowingCallable throwingCallable = () -> userRepository.save(givenUser);
 

@@ -14,8 +14,10 @@ class UserFactoryTest {
     @ParameterizedTest
     @MethodSource("fromSignUpRequestProvider")
     void fromSignUpRequest(SignUpRequest givenSignUpRequest, User expectedUser) {
+        //when
         User actualUser = UserFactory.from(givenSignUpRequest);
 
+        //then
         then(actualUser).usingRecursiveComparison()
                 .isEqualTo(expectedUser);
 
