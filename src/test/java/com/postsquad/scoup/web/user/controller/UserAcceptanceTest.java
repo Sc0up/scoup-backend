@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.user;
+package com.postsquad.scoup.web.user.controller;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
@@ -36,6 +36,7 @@ public class UserAcceptanceTest extends AcceptanceTestBase {
     @MethodSource("validateEmailProvider")
     @DisplayName("이미 가입된 이메일을 입력할 경우 이메일이 중복되었다는 메시지가 반환된다.")
     void validateEmail(String desc, String givenEmailRequest, EmailValidationResponse expectedEmailResponse) {
+        // given
         String path = "/api/validate/email";
         RequestSpecification givenRequest = RestAssured.given()
                                                     .baseUri(BASE_URL)
@@ -43,11 +44,13 @@ public class UserAcceptanceTest extends AcceptanceTestBase {
                                                     .basePath(path)
                                                     .queryParam("email", givenEmailRequest);
 
+        // when
         Response actualResponse = givenRequest.when()
                                           .log().all()
                                           .get()
                                           .andReturn();
 
+        // then
         then(actualResponse)
                 .as("이메일 중복 확인: %s", desc)
                 .hasFieldOrPropertyWithValue("statusCode", HttpStatus.OK.value())
@@ -72,6 +75,7 @@ public class UserAcceptanceTest extends AcceptanceTestBase {
     @MethodSource("validateRequestParamProvider")
     @DisplayName("Request parameter validation")
     void validateRequestParam(String description, String givenEmailRequest, ErrorResponse expectedResponse) {
+        // given
         String path = "/api/validate/email";
         RequestSpecification givenRequest = RestAssured.given()
                                                     .baseUri(BASE_URL)
@@ -79,11 +83,13 @@ public class UserAcceptanceTest extends AcceptanceTestBase {
                                                     .basePath(path)
                                                     .queryParam("email", givenEmailRequest);
 
+        // when
         Response actualResponse = givenRequest.when()
                                           .log().all()
                                           .get()
                                           .andReturn();
 
+        // then
         then(actualResponse)
                 .as("이메일 중복 확인: %s", description)
                 .hasFieldOrPropertyWithValue("statusCode", HttpStatus.BAD_REQUEST.value())
