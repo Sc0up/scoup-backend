@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.user;
+package com.postsquad.scoup.web.user.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
