@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web;
+package com.postsquad.scoup.web.common;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
