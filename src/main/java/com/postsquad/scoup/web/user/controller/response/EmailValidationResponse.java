@@ -1,8 +1,14 @@
 package com.postsquad.scoup.web.user.controller.response;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class EmailValidationResponse {
 
     private boolean existingEmail;
