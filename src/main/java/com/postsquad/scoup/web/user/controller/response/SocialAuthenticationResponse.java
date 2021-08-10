@@ -1,6 +1,6 @@
 package com.postsquad.scoup.web.user.controller.response;
 
-import com.postsquad.scoup.web.user.auth.OAuthUserResponse;
+import com.postsquad.scoup.web.user.auth.response.OAuthUserResponse;
 import lombok.Builder;
 import lombok.Getter;
 
