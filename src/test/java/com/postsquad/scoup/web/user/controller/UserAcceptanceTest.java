@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.user;
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
+import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;

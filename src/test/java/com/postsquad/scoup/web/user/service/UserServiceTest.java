@@ -1,8 +1,8 @@
-package com.postsquad.scoup.web.user;
+package com.postsquad.scoup.web.user.service;
 
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
+import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
-import com.postsquad.scoup.web.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -14,7 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest(classes = UserService.class)
 public class UserServiceTest {
@@ -39,9 +39,12 @@ public class UserServiceTest {
     @ParameterizedTest
     @MethodSource
     public void validateEmailTest(String email, EmailValidationResponse expected){
+        // when
         EmailValidationResponse response = userService.validateEmail(email);
 
-        assertThat(response).isEqualTo(expected);
+        // then
+        then(response).usingRecursiveComparison()
+                .isEqualTo(expected);
     }
 
     static Stream<Arguments> validateEmailTest() {
