@@ -7,7 +7,6 @@ import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.internal.mapping.Jackson2Mapper;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.AfterEach;
@@ -27,11 +26,6 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    private com.fasterxml.jackson.databind.ObjectMapper objectMapperInner;
-
-    protected io.restassured.mapper.ObjectMapper objectMapper = new Jackson2Mapper((type, charset) -> objectMapperInner);
 
     @AfterEach
     void tearDown() {
@@ -108,7 +102,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
-        then(actualResponse.as(ErrorResponse.class, objectMapper))
+        then(actualResponse.as(ErrorResponse.class))
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
