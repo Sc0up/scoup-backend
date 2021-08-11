@@ -1,8 +1,8 @@
 package com.postsquad.scoup.web.user.service;
 
-import com.postsquad.scoup.web.user.auth.response.AccessTokenResponse;
-import com.postsquad.scoup.web.user.auth.OAuth;
-import com.postsquad.scoup.web.user.auth.response.OAuthUserResponse;
+import com.postsquad.scoup.web.auth.response.AccessTokenResponse;
+import com.postsquad.scoup.web.auth.OAuth;
+import com.postsquad.scoup.web.auth.response.OAuthUserResponse;
 import com.postsquad.scoup.web.user.controller.response.SocialAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

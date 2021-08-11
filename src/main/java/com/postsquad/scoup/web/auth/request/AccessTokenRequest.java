@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.user.auth.request;
+package com.postsquad.scoup.web.auth.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

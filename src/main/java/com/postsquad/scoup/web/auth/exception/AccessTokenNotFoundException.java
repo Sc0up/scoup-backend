@@ -1,6 +1,4 @@
-package com.postsquad.scoup.web.user.auth.exception;
-
-import com.postsquad.scoup.web.user.auth.exception.OAuthException;
+package com.postsquad.scoup.web.auth.exception;
 
 public class AccessTokenNotFoundException extends OAuthException {
 

@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.user.auth.exception;
+package com.postsquad.scoup.web.auth.exception;
 
 public class OAuthException extends RuntimeException {
 

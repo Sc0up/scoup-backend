@@ -1,11 +1,11 @@
-package com.postsquad.scoup.web.user.auth;
+package com.postsquad.scoup.web.auth;
 
-import com.postsquad.scoup.web.user.auth.exception.AccessTokenNotFoundException;
-import com.postsquad.scoup.web.user.auth.exception.GitHubUserNotFoundException;
-import com.postsquad.scoup.web.user.auth.exception.InvalidGitHubRequestException;
-import com.postsquad.scoup.web.user.auth.request.AccessTokenRequest;
-import com.postsquad.scoup.web.user.auth.response.AccessTokenResponse;
-import com.postsquad.scoup.web.user.auth.response.OAuthUserResponse;
+import com.postsquad.scoup.web.auth.exception.AccessTokenNotFoundException;
+import com.postsquad.scoup.web.auth.exception.GitHubUserNotFoundException;
+import com.postsquad.scoup.web.auth.exception.InvalidGitHubRequestException;
+import com.postsquad.scoup.web.auth.request.AccessTokenRequest;
+import com.postsquad.scoup.web.auth.response.AccessTokenResponse;
+import com.postsquad.scoup.web.auth.response.OAuthUserResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
