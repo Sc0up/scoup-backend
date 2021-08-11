@@ -20,9 +20,7 @@ public class OAuthService {
     }
 
     public SocialAuthenticationResponse readOAuthUserDataWithToken(String header) {
-        String token = "token";
-        String accessToken = header.substring(token.length()).trim();
-        OAuthUserResponse oAuthUserInfo = oauth.getOAuthUserInfo(accessToken);
+        OAuthUserResponse oAuthUserInfo = oauth.getOAuthUserInfoFromHeader(header);
         return SocialAuthenticationResponse.from(oAuthUserInfo);
     }
 }

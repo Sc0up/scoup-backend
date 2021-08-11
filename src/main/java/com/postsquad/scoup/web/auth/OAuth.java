@@ -8,4 +8,6 @@ public interface OAuth {
     AccessTokenResponse getToken(String code);
 
     OAuthUserResponse getOAuthUserInfo(String token);
+
+    OAuthUserResponse getOAuthUserInfoFromHeader(String header);
 }

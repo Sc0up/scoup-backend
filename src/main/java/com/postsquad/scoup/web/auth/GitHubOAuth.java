@@ -72,4 +72,10 @@ public class GitHubOAuth implements OAuth {
                 .blockOptional()
                 .orElseThrow(GitHubUserNotFoundException::new);
     }
+
+    @Override
+    public OAuthUserResponse getOAuthUserInfoFromHeader(String header) {
+        String accessToken = header.substring(TOKEN.length()).trim();
+        return getOAuthUserInfo(accessToken);
+    }
 }
