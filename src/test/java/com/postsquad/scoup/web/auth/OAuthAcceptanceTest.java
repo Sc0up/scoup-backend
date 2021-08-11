@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.user;
+package com.postsquad.scoup.web.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postsquad.scoup.web.AcceptanceTestBase;
@@ -20,7 +20,7 @@ import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 
-class UserAcceptanceTest extends AcceptanceTestBase {
+class OAuthAcceptanceTest extends AcceptanceTestBase {
 
     @Value("${github.access.token}")
     private String accessToken;
