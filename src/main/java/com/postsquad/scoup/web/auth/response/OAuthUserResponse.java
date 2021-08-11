@@ -6,7 +6,10 @@ import lombok.Getter;
 public class OAuthUserResponse {
 
     private Long id;
+
     private String login;
+
     private String email;
+
     private String avatarUrl;
 }

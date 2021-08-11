@@ -8,6 +8,8 @@ import lombok.Getter;
 public class AccessTokenRequest {
 
     private final String clientId;
+
     private final String clientSecret;
+
     private final String code;
 }
