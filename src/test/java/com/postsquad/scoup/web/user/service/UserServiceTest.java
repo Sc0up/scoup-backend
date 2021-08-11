@@ -30,15 +30,15 @@ public class UserServiceTest {
     void setUp() {
         userService = new UserService(userRepository);
 
-        TEST_USER = User.of("email@email.com");
+        TEST_USER = User.builder().id(1L).avatarUrl(null).email("email@email.com").nickname(null).password(null).username(null).build();
 
         Mockito.when(userRepository.findByEmail(TEST_USER.getEmail()))
                 .thenReturn(Optional.of(TEST_USER));
     }
 
     @ParameterizedTest
-    @MethodSource
-    public void validateEmailTest(String email, EmailValidationResponse expected){
+    @MethodSource("validateEmailProvider")
+    public void validateEmail(String email, EmailValidationResponse expected){
         // when
         EmailValidationResponse response = userService.validateEmail(email);
 
@@ -47,7 +47,7 @@ public class UserServiceTest {
                 .isEqualTo(expected);
     }
 
-    static Stream<Arguments> validateEmailTest() {
+    static Stream<Arguments> validateEmailProvider() {
         return Stream.of(
                 Arguments.of("email@email.com", EmailValidationResponse.builder().existingEmail(true).build()),
                 Arguments.of("notExistingEmail@email.com", EmailValidationResponse.builder().existingEmail(false).build())
