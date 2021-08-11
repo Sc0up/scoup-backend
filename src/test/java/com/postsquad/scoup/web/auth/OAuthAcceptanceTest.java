@@ -1,15 +1,12 @@
 package com.postsquad.scoup.web.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.user.controller.response.SocialAuthenticationResponse;
-import io.restassured.internal.mapping.Jackson2Mapper;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,11 +21,6 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
 
     @Value("${github.access.token}")
     private String accessToken;
-
-    @Autowired
-    private ObjectMapper objectMapperInner;
-
-    private final io.restassured.mapper.ObjectMapper objectMapper = new Jackson2Mapper((type, charset) -> objectMapperInner);
 
     @DisplayName("소셜 서비스에 가입된 사용자의 정보를 불러올 수 있다.")
     @ParameterizedTest
@@ -50,7 +42,7 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
 
         // then
         assertThat(actualResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-        then(actualResponse.as(SocialAuthenticationResponse.class, objectMapper))
+        then(actualResponse.as(SocialAuthenticationResponse.class))
                 .as("사용자의 소셜 계정 개인 정보 조회")
                 .usingRecursiveComparison()
                 .isEqualTo(expectedSocialAuthenticationResponse);
