@@ -15,7 +15,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public EmailValidationResponse validateEmail(@Email String email) {
+    public EmailValidationResponse validateEmail(String email) {
         if (userRepository.findByEmail(email).isPresent()) {
             return EmailValidationResponse.builder().existingEmail(true).build();
         }
