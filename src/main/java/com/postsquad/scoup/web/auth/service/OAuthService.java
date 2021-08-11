@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.user.service;
+package com.postsquad.scoup.web.auth.service;
 
 import com.postsquad.scoup.web.auth.response.AccessTokenResponse;
 import com.postsquad.scoup.web.auth.OAuth;
@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class OAuthService {
 
     private final OAuth oauth;
 
-    public SocialAuthenticationResponse readUserData(String code) {
+    public SocialAuthenticationResponse readOAuthUserData(String code) {
         AccessTokenResponse token = oauth.getToken(code);
         OAuthUserResponse userInfo = oauth.getUserInfo(token.getAccessToken());
         return SocialAuthenticationResponse.from(userInfo);
     }
 
-    public SocialAuthenticationResponse readUserDataWithToken(String header) {
+    public SocialAuthenticationResponse readOAuthUserDataWithToken(String header) {
         String token = "token";
         String accessToken = header.substring(token.length()).trim();
         OAuthUserResponse userInfo = oauth.getUserInfo(accessToken);

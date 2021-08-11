@@ -1,7 +1,7 @@
-package com.postsquad.scoup.web.user.controller;
+package com.postsquad.scoup.web.auth.controller;
 
 import com.postsquad.scoup.web.user.controller.response.SocialAuthenticationResponse;
-import com.postsquad.scoup.web.user.service.UserService;
+import com.postsquad.scoup.web.auth.service.OAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class UserController {
+public class OAuthController {
 
-    private final UserService userService;
+    private final OAuthService userService;
 
     @GetMapping("/social/authenticate")
-    public SocialAuthenticationResponse readUserData(@RequestParam String code) {
-        return userService.readUserData(code);
+    public SocialAuthenticationResponse readOAuthUserData(@RequestParam String code) {
+        return userService.readOAuthUserData(code);
     }
 
     @GetMapping("/social/authenticate/token")
-    public SocialAuthenticationResponse readUserDataWithToken(@RequestHeader("Authorization") String header) {
-        return userService.readUserDataWithToken(header);
+    public SocialAuthenticationResponse readOAuthUserDataWithToken(@RequestHeader("Authorization") String header) {
+        return userService.readOAuthUserDataWithToken(header);
     }
 }
