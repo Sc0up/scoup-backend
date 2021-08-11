@@ -217,10 +217,11 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                           .andReturn();
 
         // then
-        then(actualResponse)
+        actualResponse.then()
+                .log().all()
+                .statusCode(HttpStatus.OK.value());
+        then(actualResponse.as(EmailValidationResponse.class, restAssuredObjectMapper))
                 .as("이메일 중복 확인: %s", desc)
-                .hasFieldOrPropertyWithValue("statusCode", HttpStatus.OK.value())
-                .extracting(response -> response.as(EmailValidationResponse.class, restAssuredObjectMapper))
                 .usingRecursiveComparison()
                 .isEqualTo(expectedEmailResponse);
     }
@@ -256,10 +257,11 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                           .andReturn();
 
         // then
-        then(actualResponse)
+        actualResponse.then()
+                .log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+        then(actualResponse.as(ErrorResponse.class, restAssuredObjectMapper))
                 .as("이메일 중복 확인: %s", description)
-                .hasFieldOrPropertyWithValue("statusCode", HttpStatus.BAD_REQUEST.value())
-                .extracting(response -> response.as(ErrorResponse.class, restAssuredObjectMapper))
                 .usingRecursiveComparison()
                 .ignoringFields("timestamp")
                 .isEqualTo(expectedResponse);
