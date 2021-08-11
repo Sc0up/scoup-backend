@@ -24,10 +24,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public WebClient webClient(HttpClient httpClient, ObjectMapper baseConfig) {
-        ObjectMapper objectMapper = baseConfig.copy();
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(objectMapper)))
+                .codecs(configurer -> configurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(baseConfig)))
                 .build();
         return WebClient.builder().clientConnector(new ReactorClientHttpConnector(httpClient)).exchangeStrategies(exchangeStrategies).build();
     }
