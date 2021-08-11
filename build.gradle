@@ -21,6 +21,7 @@ repositories {
 
 ext {
     set('snippetsDir', file("build/generated-snippets"))
+    set('mapstructVersion', "1.4.2.Final")
 }
 
 dependencies {
@@ -37,6 +38,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'io.rest-assured:rest-assured'
+
+    /* MapStruct */
+    implementation 'org.mapstruct:mapstruct' + ":$mapstructVersion"
+    annotationProcessor 'org.mapstruct:mapstruct-processor' + ":$mapstructVersion"
 }
 
 test {
