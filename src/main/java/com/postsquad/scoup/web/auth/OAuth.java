@@ -7,5 +7,5 @@ public interface OAuth {
 
     AccessTokenResponse getToken(String code);
 
-    OAuthUserResponse getUserInfo(String token);
+    OAuthUserResponse getOAuthUserInfo(String token);
 }

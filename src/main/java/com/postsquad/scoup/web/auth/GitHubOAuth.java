@@ -60,7 +60,7 @@ public class GitHubOAuth implements OAuth {
     }
 
     @Override
-    public OAuthUserResponse getUserInfo(String accessToken) {
+    public OAuthUserResponse getOAuthUserInfo(String accessToken) {
         logger.debug("Access token: {}", accessToken);
         return webClient.get()
                 .uri(userUri)

@@ -15,14 +15,14 @@ public class OAuthService {
 
     public SocialAuthenticationResponse readOAuthUserData(String code) {
         AccessTokenResponse token = oauth.getToken(code);
-        OAuthUserResponse userInfo = oauth.getUserInfo(token.getAccessToken());
-        return SocialAuthenticationResponse.from(userInfo);
+        OAuthUserResponse oAuthUserInfo = oauth.getOAuthUserInfo(token.getAccessToken());
+        return SocialAuthenticationResponse.from(oAuthUserInfo);
     }
 
     public SocialAuthenticationResponse readOAuthUserDataWithToken(String header) {
         String token = "token";
         String accessToken = header.substring(token.length()).trim();
-        OAuthUserResponse userInfo = oauth.getUserInfo(accessToken);
-        return SocialAuthenticationResponse.from(userInfo);
+        OAuthUserResponse oAuthUserInfo = oauth.getOAuthUserInfo(accessToken);
+        return SocialAuthenticationResponse.from(oAuthUserInfo);
     }
 }

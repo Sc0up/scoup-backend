@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OAuthController {
 
-    private final OAuthService userService;
+    private final OAuthService oAuthService;
 
     @GetMapping("/social/authenticate")
     public SocialAuthenticationResponse readOAuthUserData(@RequestParam String code) {
-        return userService.readOAuthUserData(code);
+        return oAuthService.readOAuthUserData(code);
     }
 
     @GetMapping("/social/authenticate/token")
     public SocialAuthenticationResponse readOAuthUserDataWithToken(@RequestHeader("Authorization") String header) {
-        return userService.readOAuthUserDataWithToken(header);
+        return oAuthService.readOAuthUserDataWithToken(header);
     }
 }
