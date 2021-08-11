@@ -201,7 +201,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ParameterizedTest
     @MethodSource("validateEmailProvider")
     @DisplayName("이미 가입된 이메일을 입력할 경우 이메일이 중복되었다는 메시지가 반환된다.")
-    void validateEmail(String desc, String givenEmailRequest, EmailValidationResponse expectedEmailResponse) {
+    void validateEmail(String description, String givenEmailRequest, EmailValidationResponse expectedEmailResponse) {
         // given
         String path = "/api/validate/email";
         RequestSpecification givenRequest = RestAssured.given()
@@ -221,7 +221,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
         then(actualResponse.as(EmailValidationResponse.class, restAssuredObjectMapper))
-                .as("이메일 중복 확인: %s", desc)
+                .as("이메일 중복 확인: %s", description)
                 .usingRecursiveComparison()
                 .isEqualTo(expectedEmailResponse);
     }
