@@ -32,7 +32,13 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @BeforeEach
     void setUp() {
-        userRepository.save(User.of(1L, "nickname", "username", "existing@email.com", null, null));
+        userRepository.save(User.builder()
+                                    .nickname("nickname")
+                                    .username("username")
+                                    .email("existing@email.com")
+                                    .avatarUrl("avatarUrl")
+                                    .password("password")
+                                    .build());
     }
 
     @AfterEach
