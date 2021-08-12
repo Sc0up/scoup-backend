@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,5 +42,21 @@ public class ErrorResponse {
                         .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                         .collect(Collectors.toList())
         );
+    }
+
+    public static ErrorResponse of(HttpStatus status, String message, List<String> errors) {
+        return ErrorResponse.builder()
+                .statusCode(status.value())
+                .message(message)
+                .errors(errors)
+                .build();
+    }
+
+    public static ErrorResponse of(HttpStatus status, String message, String... errors) {
+        return ErrorResponse.builder()
+                .statusCode(status.value())
+                .message(message)
+                .errors(Arrays.asList(errors))
+                .build();
     }
 }
