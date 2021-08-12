@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.error.controller;
 
+import com.postsquad.scoup.web.auth.exception.OAuthException;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,6 +14,13 @@ public class ErrorControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException methodArgumentNotValidException) {
-        return ErrorResponse.of(HttpStatus.BAD_REQUEST, methodArgumentNotValidException.getFieldErrors());
+        String message = "method argument not valid";
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST, message, methodArgumentNotValidException.getFieldErrors());
+    }
+
+    @ExceptionHandler(OAuthException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse oAuthExceptionHandler(OAuthException oAuthException) {
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST, oAuthException.getMessage());
     }
 }

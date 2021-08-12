@@ -32,14 +32,24 @@ public class ErrorResponse {
         return new ErrorResponse(timestamp, message, statusCode, errors);
     }
 
-    public static ErrorResponse of(HttpStatus status, List<FieldError> errors) {
-        return ErrorResponse.of(
-                LocalDateTime.now(),
-                status.getReasonPhrase(),
-                status.value(),
-                errors.stream()
-                        .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-                        .collect(Collectors.toList())
-        );
+    public static ErrorResponse of(HttpStatus status, String message, List<FieldError> errors) {
+        return ErrorResponse.builder()
+                .statusCode(status.value())
+                .message(message)
+                .errors(errors.stream()
+                        .map(ErrorResponse::joiningFieldErrorAndMessage)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    public static ErrorResponse of(HttpStatus status, String message) {
+        return ErrorResponse.builder()
+                .statusCode(status.value())
+                .message(message)
+                .build();
+    }
+
+    private static String joiningFieldErrorAndMessage(FieldError fieldError) {
+        return fieldError.getField() + ": " + fieldError.getDefaultMessage();
     }
 }

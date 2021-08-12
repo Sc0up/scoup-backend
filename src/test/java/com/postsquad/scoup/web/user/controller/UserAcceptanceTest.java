@@ -120,7 +120,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("Bad Request")
+                                .message("method argument not valid")
                                 .statusCode(400)
                                 .errors(Arrays.asList("nickname: 비어 있을 수 없습니다"))
                                 .build()
@@ -132,7 +132,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("Bad Request")
+                                .message("method argument not valid")
                                 .statusCode(400)
                                 .errors(Arrays.asList("username: 비어 있을 수 없습니다"))
                                 .build()
@@ -144,7 +144,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("Bad Request")
+                                .message("method argument not valid")
                                 .statusCode(400)
                                 .errors(Arrays.asList("email: 비어 있을 수 없습니다"))
                                 .build()
@@ -156,7 +156,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .email("email@email")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("Bad Request")
+                                .message("method argument not valid")
                                 .statusCode(400)
                                 .errors(Arrays.asList("password: 비어 있을 수 없습니다"))
                                 .build()
@@ -169,7 +169,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("Bad Request")
+                                .message("method argument not valid")
                                 .statusCode(400)
                                 .errors(Arrays.asList("email: 올바른 형식의 이메일 주소여야 합니다"))
                                 .build()
@@ -178,7 +178,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                         SignUpRequest.builder()
                                 .build(),
                         ErrorResponse.builder()
-                                .message("Bad Request")
+                                .message("method argument not valid")
                                 .statusCode(400)
                                 .errors(Arrays.asList(
                                         "nickname: 비어 있을 수 없습니다",
