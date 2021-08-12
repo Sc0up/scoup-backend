@@ -35,4 +35,4 @@ out/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/application-key.properties
+/src/main/resources/auth.key.properties
