@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.user.controller;
+package com.postsquad.scoup.web.user;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
