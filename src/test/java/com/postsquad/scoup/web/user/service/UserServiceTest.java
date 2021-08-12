@@ -30,7 +30,7 @@ public class UserServiceTest {
     void setUp() {
         userService = new UserService(userRepository);
 
-        TEST_USER = User.builder().id(1L).avatarUrl(null).email("email@email.com").nickname(null).password(null).username(null).build();
+        TEST_USER = User.builder().avatarUrl(null).email("email@email.com").nickname(null).password(null).username(null).build();
 
         Mockito.when(userRepository.findByEmail(TEST_USER.getEmail()))
                 .thenReturn(Optional.of(TEST_USER));

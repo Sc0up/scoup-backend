@@ -33,7 +33,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void setUp() {
         userRepository.save(User.builder()
-                                    .nickname("nickname")
+                                    .nickname("existing")
                                     .username("username")
                                     .email("existing@email.com")
                                     .avatarUrl("avatarUrl")
@@ -70,6 +70,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
+                .ignoringFields(new String[]{"createdDateTime", "modifiedDateTime", "id"})
                 .isEqualTo(expectedUser);
     }
 
@@ -84,7 +85,6 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         User.builder()
-                                .id(1L)
                                 .nickname("nickname")
                                 .username("username")
                                 .email("email@email")
@@ -105,6 +105,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                                     .port(port)
                                                     .basePath(path)
                                                     .contentType(ContentType.JSON)
+                                                    .header("Accept-Language", "ko-KR")
                                                     .body(givenSignUpRequest);
 
         // when
@@ -116,7 +117,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
-        then(actualResponse.as(ErrorResponse.class, restAssuredObjectMapper))
+        then(actualResponse.as(ErrorResponse.class))
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
@@ -226,7 +227,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
-        then(actualResponse.as(EmailValidationResponse.class, restAssuredObjectMapper))
+        then(actualResponse.as(EmailValidationResponse.class))
                 .as("이메일 중복 확인: %s", description)
                 .usingRecursiveComparison()
                 .isEqualTo(expectedEmailResponse);
@@ -266,7 +267,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
-        then(actualResponse.as(ErrorResponse.class, restAssuredObjectMapper))
+        then(actualResponse.as(ErrorResponse.class))
                 .as("이메일 중복 확인: %s", description)
                 .usingRecursiveComparison()
                 .ignoringFields("timestamp")

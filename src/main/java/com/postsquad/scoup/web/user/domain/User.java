@@ -1,11 +1,15 @@
 package com.postsquad.scoup.web.user.domain;
 
+import com.postsquad.scoup.web.common.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,11 +18,7 @@ import javax.persistence.*;
         @UniqueConstraint(columnNames = {"nickname"}, name = "UK_USER_NICKNAME"),
         @UniqueConstraint(columnNames = {"email"}, name = "UK_USER_EMAIL"),
 })
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity {
 
     @Column(length = 10, nullable = false)
     private String nickname;
@@ -35,8 +35,7 @@ public class User {
     @Column(length = 30, nullable = false)
     private String password;
 
-    protected User(Long id, String nickname, String username, String email, String avatarUrl, String password) {
-        this.id = id;
+    protected User(String nickname, String username, String email, String avatarUrl, String password) {
         this.nickname = nickname;
         this.username = username;
         this.email = email;
@@ -45,7 +44,7 @@ public class User {
     }
 
     @Builder
-    public static User of(Long id, String nickname, String username, String email, String avatarUrl, String password) {
-        return new User(id, nickname, username, email, avatarUrl, password);
+    public static User of(String nickname, String username, String email, String avatarUrl, String password) {
+        return new User(nickname, username, email, avatarUrl, password);
     }
 }

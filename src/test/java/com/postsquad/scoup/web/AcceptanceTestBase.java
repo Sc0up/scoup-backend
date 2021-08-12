@@ -1,5 +1,11 @@
 package com.postsquad.scoup.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.RestAssured;
+import io.restassured.config.ObjectMapperConfig;
+import io.restassured.config.RestAssuredConfig;
+import io.restassured.internal.mapping.Jackson2Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
@@ -10,4 +16,19 @@ public class AcceptanceTestBase {
 
     @LocalServerPort
     protected int port;
+
+    @Autowired
+    protected ObjectMapper objectMapper;
+
+    {
+        setUpRestAssured();
+    }
+
+    private void setUpRestAssured() {
+        Jackson2Mapper jackson2Mapper = new Jackson2Mapper((type, charset) -> objectMapper);
+        ObjectMapperConfig jackson2ObjectMapperConfig = new ObjectMapperConfig(jackson2Mapper);
+
+        RestAssured.config = RestAssuredConfig.config()
+                .objectMapperConfig(jackson2ObjectMapperConfig);
+    }
 }
