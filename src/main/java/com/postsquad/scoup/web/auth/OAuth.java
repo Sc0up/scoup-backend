@@ -1,7 +1,7 @@
 package com.postsquad.scoup.web.auth;
 
-import com.postsquad.scoup.web.auth.response.AccessTokenResponse;
-import com.postsquad.scoup.web.auth.response.OAuthUserResponse;
+import com.postsquad.scoup.web.auth.controller.response.AccessTokenResponse;
+import com.postsquad.scoup.web.auth.controller.response.OAuthUserResponse;
 
 public interface OAuth {
 
