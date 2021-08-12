@@ -8,8 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class EmailValidationResponse {
 
     private boolean existingEmail;
+
+    public static EmailValidationResponse valueOf(boolean existingEmail) {
+        return new EmailValidationResponse(existingEmail);
+    }
 }

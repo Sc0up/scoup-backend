@@ -7,8 +7,6 @@ import com.postsquad.scoup.web.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Email;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -17,9 +15,9 @@ public class UserService {
 
     public EmailValidationResponse validateEmail(String email) {
         if (userRepository.findByEmail(email).isPresent()) {
-            return EmailValidationResponse.builder().existingEmail(true).build();
+            return EmailValidationResponse.valueOf(true);
         }
-        return EmailValidationResponse.builder().existingEmail(false).build();
+        return EmailValidationResponse.valueOf(false);
     }
 
     public long signIn(SignUpRequest signUpRequest) {

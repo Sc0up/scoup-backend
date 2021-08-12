@@ -236,11 +236,11 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         return Stream.of(
                 Arguments.of("성공: 중복된 이메일",
                         "existing@email.com",
-                        EmailValidationResponse.builder().existingEmail(true).build()
+                        EmailValidationResponse.valueOf(true)
                 ),
                 Arguments.of("성공: 중복되지 않은 이메일",
                         "notExisting@email.com",
-                        EmailValidationResponse.builder().existingEmail(false).build()
+                        EmailValidationResponse.valueOf(false)
                 ));
     }
 

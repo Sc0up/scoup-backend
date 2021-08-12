@@ -49,8 +49,8 @@ public class UserServiceTest {
 
     static Stream<Arguments> validateEmailProvider() {
         return Stream.of(
-                Arguments.of("email@email.com", EmailValidationResponse.builder().existingEmail(true).build()),
-                Arguments.of("notExistingEmail@email.com", EmailValidationResponse.builder().existingEmail(false).build())
+                Arguments.of("email@email.com", EmailValidationResponse.valueOf(true)),
+                Arguments.of("notExistingEmail@email.com", EmailValidationResponse.valueOf(false))
         );
     }
 }
