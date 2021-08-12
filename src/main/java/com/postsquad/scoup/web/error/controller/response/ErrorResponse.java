@@ -6,8 +6,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 
+import javax.validation.ConstraintViolation;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
@@ -39,6 +41,17 @@ public class ErrorResponse {
                 status.value(),
                 errors.stream()
                         .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+                        .collect(Collectors.toList())
+        );
+    }
+
+    public static ErrorResponse of(HttpStatus status, Set<ConstraintViolation<?>> errors) {
+        return ErrorResponse.of(
+                LocalDateTime.now(),
+                status.getReasonPhrase(),
+                status.value(),
+                errors.stream()
+                        .map(constraintViolation -> constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage())
                         .collect(Collectors.toList())
         );
     }
