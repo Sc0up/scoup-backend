@@ -255,6 +255,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                                     .baseUri(BASE_URL)
                                                     .port(port)
                                                     .basePath(path)
+                                                    .header("Accept-Language", "ko-KR")
                                                     .queryParam("email", givenEmailRequest);
 
         // when
