@@ -15,7 +15,7 @@ public class ErrorControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException methodArgumentNotValidException) {
-        String message = "method argument not valid";
+        String message = "Method argument not valid.";
         return ErrorResponse.of(HttpStatus.BAD_REQUEST, message, methodArgumentNotValidException.getFieldErrors());
     }
 
