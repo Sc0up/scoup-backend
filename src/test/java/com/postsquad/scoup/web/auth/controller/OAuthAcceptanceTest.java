@@ -1,11 +1,12 @@
 package com.postsquad.scoup.web.auth.controller;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
-import com.postsquad.scoup.web.user.controller.response.SocialAuthenticationResponse;
+import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +26,7 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("소셜 서비스에 가입된 사용자의 정보를 불러올 수 있다.")
     @ParameterizedTest
     @MethodSource("readUserDataProvider")
-    void readUserData(SocialAuthenticationResponse expectedSocialAuthenticationResponse) {
+    void readUserData(String description, SocialAuthenticationResponse expectedSocialAuthenticationResponse) {
         // given
         String socialAuthenticationPath = "/api/social/authenticate/token";
         RequestSpecification givenRequest = given()
@@ -43,18 +44,23 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
         // then
         assertThat(actualResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
         then(actualResponse.as(SocialAuthenticationResponse.class))
-                .as("사용자의 소셜 계정 개인 정보 조회")
+                .as("사용자의 소셜 계정 개인 정보 조회 : %s", description)
                 .usingRecursiveComparison()
                 .isEqualTo(expectedSocialAuthenticationResponse);
     }
 
-    private static Stream<SocialAuthenticationResponse> readUserDataProvider() {
-        return Stream.of(SocialAuthenticationResponse
-                .builder()
-                .socialServiceId("68000537")
-                .username("janeljs")
-                .email("jisunlim818@gmail.com")
-                .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
-                .build());
+    private static Stream<Arguments> readUserDataProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "성공",
+                        SocialAuthenticationResponse
+                                .builder()
+                                .socialServiceId("68000537")
+                                .username("janeljs")
+                                .email("jisunlim818@gmail.com")
+                                .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
+                                .build()
+                )
+        );
     }
 }
