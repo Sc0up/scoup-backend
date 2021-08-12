@@ -24,6 +24,8 @@ public class AcceptanceTestBase {
 
     protected String[] ignoringFieldsForResponse = new String[]{"createdDateTime", "modifiedDateTime"};
 
+    protected String[] ignoringFieldsForErrorResponse = new String[]{"timestamp"};
+
     {
         setUpRestAssured();
     }
