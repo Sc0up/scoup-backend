@@ -106,7 +106,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
-                .ignoringFields("timestamp")
+                .ignoringFields(ignoringFieldsForErrorResponse)
                 .isEqualTo(expectedResponse);
     }
 
