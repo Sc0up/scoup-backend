@@ -91,6 +91,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .port(port)
                 .basePath(path)
                 .contentType(ContentType.JSON)
+                .header("Accept-Language", "ko-KR")
                 .body(givenSignUpRequest);
 
         // when
