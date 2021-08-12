@@ -13,8 +13,11 @@ import lombok.NoArgsConstructor;
 public class SocialAuthenticationResponse {
 
     private String socialServiceId;
+
     private String username;
+
     private String email;
+
     private String avatarUrl;
 
     public static SocialAuthenticationResponse from(OAuthUserResponse oAuthUserResponse) {
