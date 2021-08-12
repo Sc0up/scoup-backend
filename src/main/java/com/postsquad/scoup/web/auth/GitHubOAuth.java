@@ -2,7 +2,7 @@ package com.postsquad.scoup.web.auth;
 
 import com.postsquad.scoup.web.auth.exception.AccessTokenNotFoundException;
 import com.postsquad.scoup.web.auth.exception.GitHubUserNotFoundException;
-import com.postsquad.scoup.web.auth.exception.InvalidGitHubRequestException;
+import com.postsquad.scoup.web.auth.exception.GitHubRequestNotValidException;
 import com.postsquad.scoup.web.auth.request.AccessTokenRequest;
 import com.postsquad.scoup.web.auth.response.AccessTokenResponse;
 import com.postsquad.scoup.web.auth.response.OAuthUserResponse;
@@ -55,7 +55,7 @@ public class GitHubOAuth implements OAuth {
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(accessTokenRequest)
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(InvalidGitHubRequestException::new))
+                .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(GitHubRequestNotValidException::new))
                 .bodyToMono(AccessTokenResponse.class)
                 .blockOptional()
                 .orElseThrow(AccessTokenNotFoundException::new);
@@ -69,7 +69,7 @@ public class GitHubOAuth implements OAuth {
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, TOKEN + " " + accessToken)
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(InvalidGitHubRequestException::new))
+                .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(GitHubRequestNotValidException::new))
                 .bodyToMono(OAuthUserResponse.class)
                 .blockOptional()
                 .orElseThrow(GitHubUserNotFoundException::new);
