@@ -135,7 +135,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("method argument not valid")
+                                .message("Method argument not valid.")
                                 .statusCode(400)
                                 .errors(Arrays.asList("nickname: 비어 있을 수 없습니다"))
                                 .build()
@@ -147,7 +147,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("method argument not valid")
+                                .message("Method argument not valid.")
                                 .statusCode(400)
                                 .errors(Arrays.asList("username: 비어 있을 수 없습니다"))
                                 .build()
@@ -159,7 +159,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("method argument not valid")
+                                .message("Method argument not valid.")
                                 .statusCode(400)
                                 .errors(Arrays.asList("email: 비어 있을 수 없습니다"))
                                 .build()
@@ -171,7 +171,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .email("email@email")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("method argument not valid")
+                                .message("Method argument not valid.")
                                 .statusCode(400)
                                 .errors(Arrays.asList("password: 비어 있을 수 없습니다"))
                                 .build()
@@ -184,7 +184,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("method argument not valid")
+                                .message("Method argument not valid.")
                                 .statusCode(400)
                                 .errors(Arrays.asList("email: 올바른 형식의 이메일 주소여야 합니다"))
                                 .build()
@@ -193,7 +193,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                         SignUpRequest.builder()
                                 .build(),
                         ErrorResponse.builder()
-                                .message("method argument not valid")
+                                .message("Method argument not valid.")
                                 .statusCode(400)
                                 .errors(Arrays.asList(
                                         "nickname: 비어 있을 수 없습니다",
@@ -281,21 +281,21 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                         "",
                         ErrorResponse.builder()
                                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .errors(Collections.singletonList("validateEmail.email: must not be empty"))
                                 .build()),
                 Arguments.of("실패: null",
                         null,
                         ErrorResponse.builder()
                                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .errors(Collections.singletonList("validateEmail.email: must not be empty"))
                                 .build()),
                 Arguments.of("실패: 이메일 형식",
                         "email",
                         ErrorResponse.builder()
                                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .errors(Collections.singletonList("validateEmail.email: must be a well-formed email address"))
                                 .build())
         );
