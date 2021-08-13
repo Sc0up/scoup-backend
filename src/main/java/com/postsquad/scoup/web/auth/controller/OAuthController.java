@@ -8,18 +8,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
 @RequiredArgsConstructor
+@RequestMapping("/oauth")
+@RestController
 public class OAuthController {
 
     private final OAuthService oAuthService;
 
-    @GetMapping("/social/authenticate")
+    @GetMapping("/user-data")
     public SocialAuthenticationResponse readOAuthUserData(@RequestParam String code) {
         return oAuthService.readOAuthUserData(code);
     }
 
-    @GetMapping("/social/authenticate/token")
+    @GetMapping("/user-data/token")
     public SocialAuthenticationResponse readOAuthUserDataWithToken(@RequestHeader("Authorization") String header) {
         return oAuthService.readOAuthUserDataWithToken(header);
     }
