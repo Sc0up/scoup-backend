@@ -95,6 +95,54 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     }
 
     @ParameterizedTest
+    @MethodSource("signUpWhenUserAlreadyExistsProvider")
+    @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다.")
+    void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequest, ErrorResponse expectedResponse) {
+        // given
+        String path = "/api/sign-up";
+        RequestSpecification givenRequest = RestAssured.given()
+                .baseUri(BASE_URL)
+                .port(port)
+                .basePath(path)
+                .contentType(ContentType.JSON)
+                .body(givenSignUpRequest);
+        givenRequest.post();
+
+        // when
+        Response actualResponse = givenRequest.when()
+                .log().all(true)
+                .post();
+
+        // then
+        actualResponse.then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+        then(actualResponse.as(ErrorResponse.class))
+                .as("회원가입 결과 - %s", description)
+                .usingRecursiveComparison()
+                .ignoringFields(new String[]{"timestamp"})
+                .isEqualTo(expectedResponse);
+    }
+
+    static Stream<Arguments> signUpWhenUserAlreadyExistsProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "실패 - 이미 가입한 이메일(email@email)",
+                        SignUpRequest.builder()
+                                .username("username")
+                                .nickname("nickname")
+                                .email("email@email")
+                                .password("password")
+                                .build(),
+                        ErrorResponse.builder()
+                                .message("Sign up failed")
+                                .statusCode(400)
+                                .errors(Arrays.asList("User(email@email) already exists"))
+                                .build()
+                )
+        );
+    }
+
+    @ParameterizedTest
     @MethodSource("signUpWithValidationProvider")
     @DisplayName("회원가입 DTO validation")
     void signUpWithValidation(String description, SignUpRequest givenSignUpRequest, ErrorResponse expectedResponse) {

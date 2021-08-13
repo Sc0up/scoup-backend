@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 
 import javax.validation.ConstraintViolation;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -56,5 +57,13 @@ public class ErrorResponse {
                                           .map(constraintViolation -> constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage())
                                           .collect(Collectors.toList()))
                             .build();
+    }
+
+    public static ErrorResponse of(HttpStatus status, String message, String... errors) {
+        return ErrorResponse.builder()
+                .statusCode(status.value())
+                .message(message)
+                .errors(Arrays.asList(errors))
+                .build();
     }
 }
