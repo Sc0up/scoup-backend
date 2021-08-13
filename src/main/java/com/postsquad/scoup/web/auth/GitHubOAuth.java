@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-@Service
 @PropertySource(value = "classpath:auth.github.properties")
+@Service
 public class GitHubOAuth implements OAuth {
 
     private final Logger logger = LoggerFactory.getLogger(GitHubOAuth.class);
@@ -29,11 +29,13 @@ public class GitHubOAuth implements OAuth {
     private final String clientId;
     private final String clientSecret;
 
-    public GitHubOAuth(WebClient webClient,
-                       @Value("${github.access.token.uri}") String accessTokenUri,
-                       @Value("${github.user.uri}") String userUri,
-                       @Value("${github.web.client.id}") String clientId,
-                       @Value("${github.web.client.secret}") String clientSecret) {
+    public GitHubOAuth(
+            WebClient webClient,
+            @Value("${github.access.token.uri}") String accessTokenUri,
+            @Value("${github.user.uri}") String userUri,
+            @Value("${github.web.client.id}") String clientId,
+            @Value("${github.web.client.secret}") String clientSecret
+    ) {
         this.webClient = webClient;
         this.accessTokenUri = accessTokenUri;
         this.userUri = userUri;
@@ -45,34 +47,34 @@ public class GitHubOAuth implements OAuth {
     public AccessTokenResponse getToken(String code) {
         logger.debug("Authorization code: {}", code);
         AccessTokenRequest accessTokenRequest = AccessTokenRequest.builder()
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .code(code)
-                .build();
+                                                                  .clientId(clientId)
+                                                                  .clientSecret(clientSecret)
+                                                                  .code(code)
+                                                                  .build();
 
         return webClient.post()
-                .uri(accessTokenUri)
-                .accept(MediaType.APPLICATION_JSON)
-                .bodyValue(accessTokenRequest)
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(InvalidGitHubRequestException::new))
-                .bodyToMono(AccessTokenResponse.class)
-                .blockOptional()
-                .orElseThrow(AccessTokenNotFoundException::new);
+                        .uri(accessTokenUri)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .bodyValue(accessTokenRequest)
+                        .retrieve()
+                        .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(InvalidGitHubRequestException::new))
+                        .bodyToMono(AccessTokenResponse.class)
+                        .blockOptional()
+                        .orElseThrow(AccessTokenNotFoundException::new);
     }
 
     @Override
     public OAuthUserResponse getOAuthUserInfo(String accessToken) {
         logger.debug("Access token: {}", accessToken);
         return webClient.get()
-                .uri(userUri)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, TOKEN + " " + accessToken)
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(InvalidGitHubRequestException::new))
-                .bodyToMono(OAuthUserResponse.class)
-                .blockOptional()
-                .orElseThrow(GitHubUserNotFoundException::new);
+                        .uri(userUri)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, TOKEN + " " + accessToken)
+                        .retrieve()
+                        .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(InvalidGitHubRequestException::new))
+                        .bodyToMono(OAuthUserResponse.class)
+                        .blockOptional()
+                        .orElseThrow(GitHubUserNotFoundException::new);
     }
 
     @Override

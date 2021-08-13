@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Data
 @NoArgsConstructor
+@Data
 public class ErrorResponse {
 
     private LocalDateTime timestamp;
@@ -61,9 +61,9 @@ public class ErrorResponse {
 
     public static ErrorResponse of(HttpStatus status, String message, String... errors) {
         return ErrorResponse.builder()
-                .statusCode(status.value())
-                .message(message)
-                .errors(Arrays.asList(errors))
-                .build();
+                            .statusCode(status.value())
+                            .message(message)
+                            .errors(Arrays.asList(errors))
+                            .build();
     }
 }

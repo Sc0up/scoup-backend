@@ -6,10 +6,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Getter
 public class SocialAuthenticationResponse {
 
     private String socialServiceId;
@@ -22,10 +22,10 @@ public class SocialAuthenticationResponse {
 
     public static SocialAuthenticationResponse from(OAuthUserResponse oAuthUserResponse) {
         return SocialAuthenticationResponse.builder()
-                .socialServiceId(String.valueOf(oAuthUserResponse.getId()))
-                .username(oAuthUserResponse.getLogin())
-                .email(oAuthUserResponse.getEmail())
-                .avatarUrl(oAuthUserResponse.getAvatarUrl())
-                .build();
+                                           .socialServiceId(String.valueOf(oAuthUserResponse.getId()))
+                                           .username(oAuthUserResponse.getLogin())
+                                           .email(oAuthUserResponse.getEmail())
+                                           .avatarUrl(oAuthUserResponse.getAvatarUrl())
+                                           .build();
     }
 }

@@ -35,6 +35,6 @@ public class AcceptanceTestBase {
         ObjectMapperConfig jackson2ObjectMapperConfig = new ObjectMapperConfig(jackson2Mapper);
 
         RestAssured.config = RestAssuredConfig.config()
-                .objectMapperConfig(jackson2ObjectMapperConfig);
+                                              .objectMapperConfig(jackson2ObjectMapperConfig);
     }
 }

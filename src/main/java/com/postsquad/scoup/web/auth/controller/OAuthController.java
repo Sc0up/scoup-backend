@@ -1,15 +1,15 @@
 package com.postsquad.scoup.web.auth.controller;
 
-import com.postsquad.scoup.web.user.controller.response.SocialAuthenticationResponse;
 import com.postsquad.scoup.web.auth.service.OAuthService;
+import com.postsquad.scoup.web.user.controller.response.SocialAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequiredArgsConstructor
+@RestController
 public class OAuthController {
 
     private final OAuthService oAuthService;

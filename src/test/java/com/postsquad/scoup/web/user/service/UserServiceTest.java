@@ -33,18 +33,18 @@ public class UserServiceTest {
         TEST_USER = User.builder().avatarUrl(null).email("email@email.com").nickname(null).password(null).username(null).build();
 
         Mockito.when(userRepository.findByEmail(TEST_USER.getEmail()))
-                .thenReturn(Optional.of(TEST_USER));
+               .thenReturn(Optional.of(TEST_USER));
     }
 
     @ParameterizedTest
     @MethodSource("validateEmailProvider")
-    public void validateEmail(String email, EmailValidationResponse expected){
+    public void validateEmail(String email, EmailValidationResponse expected) {
         // when
         EmailValidationResponse response = userService.validateEmail(email);
 
         // then
         then(response).usingRecursiveComparison()
-                .isEqualTo(expected);
+                      .isEqualTo(expected);
     }
 
     static Stream<Arguments> validateEmailProvider() {

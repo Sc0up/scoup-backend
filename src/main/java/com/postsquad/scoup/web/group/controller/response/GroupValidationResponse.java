@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
 @Builder
+@Getter
 public class GroupValidationResponse {
 
     private boolean isExistingName;
