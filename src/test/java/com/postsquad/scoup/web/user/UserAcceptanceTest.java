@@ -70,7 +70,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
-                .ignoringFields(new String[]{"createdDateTime", "modifiedDateTime", "id"})
+                .ignoringFields(ignoringFieldsForResponseWithId)
                 .isEqualTo(expectedUser);
     }
 
@@ -121,7 +121,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
-                .ignoringFields("timestamp")
+                .ignoringFields(ignoringFieldsForErrorResponse)
                 .isEqualTo(expectedResponse);
     }
 
@@ -271,7 +271,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         then(actualResponse.as(ErrorResponse.class))
                 .as("이메일 중복 확인: %s", description)
                 .usingRecursiveComparison()
-                .ignoringFields("timestamp")
+                .ignoringFields(ignoringFieldsForErrorResponse)
                 .isEqualTo(expectedResponse);
     }
 
