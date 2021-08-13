@@ -281,21 +281,21 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                         "",
                         ErrorResponse.builder()
                                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .errors(Collections.singletonList("validateEmail.email: must not be empty"))
                                 .build()),
                 Arguments.of("실패: null",
                         null,
                         ErrorResponse.builder()
                                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .errors(Collections.singletonList("validateEmail.email: must not be empty"))
                                 .build()),
                 Arguments.of("실패: 이메일 형식",
                         "email",
                         ErrorResponse.builder()
                                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .errors(Collections.singletonList("validateEmail.email: must be a well-formed email address"))
                                 .build())
         );

@@ -22,6 +22,7 @@ public class ErrorControllerAdvice {
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse constraintViolationExceptionHandler(ConstraintViolationException constraintViolationException) {
-        return ErrorResponse.of(HttpStatus.BAD_REQUEST, constraintViolationException.getConstraintViolations());
+        String message = "Method argument not valid.";
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST, message, constraintViolationException.getConstraintViolations());
     }
 }

@@ -36,26 +36,25 @@ public class ErrorResponse {
 
     public static ErrorResponse of(HttpStatus status, String message, List<FieldError> errors) {
         return ErrorResponse.builder()
-                .statusCode(status.value())
-                .message(message)
-                .errors(errors.stream()
-                        .map(ErrorResponse::joiningFieldErrorAndMessage)
-                        .collect(Collectors.toList()))
-                .build();
+                            .statusCode(status.value())
+                            .message(message)
+                            .errors(errors.stream()
+                                          .map(ErrorResponse::joiningFieldErrorAndMessage)
+                                          .collect(Collectors.toList()))
+                            .build();
     }
 
     private static String joiningFieldErrorAndMessage(FieldError fieldError) {
         return fieldError.getField() + ": " + fieldError.getDefaultMessage();
     }
 
-    public static ErrorResponse of(HttpStatus status, Set<ConstraintViolation<?>> errors) {
-        return ErrorResponse.of(
-                LocalDateTime.now(),
-                status.getReasonPhrase(),
-                status.value(),
-                errors.stream()
-                        .map(constraintViolation -> constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage())
-                        .collect(Collectors.toList())
-        );
+    public static ErrorResponse of(HttpStatus status, String message, Set<ConstraintViolation<?>> errors) {
+        return ErrorResponse.builder()
+                            .statusCode(status.value())
+                            .message(message)
+                            .errors(errors.stream()
+                                          .map(constraintViolation -> constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage())
+                                          .collect(Collectors.toList()))
+                            .build();
     }
 }
