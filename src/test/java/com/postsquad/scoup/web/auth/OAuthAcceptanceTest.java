@@ -2,6 +2,7 @@ package com.postsquad.scoup.web.auth;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
+import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
@@ -59,6 +60,45 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
                                 .username("janeljs")
                                 .email("jisunlim818@gmail.com")
                                 .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
+                                .build()
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("gitHubRequestValidationProvider")
+    @DisplayName("Github 요청 validation")
+    void gitHubRequestValidation(String description, String invalidToken, ErrorResponse expectedResponse) {
+        // given
+        String socialAuthenticationPath = "/api/social/authenticate/token";
+        RequestSpecification givenRequest = given()
+                .baseUri(BASE_URL)
+                .port(port)
+                .basePath(socialAuthenticationPath)
+                .header(HttpHeaders.AUTHORIZATION, "token " + invalidToken);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                .log().all(true)
+                .get();
+
+        // then
+        assertThat(actualResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        then(actualResponse.as(ErrorResponse.class))
+                .as("사용자의 소셜 계정 개인 정보 조회 : %s", description)
+                .usingRecursiveComparison()
+                .ignoringFields("timestamp")
+                .isEqualTo(expectedResponse);
+    }
+
+    private static Stream<Arguments> gitHubRequestValidationProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "실패",
+                        "gho_fehklwekjdojfwofjwfowg",
+                        ErrorResponse.builder()
+                                .statusCode(HttpStatus.BAD_REQUEST.value())
+                                .message("GitHub request fails validation.")
                                 .build()
                 )
         );
