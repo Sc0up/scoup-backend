@@ -17,10 +17,4 @@ public class ErrorControllerAdvice {
         String message = "method argument not valid";
         return ErrorResponse.of(HttpStatus.BAD_REQUEST, message, methodArgumentNotValidException.getFieldErrors());
     }
-
-    @ExceptionHandler(OAuthException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse oAuthExceptionHandler(OAuthException oAuthException) {
-        return ErrorResponse.of(HttpStatus.BAD_REQUEST, oAuthException.getMessage());
-    }
 }
