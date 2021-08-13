@@ -43,7 +43,6 @@ public class UserController {
 
     @GetMapping("/validate/nickname")
     public NicknameValidationResponse validateNickname(@RequestParam @NotEmpty String nickname) {
-        // dummy
-        return NicknameValidationResponse.valueOf(true);
+        return userService.validateNickname(nickname);
     }
 }
