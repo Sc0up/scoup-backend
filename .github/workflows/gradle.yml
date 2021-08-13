@@ -21,6 +21,10 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+      - name: Create auth.key.properties file
+        env:
+          AUTH_KEY: ${{ secrets.AUTH_KEY }}
+        run: echo "$AUTH_KEY" > ./secrets.properties
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
