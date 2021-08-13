@@ -27,6 +27,6 @@ public class OAuthController {
     @ExceptionHandler(OAuthException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse oAuthExceptionHandler(OAuthException oAuthException) {
-        return ErrorResponse.of(HttpStatus.BAD_REQUEST, oAuthException.getMessage());
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST, oAuthException.getMessage(), oAuthException.getCause().getMessage());
     }
 }
