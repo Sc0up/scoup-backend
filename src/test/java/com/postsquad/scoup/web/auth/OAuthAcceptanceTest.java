@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.*;
@@ -38,9 +39,9 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
-                .log().all()
-                .get()
-                .andReturn();
+                                              .log().all()
+                                              .get()
+                                              .andReturn();
 
         // then
         assertThat(actualResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -65,9 +66,9 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
         );
     }
 
+    @DisplayName("Github 요청 validation")
     @ParameterizedTest
     @MethodSource("gitHubRequestValidationProvider")
-    @DisplayName("Github 요청 validation")
     void gitHubRequestValidation(String description, String invalidToken, ErrorResponse expectedResponse) {
         // given
         String socialAuthenticationPath = "/api/oauth/user-data/token";
@@ -79,15 +80,15 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
-                .log().all(true)
-                .get();
+                                              .log().all(true)
+                                              .get();
 
         // then
         assertThat(actualResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         then(actualResponse.as(ErrorResponse.class))
                 .as("사용자의 소셜 계정 개인 정보 조회 : %s", description)
                 .usingRecursiveComparison()
-                .ignoringFields("timestamp")
+                .ignoringFields(ignoringFieldsForErrorResponse)
                 .isEqualTo(expectedResponse);
     }
 
@@ -97,9 +98,10 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
                         "실패",
                         "gho_fehklwekjdojfwofjwfowg",
                         ErrorResponse.builder()
-                                .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("GitHub request fails validation.")
-                                .build()
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .message("Failed to get user data from the resource server.")
+                                     .errors(List.of("GitHub request fails validation."))
+                                     .build()
                 )
         );
     }
