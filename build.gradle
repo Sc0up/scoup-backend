@@ -30,18 +30,28 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-quartz'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'io.rest-assured:rest-assured'
 
-    /* MapStruct */
+    /* MapStruct
+    * org.mapstruct:mapstruct-processor가 Lombok보다 위에 있어야 제대로 작동합니다.
+    * 그렇지 않으면 빌더 인식이 제대로 되지 않을 수 있습니다.
+    * 참고
+    * - https://github.com/projectlombok/lombok/issues/1538
+    * - https://github.com/mapstruct/mapstruct/issues/1581
+    * - https://github.com/mapstruct/mapstruct/issues/1997
+    */
     implementation 'org.mapstruct:mapstruct' + ":$mapstructVersion"
     annotationProcessor 'org.mapstruct:mapstruct-processor' + ":$mapstructVersion"
+
+    /* Lombok */
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor  'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 }
 
 test {
