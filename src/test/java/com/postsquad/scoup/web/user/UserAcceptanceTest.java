@@ -271,7 +271,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         then(actualResponse.as(ErrorResponse.class))
                 .as("이메일 중복 확인: %s", description)
                 .usingRecursiveComparison()
-                .ignoringFields("timestamp")
+                .ignoringFields(ignoringFieldsForErrorResponse)
                 .isEqualTo(expectedResponse);
     }
 
