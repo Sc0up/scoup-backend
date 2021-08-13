@@ -25,11 +25,11 @@ class UserRepositoryTest {
     void save() {
         // given
         User user = User.builder()
-                .nickname("nickname")
-                .username("username")
-                .email("email")
-                .password("password")
-                .build();
+                        .nickname("nickname")
+                        .username("username")
+                        .email("email")
+                        .password("password")
+                        .build();
 
         // when
         userRepository.save(user);
@@ -57,35 +57,35 @@ class UserRepositoryTest {
                 Arguments.of(
                         "닉네임 없는 경우",
                         User.builder()
-                                .username("username")
-                                .email("email")
-                                .password("password")
-                                .build()
+                            .username("username")
+                            .email("email")
+                            .password("password")
+                            .build()
                 ), Arguments.of(
                         "사용자명 없는 경우",
                         User.builder()
-                                .nickname("nickname")
-                                .email("email")
-                                .password("password")
-                                .build()
+                            .nickname("nickname")
+                            .email("email")
+                            .password("password")
+                            .build()
                 ), Arguments.of(
                         "이메일 없는 경우",
                         User.builder()
-                                .nickname("nickname")
-                                .username("username")
-                                .password("password")
-                                .build()
+                            .nickname("nickname")
+                            .username("username")
+                            .password("password")
+                            .build()
                 ), Arguments.of(
                         "비밀번호 없는 경우",
                         User.builder()
-                                .nickname("nickname")
-                                .username("username")
-                                .email("email")
-                                .build()
+                            .nickname("nickname")
+                            .username("username")
+                            .email("email")
+                            .build()
                 ), Arguments.of(
                         "아무것도 없는 경우",
                         User.builder()
-                                .build()
+                            .build()
                 )
         );
     }
@@ -110,31 +110,31 @@ class UserRepositoryTest {
                 Arguments.of(
                         "닉네임 중복",
                         User.builder()
-                                .nickname("nickname")
-                                .username("username")
-                                .email("email")
-                                .password("password")
-                                .build(),
+                            .nickname("nickname")
+                            .username("username")
+                            .email("email")
+                            .password("password")
+                            .build(),
                         User.builder()
-                                .nickname("nickname")
-                                .username("username")
-                                .email("email2")
-                                .password("password")
-                                .build()
+                            .nickname("nickname")
+                            .username("username")
+                            .email("email2")
+                            .password("password")
+                            .build()
                 ), Arguments.of(
                         "이메일 중복",
                         User.builder()
-                                .nickname("nickname")
-                                .username("username")
-                                .email("email")
-                                .password("password")
-                                .build(),
+                            .nickname("nickname")
+                            .username("username")
+                            .email("email")
+                            .password("password")
+                            .build(),
                         User.builder()
-                                .nickname("nickname2")
-                                .username("username")
-                                .email("email")
-                                .password("password")
-                                .build()
+                            .nickname("nickname2")
+                            .username("username")
+                            .email("email")
+                            .password("password")
+                            .build()
                 )
         );
     }

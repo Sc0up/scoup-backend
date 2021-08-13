@@ -33,12 +33,12 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void setUp() {
         userRepository.save(User.builder()
-                                    .nickname("existing")
-                                    .username("username")
-                                    .email("existing@email.com")
-                                    .avatarUrl("avatarUrl")
-                                    .password("password")
-                                    .build());
+                                .nickname("existing")
+                                .username("username")
+                                .email("existing@email.com")
+                                .avatarUrl("avatarUrl")
+                                .password("password")
+                                .build());
     }
 
     @AfterEach
@@ -53,20 +53,20 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         // given
         String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
-                                                    .baseUri(BASE_URL)
-                                                    .port(port)
-                                                    .basePath(path)
-                                                    .contentType(ContentType.JSON)
-                                                    .body(givenSignUpRequest);
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path)
+                                                       .contentType(ContentType.JSON)
+                                                       .body(givenSignUpRequest);
 
         // when
         Response actualResponse = givenRequest.when()
-                                          .log().all(true)
-                                          .post();
+                                              .log().all(true)
+                                              .post();
 
         // then
         actualResponse.then()
-                .statusCode(HttpStatus.CREATED.value());
+                      .statusCode(HttpStatus.CREATED.value());
         then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
@@ -79,17 +79,17 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "성공",
                         SignUpRequest.builder()
-                                .nickname("nickname")
-                                .username("username")
-                                .email("email@email")
-                                .password("password")
-                                .build(),
+                                     .nickname("nickname")
+                                     .username("username")
+                                     .email("email@email")
+                                     .password("password")
+                                     .build(),
                         User.builder()
-                                .nickname("nickname")
-                                .username("username")
-                                .email("email@email")
-                                .password("password")
-                                .build()
+                            .nickname("nickname")
+                            .username("username")
+                            .email("email@email")
+                            .password("password")
+                            .build()
                 )
         );
     }
@@ -101,21 +101,21 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         // given
         String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
-                .baseUri(BASE_URL)
-                .port(port)
-                .basePath(path)
-                .contentType(ContentType.JSON)
-                .body(givenSignUpRequest);
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path)
+                                                       .contentType(ContentType.JSON)
+                                                       .body(givenSignUpRequest);
         givenRequest.post();
 
         // when
         Response actualResponse = givenRequest.when()
-                .log().all(true)
-                .post();
+                                              .log().all(true)
+                                              .post();
 
         // then
         actualResponse.then()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                      .statusCode(HttpStatus.BAD_REQUEST.value());
         then(actualResponse.as(ErrorResponse.class))
                 .as("회원가입 결과 - %s", description)
                 .usingRecursiveComparison()
@@ -128,16 +128,16 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "실패 - 이미 가입한 이메일(email@email)",
                         SignUpRequest.builder()
-                                .username("username")
-                                .nickname("nickname")
-                                .email("email@email")
-                                .password("password")
-                                .build(),
+                                     .username("username")
+                                     .nickname("nickname")
+                                     .email("email@email")
+                                     .password("password")
+                                     .build(),
                         ErrorResponse.builder()
-                                .message("Sign up failed")
-                                .statusCode(400)
-                                .errors(Arrays.asList("User(email@email) already exists"))
-                                .build()
+                                     .message("Sign up failed")
+                                     .statusCode(400)
+                                     .errors(Arrays.asList("User(email@email) already exists"))
+                                     .build()
                 )
         );
     }
@@ -149,22 +149,22 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         // given
         String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
-                                                    .baseUri(BASE_URL)
-                                                    .port(port)
-                                                    .basePath(path)
-                                                    .contentType(ContentType.JSON)
-                                                    .header("Accept-Language", "ko-KR")
-                                                    .body(givenSignUpRequest);
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path)
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Accept-Language", "ko-KR")
+                                                       .body(givenSignUpRequest);
 
         // when
         Response actualResponse = givenRequest.when()
-                                          .log().all(true)
-                                          .post();
+                                              .log().all(true)
+                                              .post();
 
         //then
         actualResponse.then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                      .log().all()
+                      .statusCode(HttpStatus.BAD_REQUEST.value());
         then(actualResponse.as(ErrorResponse.class))
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
@@ -178,77 +178,77 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "실패 - nickname 없음",
                         SignUpRequest.builder()
-                                .username("username")
-                                .email("email@email")
-                                .password("password")
-                                .build(),
+                                     .username("username")
+                                     .email("email@email")
+                                     .password("password")
+                                     .build(),
                         ErrorResponse.builder()
-                                .message("Method argument not valid.")
-                                .statusCode(400)
-                                .errors(Arrays.asList("nickname: 비어 있을 수 없습니다"))
-                                .build()
+                                     .message("Method argument not valid.")
+                                     .statusCode(400)
+                                     .errors(Arrays.asList("nickname: 비어 있을 수 없습니다"))
+                                     .build()
                 ), Arguments.of(
                         "실패 - username 없음",
                         SignUpRequest.builder()
-                                .nickname("nickname")
-                                .email("email@email")
-                                .password("password")
-                                .build(),
+                                     .nickname("nickname")
+                                     .email("email@email")
+                                     .password("password")
+                                     .build(),
                         ErrorResponse.builder()
-                                .message("Method argument not valid.")
-                                .statusCode(400)
-                                .errors(Arrays.asList("username: 비어 있을 수 없습니다"))
-                                .build()
+                                     .message("Method argument not valid.")
+                                     .statusCode(400)
+                                     .errors(Arrays.asList("username: 비어 있을 수 없습니다"))
+                                     .build()
                 ), Arguments.of(
                         "실패 - email 없음",
                         SignUpRequest.builder()
-                                .nickname("nickname")
-                                .username("username")
-                                .password("password")
-                                .build(),
+                                     .nickname("nickname")
+                                     .username("username")
+                                     .password("password")
+                                     .build(),
                         ErrorResponse.builder()
-                                .message("Method argument not valid.")
-                                .statusCode(400)
-                                .errors(Arrays.asList("email: 비어 있을 수 없습니다"))
-                                .build()
+                                     .message("Method argument not valid.")
+                                     .statusCode(400)
+                                     .errors(Arrays.asList("email: 비어 있을 수 없습니다"))
+                                     .build()
                 ), Arguments.of(
                         "실패 - password 없음",
                         SignUpRequest.builder()
-                                .nickname("nickname")
-                                .username("username")
-                                .email("email@email")
-                                .build(),
+                                     .nickname("nickname")
+                                     .username("username")
+                                     .email("email@email")
+                                     .build(),
                         ErrorResponse.builder()
-                                .message("Method argument not valid.")
-                                .statusCode(400)
-                                .errors(Arrays.asList("password: 비어 있을 수 없습니다"))
-                                .build()
+                                     .message("Method argument not valid.")
+                                     .statusCode(400)
+                                     .errors(Arrays.asList("password: 비어 있을 수 없습니다"))
+                                     .build()
                 ), Arguments.of(
                         "실패 - email 형식 다름",
                         SignUpRequest.builder()
-                                .nickname("nickname")
-                                .username("username")
-                                .email("email")
-                                .password("password")
-                                .build(),
+                                     .nickname("nickname")
+                                     .username("username")
+                                     .email("email")
+                                     .password("password")
+                                     .build(),
                         ErrorResponse.builder()
-                                .message("Method argument not valid.")
-                                .statusCode(400)
-                                .errors(Arrays.asList("email: 올바른 형식의 이메일 주소여야 합니다"))
-                                .build()
+                                     .message("Method argument not valid.")
+                                     .statusCode(400)
+                                     .errors(Arrays.asList("email: 올바른 형식의 이메일 주소여야 합니다"))
+                                     .build()
                 ), Arguments.of(
                         "실패 - 모두 없음",
                         SignUpRequest.builder()
-                                .build(),
+                                     .build(),
                         ErrorResponse.builder()
-                                .message("Method argument not valid.")
-                                .statusCode(400)
-                                .errors(Arrays.asList(
-                                        "nickname: 비어 있을 수 없습니다",
-                                        "email: 비어 있을 수 없습니다",
-                                        "password: 비어 있을 수 없습니다",
-                                        "username: 비어 있을 수 없습니다"
-                                )).build()
+                                     .message("Method argument not valid.")
+                                     .statusCode(400)
+                                     .errors(Arrays.asList(
+                                             "nickname: 비어 있을 수 없습니다",
+                                             "email: 비어 있을 수 없습니다",
+                                             "password: 비어 있을 수 없습니다",
+                                             "username: 비어 있을 수 없습니다"
+                                     )).build()
                 )
         );
     }
@@ -260,21 +260,21 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         // given
         String path = "/api/users/validate/email";
         RequestSpecification givenRequest = RestAssured.given()
-                                                    .baseUri(BASE_URL)
-                                                    .port(port)
-                                                    .basePath(path)
-                                                    .queryParam("email", givenEmailRequest);
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path)
+                                                       .queryParam("email", givenEmailRequest);
 
         // when
         Response actualResponse = givenRequest.when()
-                                          .log().all()
-                                          .get()
-                                          .andReturn();
+                                              .log().all()
+                                              .get()
+                                              .andReturn();
 
         // then
         actualResponse.then()
-                .log().all()
-                .statusCode(HttpStatus.OK.value());
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
         then(actualResponse.as(EmailValidationResponse.class))
                 .as("이메일 중복 확인: %s", description)
                 .usingRecursiveComparison()
@@ -283,14 +283,16 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     static Stream<Arguments> validateEmailProvider() {
         return Stream.of(
-                Arguments.of("성공: 중복된 이메일",
+                Arguments.of(
+                        "성공: 중복된 이메일",
                         "existing@email.com",
                         EmailValidationResponse.valueOf(true)
-                ),
-                Arguments.of("성공: 중복되지 않은 이메일",
+                ), Arguments.of(
+                        "성공: 중복되지 않은 이메일",
                         "notExisting@email.com",
                         EmailValidationResponse.valueOf(false)
-                ));
+                )
+        );
     }
 
     @ParameterizedTest
@@ -300,22 +302,22 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         // given
         String path = "/api/users/validate/email";
         RequestSpecification givenRequest = RestAssured.given()
-                                                    .baseUri(BASE_URL)
-                                                    .port(port)
-                                                    .basePath(path)
-                                                    .header("Accept-Language", "en-US")
-                                                    .queryParam("email", givenEmailRequest);
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path)
+                                                       .header("Accept-Language", "en-US")
+                                                       .queryParam("email", givenEmailRequest);
 
         // when
         Response actualResponse = givenRequest.when()
-                                          .log().all()
-                                          .get()
-                                          .andReturn();
+                                              .log().all()
+                                              .get()
+                                              .andReturn();
 
         // then
         actualResponse.then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                      .log().all()
+                      .statusCode(HttpStatus.BAD_REQUEST.value());
         then(actualResponse.as(ErrorResponse.class))
                 .as("이메일 중복 확인: %s", description)
                 .usingRecursiveComparison()
@@ -325,27 +327,31 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     static Stream<Arguments> validateRequestParamProvider() {
         return Stream.of(
-                Arguments.of("실패: 빈 문자열",
+                Arguments.of(
+                        "실패: 빈 문자열",
                         "",
                         ErrorResponse.builder()
-                                .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("Method argument not valid.")
-                                .errors(Collections.singletonList("validateEmail.email: must not be empty"))
-                                .build()),
-                Arguments.of("실패: null",
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .message("Method argument not valid.")
+                                     .errors(Collections.singletonList("validateEmail.email: must not be empty"))
+                                     .build()
+                ), Arguments.of(
+                        "실패: null",
                         null,
                         ErrorResponse.builder()
-                                .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("Method argument not valid.")
-                                .errors(Collections.singletonList("validateEmail.email: must not be empty"))
-                                .build()),
-                Arguments.of("실패: 이메일 형식",
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .message("Method argument not valid.")
+                                     .errors(Collections.singletonList("validateEmail.email: must not be empty"))
+                                     .build()
+                ), Arguments.of(
+                        "실패: 이메일 형식",
                         "email",
                         ErrorResponse.builder()
-                                .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("Method argument not valid.")
-                                .errors(Collections.singletonList("validateEmail.email: must be a well-formed email address"))
-                                .build())
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .message("Method argument not valid.")
+                                     .errors(Collections.singletonList("validateEmail.email: must be a well-formed email address"))
+                                     .build()
+                )
         );
     }
 }

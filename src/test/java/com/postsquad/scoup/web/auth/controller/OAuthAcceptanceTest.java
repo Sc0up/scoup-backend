@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.auth;
+package com.postsquad.scoup.web.auth.controller;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.user.controller.response.SocialAuthenticationResponse;
@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.stream.Stream;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -28,17 +28,16 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
     void readUserData(SocialAuthenticationResponse expectedSocialAuthenticationResponse) {
         // given
         String socialAuthenticationPath = "/api/social/authenticate/token";
-        RequestSpecification givenRequest = given()
-                .baseUri(BASE_URL)
-                .port(port)
-                .basePath(socialAuthenticationPath)
-                .header(HttpHeaders.AUTHORIZATION, "token " + accessToken);
+        RequestSpecification givenRequest = given().baseUri(BASE_URL)
+                                                   .port(port)
+                                                   .basePath(socialAuthenticationPath)
+                                                   .header(HttpHeaders.AUTHORIZATION, "token " + accessToken);
 
         // when
         Response actualResponse = givenRequest.when()
-                .log().all()
-                .get()
-                .andReturn();
+                                              .log().all()
+                                              .get()
+                                              .andReturn();
 
         // then
         assertThat(actualResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -49,12 +48,11 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
     }
 
     private static Stream<SocialAuthenticationResponse> readUserDataProvider() {
-        return Stream.of(SocialAuthenticationResponse
-                .builder()
-                .socialServiceId("68000537")
-                .username("janeljs")
-                .email("jisunlim818@gmail.com")
-                .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
-                .build());
+        return Stream.of(SocialAuthenticationResponse.builder()
+                                                     .socialServiceId("68000537")
+                                                     .username("janeljs")
+                                                     .email("jisunlim818@gmail.com")
+                                                     .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
+                                                     .build());
     }
 }

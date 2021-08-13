@@ -3,8 +3,8 @@ package com.postsquad.scoup.web.auth.request;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
 @Builder
+@Getter
 public class AccessTokenRequest {
 
     private final String clientId;

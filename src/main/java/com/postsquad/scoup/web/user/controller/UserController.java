@@ -2,21 +2,21 @@ package com.postsquad.scoup.web.user.controller;
 
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
-import com.postsquad.scoup.web.user.service.SignUpFailedException;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
+import com.postsquad.scoup.web.user.service.SignUpFailedException;
 import com.postsquad.scoup.web.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-@RestController
-@Validated
 @RequiredArgsConstructor
+@Validated
+@RestController
 public class UserController {
 
     private final UserService userService;
