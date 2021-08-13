@@ -3,7 +3,7 @@ package com.postsquad.scoup.web.user.service;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.domain.User;
-import com.postsquad.scoup.web.user.domain.UserFactory;
+import com.postsquad.scoup.web.user.mapper.UserMapper;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public long signUp(SignUpRequest signUpRequest) {
-        User user = UserFactory.from(signUpRequest);
+        User user = UserMapper.INSTANCE.signUpRequestToUser(signUpRequest);
 
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
 
@@ -25,7 +25,7 @@ public class UserService {
             throw new UserAlreadyExistsException(existingUser.get());
         }
 
-        return userRepository.save(UserFactory.from(signUpRequest)).getId();
+        return userRepository.save(user).getId();
     }
 
     public EmailValidationResponse validateEmail(String email) {

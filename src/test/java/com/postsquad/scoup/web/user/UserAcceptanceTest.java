@@ -70,7 +70,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
-                .ignoringFields(new String[]{"createdDateTime", "modifiedDateTime", "id"})
+                .ignoringFields(ignoringFieldsForResponseWithId)
                 .isEqualTo(expectedUser);
     }
 
@@ -169,7 +169,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
-                .ignoringFields("timestamp")
+                .ignoringFields(ignoringFieldsForErrorResponse)
                 .isEqualTo(expectedResponse);
     }
 
@@ -183,7 +183,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .statusCode(400)
                                 .errors(Arrays.asList("nickname: 비어 있을 수 없습니다"))
                                 .build()
@@ -195,7 +195,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .statusCode(400)
                                 .errors(Arrays.asList("username: 비어 있을 수 없습니다"))
                                 .build()
@@ -207,7 +207,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .statusCode(400)
                                 .errors(Arrays.asList("email: 비어 있을 수 없습니다"))
                                 .build()
@@ -219,7 +219,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .email("email@email")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .statusCode(400)
                                 .errors(Arrays.asList("password: 비어 있을 수 없습니다"))
                                 .build()
@@ -232,7 +232,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .build(),
                         ErrorResponse.builder()
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .statusCode(400)
                                 .errors(Arrays.asList("email: 올바른 형식의 이메일 주소여야 합니다"))
                                 .build()
@@ -241,7 +241,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                         SignUpRequest.builder()
                                 .build(),
                         ErrorResponse.builder()
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .statusCode(400)
                                 .errors(Arrays.asList(
                                         "nickname: 비어 있을 수 없습니다",
@@ -319,7 +319,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         then(actualResponse.as(ErrorResponse.class))
                 .as("이메일 중복 확인: %s", description)
                 .usingRecursiveComparison()
-                .ignoringFields("timestamp")
+                .ignoringFields(ignoringFieldsForErrorResponse)
                 .isEqualTo(expectedResponse);
     }
 
@@ -329,21 +329,21 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                         "",
                         ErrorResponse.builder()
                                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .errors(Collections.singletonList("validateEmail.email: must not be empty"))
                                 .build()),
                 Arguments.of("실패: null",
                         null,
                         ErrorResponse.builder()
                                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .errors(Collections.singletonList("validateEmail.email: must not be empty"))
                                 .build()),
                 Arguments.of("실패: 이메일 형식",
                         "email",
                         ErrorResponse.builder()
                                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .message("Bad Request")
+                                .message("Method argument not valid.")
                                 .errors(Collections.singletonList("validateEmail.email: must be a well-formed email address"))
                                 .build())
         );
