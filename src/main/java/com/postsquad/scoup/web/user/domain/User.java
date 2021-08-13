@@ -11,13 +11,13 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
+@Getter
 @Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = {"nickname"}, name = "UK_USER_NICKNAME"),
         @UniqueConstraint(columnNames = {"email"}, name = "UK_USER_EMAIL"),
 })
+@Entity
 public class User extends BaseEntity {
 
     @Column(length = 10, nullable = false)

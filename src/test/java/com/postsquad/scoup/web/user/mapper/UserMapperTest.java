@@ -20,7 +20,7 @@ class UserMapperTest {
 
         //then
         then(actualUser).usingRecursiveComparison()
-                .isEqualTo(expectedUser);
+                        .isEqualTo(expectedUser);
     }
 
     @SuppressWarnings("unused")
@@ -28,17 +28,17 @@ class UserMapperTest {
         return Stream.of(
                 Arguments.arguments(
                         SignUpRequest.builder()
-                                .nickname("nickname")
-                                .username("username")
-                                .email("email")
-                                .password("password")
-                                .build(),
+                                     .nickname("nickname")
+                                     .username("username")
+                                     .email("email")
+                                     .password("password")
+                                     .build(),
                         User.builder()
-                                .nickname("nickname")
-                                .username("username")
-                                .email("email")
-                                .password("password")
-                                .build()
+                            .nickname("nickname")
+                            .username("username")
+                            .email("email")
+                            .password("password")
+                            .build()
                 )
         );
     }
