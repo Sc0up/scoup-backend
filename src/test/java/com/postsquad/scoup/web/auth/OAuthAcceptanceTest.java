@@ -29,7 +29,7 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
     @MethodSource("readUserDataProvider")
     void readUserData(String description, SocialAuthenticationResponse expectedSocialAuthenticationResponse) {
         // given
-        String socialAuthenticationPath = "/api/social/authenticate/token";
+        String socialAuthenticationPath = "/api/oauth/user-data/token";
         RequestSpecification givenRequest = given()
                 .baseUri(BASE_URL)
                 .port(port)
@@ -70,7 +70,7 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("Github 요청 validation")
     void gitHubRequestValidation(String description, String invalidToken, ErrorResponse expectedResponse) {
         // given
-        String socialAuthenticationPath = "/api/social/authenticate/token";
+        String socialAuthenticationPath = "/api/oauth/user-data/token";
         RequestSpecification givenRequest = given()
                 .baseUri(BASE_URL)
                 .port(port)
