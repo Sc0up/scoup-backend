@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+**/src/**/generated/
 
 ### STS ###
 .apt_generated
@@ -35,3 +36,4 @@ out/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/auth.key.properties

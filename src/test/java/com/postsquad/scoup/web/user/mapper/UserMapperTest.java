@@ -1,6 +1,7 @@
-package com.postsquad.scoup.web.user.domain;
+package com.postsquad.scoup.web.user.mapper;
 
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
+import com.postsquad.scoup.web.user.domain.User;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -9,21 +10,21 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-class UserFactoryTest {
+class UserMapperTest {
 
     @ParameterizedTest
-    @MethodSource("fromSignUpRequestProvider")
-    void fromSignUpRequest(SignUpRequest givenSignUpRequest, User expectedUser) {
+    @MethodSource("signUpRequestToUserProvider")
+    void signUpRequestToUser(SignUpRequest givenSignUpRequest, User expectedUser) {
         //when
-        User actualUser = UserFactory.from(givenSignUpRequest);
+        User actualUser = UserMapper.INSTANCE.signUpRequestToUser(givenSignUpRequest);
 
         //then
         then(actualUser).usingRecursiveComparison()
                 .isEqualTo(expectedUser);
-
     }
 
-    static Stream<Arguments> fromSignUpRequestProvider() {
+    @SuppressWarnings("unused")
+    static Stream<Arguments> signUpRequestToUserProvider() {
         return Stream.of(
                 Arguments.arguments(
                         SignUpRequest.builder()
