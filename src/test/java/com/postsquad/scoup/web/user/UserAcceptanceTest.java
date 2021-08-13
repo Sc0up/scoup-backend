@@ -301,7 +301,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("Request parameter validation")
     void validateRequestParam(String description, String givenEmailRequest, ErrorResponse expectedResponse) {
         // given
-        String path = "/api/validate/email";
+        String path = "/api/users/validate/email";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
@@ -395,6 +395,58 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                         "성공: 중복되지 않은 닉네임",
                         "notExistingNickname",
                         NicknameValidationResponse.valueOf(false)
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("validateNicknameRequestParamProvider")
+    @DisplayName("nickname as RequestParam validation")
+    void validateNicknameAsRequestParam(String description, String givenNicknameValidationRequest, ErrorResponse expectedResponse) {
+        // given
+        String path = "/api/users/validate/nickname";
+        RequestSpecification givenRequest = RestAssured.given()
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path)
+                                                       .queryParam("nickname", givenNicknameValidationRequest);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .log().all()
+                                              .get()
+                                              .andReturn();
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.BAD_REQUEST.value());
+        then(actualResponse.as(ErrorResponse.class))
+                .as("닉네임 중복 확인: ", description)
+                .usingRecursiveComparison()
+                .ignoringFields(ignoringFieldsForErrorResponse)
+                .isEqualTo(expectedResponse);
+    }
+
+    static Stream<Arguments> validateNicknameRequestParamProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "실패: 빈 문자열",
+                        "",
+                        ErrorResponse.builder()
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .message("Method argument not valid.")
+                                     .errors(Collections.singletonList("validateNickname.nickname: must not be empty"))
+                                     .build()
+                ),
+                Arguments.of(
+                        "실패: null",
+                        null,
+                        ErrorResponse.builder()
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .message("Method argument not valid.")
+                                     .errors(Collections.singletonList("validateNickname.nickname: must not be empty"))
+                                     .build()
                 )
         );
     }
