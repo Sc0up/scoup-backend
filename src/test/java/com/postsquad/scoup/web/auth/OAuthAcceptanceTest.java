@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.auth.controller;
+package com.postsquad.scoup.web.auth;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
