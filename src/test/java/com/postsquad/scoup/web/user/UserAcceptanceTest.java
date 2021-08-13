@@ -85,7 +85,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                      .password("password")
                                      .build(),
                         User.builder()
-                            .nickname("nickname")
+                            .nickname("nickname2")
                             .username("username")
                             .email("email@email")
                             .password("password")
