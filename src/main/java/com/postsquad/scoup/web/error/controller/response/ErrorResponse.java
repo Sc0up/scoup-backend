@@ -6,9 +6,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 
+import javax.validation.ConstraintViolation;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
@@ -35,23 +37,33 @@ public class ErrorResponse {
 
     public static ErrorResponse of(HttpStatus status, String message, List<FieldError> errors) {
         return ErrorResponse.builder()
-                .statusCode(status.value())
-                .message(message)
-                .errors(errors.stream()
-                        .map(ErrorResponse::joiningFieldErrorAndMessage)
-                        .collect(Collectors.toList()))
-                .build();
+                            .statusCode(status.value())
+                            .message(message)
+                            .errors(errors.stream()
+                                          .map(ErrorResponse::joiningFieldErrorAndMessage)
+                                          .collect(Collectors.toList()))
+                            .build();
     }
 
     private static String joiningFieldErrorAndMessage(FieldError fieldError) {
         return fieldError.getField() + ": " + fieldError.getDefaultMessage();
     }
 
-    public static ErrorResponse of(HttpStatus status, String message, String... errors) {
+    public static ErrorResponse of(HttpStatus status, String message, Set<ConstraintViolation<?>> errors) {
         return ErrorResponse.builder()
                             .statusCode(status.value())
                             .message(message)
-                            .errors(Arrays.asList(errors))
+                            .errors(errors.stream()
+                                          .map(constraintViolation -> constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage())
+                                          .collect(Collectors.toList()))
                             .build();
+    }
+
+    public static ErrorResponse of(HttpStatus status, String message, String... errors) {
+        return ErrorResponse.builder()
+                .statusCode(status.value())
+                .message(message)
+                .errors(Arrays.asList(errors))
+                .build();
     }
 }
