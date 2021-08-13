@@ -388,7 +388,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         return Stream.of(
                 Arguments.of(
                         "성공: 중복된 닉네임",
-                        "nickname",
+                        "existing",
                         NicknameValidationResponse.valueOf(true)
                 ),
                 Arguments.of(
