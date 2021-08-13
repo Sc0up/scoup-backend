@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.user.controller;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
+import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
 import com.postsquad.scoup.web.user.service.SignUpFailedException;
 import com.postsquad.scoup.web.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotEmpty;
 
 @RequiredArgsConstructor
 @Validated
+@RequestMapping("/users")
 @RestController
 public class UserController {
 
@@ -37,5 +39,11 @@ public class UserController {
     @GetMapping("/validate/email")
     public EmailValidationResponse validateEmail(@RequestParam @NotEmpty @Email String email) {
         return userService.validateEmail(email);
+    }
+
+    @GetMapping("/validate/nickname")
+    public NicknameValidationResponse validateNickname(@RequestParam @NotEmpty String nickname) {
+        // dummy
+        return NicknameValidationResponse.valueOf(true);
     }
 }

@@ -4,6 +4,7 @@ import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
+import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
 import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import io.restassured.RestAssured;
@@ -351,6 +352,49 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                      .message("Method argument not valid.")
                                      .errors(Collections.singletonList("validateEmail.email: must be a well-formed email address"))
                                      .build()
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("validateNicknameProvider")
+    @DisplayName("이미 가입된 닉네임을 입력할 경우 닉네임이 중복되었다는 메시지가 반환된다.")
+    void validateNickname(String description, String givenNicknameValidationRequest, NicknameValidationResponse expectedNicknameValidationResponse) {
+        // given
+        String path = "/api/users/validate/nickname";
+        RequestSpecification givenRequest = RestAssured.given()
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path)
+                                                       .queryParam("nickname", givenNicknameValidationRequest);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .log().all()
+                                              .get()
+                                              .andReturn();
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
+        then(actualResponse.as(NicknameValidationResponse.class))
+                .as("닉네임 중복 확인: %s", description)
+                .usingRecursiveComparison()
+                .isEqualTo(expectedNicknameValidationResponse);
+    }
+
+    static Stream<Arguments> validateNicknameProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "성공: 중복된 닉네임",
+                        "nickname",
+                        NicknameValidationResponse.valueOf(true)
+                ),
+                Arguments.of(
+                        "성공: 중복되지 않은 닉네임",
+                        "notExistingNickname",
+                        NicknameValidationResponse.valueOf(false)
                 )
         );
     }
