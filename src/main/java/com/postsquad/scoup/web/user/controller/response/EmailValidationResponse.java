@@ -1,13 +1,12 @@
 package com.postsquad.scoup.web.user.controller.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class EmailValidationResponse {
 
     private boolean existingEmail;

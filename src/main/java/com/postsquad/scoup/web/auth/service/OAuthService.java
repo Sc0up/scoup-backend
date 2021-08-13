@@ -7,8 +7,9 @@ import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResp
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
+
 @RequiredArgsConstructor
+@Service
 public class OAuthService {
 
     private final OAuth oauth;
