@@ -3,9 +3,10 @@ package com.postsquad.scoup.web.auth;
 import com.postsquad.scoup.web.auth.exception.AccessTokenNotFoundException;
 import com.postsquad.scoup.web.auth.exception.GitHubUserNotFoundException;
 import com.postsquad.scoup.web.auth.exception.GitHubRequestNotValidException;
-import com.postsquad.scoup.web.auth.controller.request.AccessTokenRequest;
-import com.postsquad.scoup.web.auth.controller.response.AccessTokenResponse;
-import com.postsquad.scoup.web.auth.controller.response.OAuthUserResponse;
+import com.postsquad.scoup.web.auth.exception.OAuthException;
+import com.postsquad.scoup.web.auth.request.AccessTokenRequest;
+import com.postsquad.scoup.web.auth.response.AccessTokenResponse;
+import com.postsquad.scoup.web.auth.response.OAuthUserResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,34 +46,34 @@ public class GitHubOAuth implements OAuth {
     public AccessTokenResponse getToken(String code) {
         logger.debug("Authorization code: {}", code);
         AccessTokenRequest accessTokenRequest = AccessTokenRequest.builder()
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .code(code)
-                .build();
+                                                                  .clientId(clientId)
+                                                                  .clientSecret(clientSecret)
+                                                                  .code(code)
+                                                                  .build();
 
         return webClient.post()
-                .uri(accessTokenUri)
-                .accept(MediaType.APPLICATION_JSON)
-                .bodyValue(accessTokenRequest)
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(GitHubRequestNotValidException::new))
-                .bodyToMono(AccessTokenResponse.class)
-                .blockOptional()
-                .orElseThrow(AccessTokenNotFoundException::new);
+                        .uri(accessTokenUri)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .bodyValue(accessTokenRequest)
+                        .retrieve()
+                        .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(() -> new OAuthException(new GitHubRequestNotValidException())))
+                        .bodyToMono(AccessTokenResponse.class)
+                        .blockOptional()
+                        .orElseThrow(() -> new OAuthException(new AccessTokenNotFoundException()));
     }
 
     @Override
     public OAuthUserResponse getOAuthUserInfo(String accessToken) {
         logger.debug("Access token: {}", accessToken);
         return webClient.get()
-                .uri(userUri)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, TOKEN + " " + accessToken)
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(GitHubRequestNotValidException::new))
-                .bodyToMono(OAuthUserResponse.class)
-                .blockOptional()
-                .orElseThrow(GitHubUserNotFoundException::new);
+                        .uri(userUri)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, TOKEN + " " + accessToken)
+                        .retrieve()
+                        .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(() -> new OAuthException(new GitHubRequestNotValidException())))
+                        .bodyToMono(OAuthUserResponse.class)
+                        .blockOptional()
+                        .orElseThrow(() -> new OAuthException(new GitHubUserNotFoundException()));
     }
 
     @Override

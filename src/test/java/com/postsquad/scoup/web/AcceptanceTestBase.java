@@ -20,6 +20,12 @@ public class AcceptanceTestBase {
     @Autowired
     protected ObjectMapper objectMapper;
 
+    protected String[] ignoringFieldsForResponseWithId = new String[]{"createdDateTime", "modifiedDateTime", "id"};
+
+    protected String[] ignoringFieldsForResponse = new String[]{"createdDateTime", "modifiedDateTime"};
+
+    protected String[] ignoringFieldsForErrorResponse = new String[]{"timestamp"};
+
     {
         setUpRestAssured();
     }
