@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.auth;
+package com.postsquad.scoup.web.auth.service;
 
 import com.postsquad.scoup.web.auth.controller.response.AccessTokenResponse;
 import com.postsquad.scoup.web.auth.controller.response.OAuthUserResponse;

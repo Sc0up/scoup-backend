@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.auth;
+package com.postsquad.scoup.web.auth.service;
 
 import com.postsquad.scoup.web.auth.controller.request.AccessTokenRequest;
 import com.postsquad.scoup.web.auth.controller.response.AccessTokenResponse;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-@PropertySource(value = "classpath:auth.github.properties")
+@PropertySource(value = "classpath:auth.properties")
 @Service
 public class GitHubOAuth implements OAuth {
 
