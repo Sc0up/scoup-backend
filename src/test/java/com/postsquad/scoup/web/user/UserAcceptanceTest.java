@@ -359,14 +359,14 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ParameterizedTest
     @MethodSource("validateNicknameProvider")
     @DisplayName("이미 가입된 닉네임을 입력할 경우 닉네임이 중복되었다는 메시지가 반환된다.")
-    void validateNickname(String description, String givenNicknameValidationRequest, NicknameValidationResponse expectedNicknameValidationResponse) {
+    void validateNickname(String description, String givenNickname, NicknameValidationResponse expectedNicknameValidationResponse) {
         // given
         String path = "/api/users/validate/nickname";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
-                                                       .queryParam("nickname", givenNicknameValidationRequest);
+                                                       .queryParam("nickname", givenNickname);
 
         // when
         Response actualResponse = givenRequest.when()
@@ -402,14 +402,14 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ParameterizedTest
     @MethodSource("validateNicknameRequestParamProvider")
     @DisplayName("nickname as RequestParam validation")
-    void validateNicknameAsRequestParam(String description, String givenNicknameValidationRequest, ErrorResponse expectedResponse) {
+    void validateNicknameAsRequestParam(String description, String invalidNickname, ErrorResponse expectedResponse) {
         // given
         String path = "/api/users/validate/nickname";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
-                                                       .queryParam("nickname", givenNicknameValidationRequest);
+                                                       .queryParam("nickname", invalidNickname);
 
         // when
         Response actualResponse = givenRequest.when()
