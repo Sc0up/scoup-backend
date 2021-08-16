@@ -25,6 +25,10 @@ public class UserService {
             throw new UserAlreadyExistsException(existingUser.get());
         }
 
+        if (userRepository.existsByNickname(user.getNickname())) {
+            throw new NicknameAlreadyExistsException(user);
+        }
+
         return userRepository.save(user).getId();
     }
 

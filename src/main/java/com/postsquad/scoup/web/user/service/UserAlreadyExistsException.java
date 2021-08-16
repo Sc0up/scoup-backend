@@ -7,6 +7,10 @@ public class UserAlreadyExistsException extends SignUpFailedException {
         super("User already exists");
     }
 
+    public UserAlreadyExistsException(String message) {
+        super(message);
+    }
+
     public UserAlreadyExistsException(User user) {
         super("User(" + user.getEmail() + ") already exists");
     }
