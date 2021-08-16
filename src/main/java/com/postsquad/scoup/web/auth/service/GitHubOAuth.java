@@ -22,8 +22,6 @@ import reactor.core.publisher.Mono;
 @Service
 public class GitHubOAuth implements OAuth {
 
-    private final Logger logger = LoggerFactory.getLogger(GitHubOAuth.class);
-    private static final String TOKEN = "token";
     private final WebClient webClient;
     private final String accessTokenUri;
     private final String userUri;
@@ -46,7 +44,6 @@ public class GitHubOAuth implements OAuth {
 
     @Override
     public AccessTokenResponse getToken(String code) {
-        logger.debug("Authorization code: {}", code);
         AccessTokenRequest accessTokenRequest = AccessTokenRequest.builder()
                                                                   .clientId(clientId)
                                                                   .clientSecret(clientSecret)
@@ -66,7 +63,6 @@ public class GitHubOAuth implements OAuth {
 
     @Override
     public OAuthUserResponse getOAuthUserInfo(String accessToken) {
-        logger.debug("Access token: {}", accessToken);
         return webClient.get()
                         .uri(userUri)
                         .accept(MediaType.APPLICATION_JSON)

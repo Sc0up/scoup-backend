@@ -5,6 +5,8 @@ import com.postsquad.scoup.web.auth.controller.response.OAuthUserResponse;
 
 public interface OAuth {
 
+    String TOKEN = "token";
+
     AccessTokenResponse getToken(String code);
 
     OAuthUserResponse getOAuthUserInfo(String token);
