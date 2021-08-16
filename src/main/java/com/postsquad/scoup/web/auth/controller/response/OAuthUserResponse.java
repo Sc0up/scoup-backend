@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.auth.response;
+package com.postsquad.scoup.web.auth.controller.response;
 
 import lombok.Getter;
 

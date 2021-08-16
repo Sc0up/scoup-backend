@@ -1,25 +1,26 @@
 package com.postsquad.scoup.web.auth.controller;
 
 import com.postsquad.scoup.web.auth.exception.OAuthException;
-import com.postsquad.scoup.web.auth.service.OAuthService;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
-import com.postsquad.scoup.web.user.controller.response.SocialAuthenticationResponse;
+import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
+import com.postsquad.scoup.web.auth.service.OAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
+@RequestMapping("/oauth")
 @RestController
 public class OAuthController {
 
     private final OAuthService oAuthService;
 
-    @GetMapping("/social/authenticate")
+    @GetMapping("/user-data")
     public SocialAuthenticationResponse readOAuthUserData(@RequestParam String code) {
         return oAuthService.readOAuthUserData(code);
     }
 
-    @GetMapping("/social/authenticate/token")
+    @GetMapping("/user-data/token")
     public SocialAuthenticationResponse readOAuthUserDataWithToken(@RequestHeader("Authorization") String header) {
         return oAuthService.readOAuthUserDataWithToken(header);
     }
