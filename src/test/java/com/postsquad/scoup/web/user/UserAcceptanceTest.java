@@ -99,6 +99,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다.")
     void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequest, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
         // given
+        // TODO: DB에 들어있는 사용자 활용하도록 수정
         String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
