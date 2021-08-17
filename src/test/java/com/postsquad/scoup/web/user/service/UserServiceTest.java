@@ -47,8 +47,7 @@ public class UserServiceTest {
                 .willReturn(true);
 
         thenThrownBy(() -> userService.signUp(SignUpRequest.builder().email(existingEmail).build()))
-                // TODO: EmailAlreadyExistsException로 변경
-                .isInstanceOf(UserAlreadyExistsException.class);
+                .isInstanceOf(EmailAlreadyExistsException.class);
     }
 
     @Test

@@ -19,7 +19,7 @@ public class UserService {
         User user = UserMapper.INSTANCE.signUpRequestToUser(signUpRequest);
 
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new UserAlreadyExistsException(user);
+            throw new EmailAlreadyExistsException(user);
         }
 
         if (userRepository.existsByNickname(user.getNickname())) {
