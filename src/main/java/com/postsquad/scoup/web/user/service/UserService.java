@@ -23,7 +23,12 @@ public class UserService {
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
 
         if (existingUser.isPresent()) {
+            // FIXME: 아래처럼 수정할 수 있을 듯
             throw new UserAlreadyExistsException(existingUser.get());
+        }
+
+        if (userRepository.existsByNickname(user.getNickname())) {
+            throw new NicknameAlreadyExistsException(user);
         }
 
         return userRepository.save(user).getId();

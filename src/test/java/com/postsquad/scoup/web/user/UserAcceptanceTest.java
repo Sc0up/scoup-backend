@@ -98,8 +98,9 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ParameterizedTest
     @MethodSource("signUpWhenUserAlreadyExistsProvider")
     @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다.")
-    void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequest, ErrorResponse expectedResponse) {
+    void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequest, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
         // given
+        // TODO: DB에 들어있는 사용자 활용하도록 수정
         String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
@@ -111,6 +112,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .body(givenSignUpRequestAlreadyExists)
                                               .log().all(true)
                                               .post();
 
@@ -134,10 +136,35 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                      .email("email@email")
                                      .password("password")
                                      .build(),
+                        SignUpRequest.builder()
+                                     .username("username")
+                                     .nickname("nickname")
+                                     .email("email@email")
+                                     .password("password")
+                                     .build(),
                         ErrorResponse.builder()
                                      .message("Sign up failed")
                                      .statusCode(400)
                                      .errors(Arrays.asList("User(email@email) already exists"))
+                                     .build()
+                ), Arguments.of(
+                        "실패 - 이미 가입한 닉네임(nickname)",
+                        SignUpRequest.builder()
+                                     .username("username")
+                                     .nickname("nickname")
+                                     .email("email@email")
+                                     .password("password")
+                                     .build(),
+                        SignUpRequest.builder()
+                                     .username("username")
+                                     .nickname("nickname")
+                                     .email("email2@email")
+                                     .password("password")
+                                     .build(),
+                        ErrorResponse.builder()
+                                     .message("Sign up failed")
+                                     .statusCode(400)
+                                     .errors(Arrays.asList("User nickname 'nickname' already exists"))
                                      .build()
                 )
         );
@@ -409,6 +436,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
+                                                       .header("Accept-Language", "en-US")
                                                        .queryParam("nickname", invalidNickname);
 
         // when
