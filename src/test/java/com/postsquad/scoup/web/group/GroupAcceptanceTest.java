@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web.group;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.group.repository.GroupRepository;
@@ -15,6 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
+import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -65,6 +67,53 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                              .name("name")
                              .description("description")
                              .build()
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("validateGroupCreationRequestProvider")
+    @DisplayName("GroupCreationRequest validation")
+    void validateGroupCreationRequest(String description, GroupCreationRequest givenGroupCreationRequest, ErrorResponse expectedResponse) {
+        // given
+        String path = "/api/groups";
+        RequestSpecification givenRequest = RestAssured.given()
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path)
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Accept-Language", "en-US")
+                                                       .body(givenGroupCreationRequest);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .log().all()
+                                              .post();
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.BAD_REQUEST.value());
+        then(actualResponse.as(ErrorResponse.class))
+                .as(description)
+                .usingRecursiveComparison()
+                .ignoringFields(ignoringFieldsForErrorResponse)
+                .isEqualTo(expectedResponse);
+    }
+
+    static Stream<Arguments> validateGroupCreationRequestProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "실패",
+                        GroupCreationRequest.builder()
+                                            .name("")
+                                            .description("")
+                                            .build(),
+                        ErrorResponse.builder()
+                                     .message("Method argument not valid.")
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .errors(Collections.singletonList("name: must not be empty"))
+                                     .build()
                 )
         );
     }

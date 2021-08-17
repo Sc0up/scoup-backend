@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RequestMapping("/groups")
 @RestController
@@ -15,7 +17,7 @@ public class GroupController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long create(@RequestBody GroupCreationRequest groupCreationRequest) {
+    public Long create(@RequestBody @Valid GroupCreationRequest groupCreationRequest) {
         return groupService.create(groupCreationRequest);
     }
 }
