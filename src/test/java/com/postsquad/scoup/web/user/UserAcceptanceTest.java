@@ -136,7 +136,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                         ErrorResponse.builder()
                                      .message("Sign up failed")
                                      .statusCode(400)
-                                     .errors(Arrays.asList("User(existing@email.com) already exists"))
+                                     .errors(Arrays.asList("User email 'existing@email.com' already exists"))
                                      .build()
                 ), Arguments.of(
                         "실패 - 이미 가입한 닉네임(nickname)",

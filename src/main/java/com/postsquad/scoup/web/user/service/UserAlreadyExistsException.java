@@ -13,6 +13,6 @@ public class UserAlreadyExistsException extends SignUpFailedException {
     }
 
     public UserAlreadyExistsException(User user) {
-        super("User(" + user.getEmail() + ") already exists");
+        super("User email '" + user.getEmail() + "' already exists");
     }
 }
