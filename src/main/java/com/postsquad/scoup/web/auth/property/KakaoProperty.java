@@ -7,9 +7,10 @@ import org.springframework.stereotype.Component;
 public class KakaoProperty extends OAuthProperty {
 
     public KakaoProperty(@Value("${kakao.access.token.uri}") String accessTokenUri,
+                         @Value("${kakao.web.redirect.uri}") String redirectUri,
                          @Value("${kakao.user.uri}") String userUri,
                          @Value("${kakao.web.client.id}") String clientId,
                          @Value("${kakao.web.client.secret}") String clientSecret) {
-        super(accessTokenUri, userUri, clientId, clientSecret);
+        super(accessTokenUri, redirectUri, userUri, clientId, clientSecret);
     }
 }
