@@ -16,10 +16,10 @@ import javax.persistence.*;
 @Entity
 public class Group extends BaseEntity {
 
-    @Column
+    @Column(length = 20, nullable = false)
     private String name;
 
-    @Column
+    @Column(length = 200)
     private String description;
 
     protected Group(String name, String description) {
