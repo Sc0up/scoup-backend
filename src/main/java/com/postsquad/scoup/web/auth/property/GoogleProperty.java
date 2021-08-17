@@ -7,9 +7,10 @@ import org.springframework.stereotype.Component;
 public class GoogleProperty extends OAuthProperty {
 
     public GoogleProperty(@Value("${google.access.token.uri}") String accessTokenUri,
+                          @Value("${google.web.redirect.uri}") String redirectUri,
                           @Value("${google.user.uri}") String userUri,
                           @Value("${google.web.client.id}") String clientId,
                           @Value("${google.web.client.secret}") String clientSecret) {
-        super(accessTokenUri, userUri, clientId, clientSecret);
+        super(accessTokenUri, redirectUri, userUri, clientId, clientSecret);
     }
 }
