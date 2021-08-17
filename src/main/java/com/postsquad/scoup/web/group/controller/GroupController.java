@@ -1,21 +1,21 @@
 package com.postsquad.scoup.web.group.controller;
 
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
-import com.postsquad.scoup.web.user.domain.User;
+import com.postsquad.scoup.web.group.service.GroupService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/groups")
 @RestController
 public class GroupController {
 
-    @GetMapping
+    private final GroupService groupService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Long create(@RequestBody GroupCreationRequest groupCreationRequest) {
-        // dummy
-        return 1L;
+        return groupService.create(groupCreationRequest);
     }
 }
