@@ -14,5 +14,7 @@ public class AccessTokenRequest {
 
     private final String clientSecret;
 
+    private final String redirectUri;
+
     private final String code;
 }
