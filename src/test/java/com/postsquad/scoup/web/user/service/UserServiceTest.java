@@ -43,8 +43,8 @@ public class UserServiceTest {
     @Test
     void signUpThrowsEmailAlreadyExistsException() {
         String existingEmail = "existing@email.com";
-        given(userRepository.findByEmail(existingEmail))
-                .willReturn(Optional.of(User.builder().email(existingEmail).build()));
+        given(userRepository.existsByEmail(existingEmail))
+                .willReturn(true);
 
         thenThrownBy(() -> userService.signUp(SignUpRequest.builder().email(existingEmail).build()))
                 // TODO: EmailAlreadyExistsException로 변경
