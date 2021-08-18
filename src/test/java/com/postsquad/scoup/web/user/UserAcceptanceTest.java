@@ -284,14 +284,14 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ParameterizedTest
     @MethodSource("validateEmailProvider")
     @DisplayName("이미 가입된 이메일을 입력할 경우 이메일이 중복되었다는 메시지가 반환된다.")
-    void validateEmail(String description, String givenEmailRequest, EmailValidationResponse expectedEmailResponse) {
+    void validateEmail(String description, String givenEmail, EmailValidationResponse expectedEmailValidationResponse) {
         // given
         String path = "/api/users/validate/email";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
-                                                       .queryParam("email", givenEmailRequest);
+                                                       .queryParam("email", givenEmail);
 
         // when
         Response actualResponse = givenRequest.when()
@@ -306,7 +306,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         then(actualResponse.as(EmailValidationResponse.class))
                 .as("이메일 중복 확인: %s", description)
                 .usingRecursiveComparison()
-                .isEqualTo(expectedEmailResponse);
+                .isEqualTo(expectedEmailValidationResponse);
     }
 
     static Stream<Arguments> validateEmailProvider() {
@@ -324,9 +324,9 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     }
 
     @ParameterizedTest
-    @MethodSource("validateRequestParamProvider")
-    @DisplayName("Request parameter validation")
-    void validateRequestParam(String description, String givenEmailRequest, ErrorResponse expectedResponse) {
+    @MethodSource("validateEmailRequestParamProvider")
+    @DisplayName("email as RequestParam validation")
+    void validateEmailAsRequestParam(String description, String invalidEmail, ErrorResponse expectedResponse) {
         // given
         String path = "/api/users/validate/email";
         RequestSpecification givenRequest = RestAssured.given()
@@ -334,7 +334,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                                        .port(port)
                                                        .basePath(path)
                                                        .header("Accept-Language", "en-US")
-                                                       .queryParam("email", givenEmailRequest);
+                                                       .queryParam("email", invalidEmail);
 
         // when
         Response actualResponse = givenRequest.when()
@@ -353,7 +353,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .isEqualTo(expectedResponse);
     }
 
-    static Stream<Arguments> validateRequestParamProvider() {
+    static Stream<Arguments> validateEmailRequestParamProvider() {
         return Stream.of(
                 Arguments.of(
                         "실패: 빈 문자열",
