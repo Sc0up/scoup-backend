@@ -98,21 +98,18 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ParameterizedTest
     @MethodSource("signUpWhenUserAlreadyExistsProvider")
     @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다.")
-    void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequest, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
+    void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
         // given
-        // TODO: DB에 들어있는 사용자 활용하도록 수정
         String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
                                                        .contentType(ContentType.JSON)
-                                                       .body(givenSignUpRequest);
-        givenRequest.post();
+                                                       .body(givenSignUpRequestAlreadyExists);
 
         // when
         Response actualResponse = givenRequest.when()
-                                              .body(givenSignUpRequestAlreadyExists)
                                               .log().all(true)
                                               .post();
 
@@ -133,38 +130,26 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                         SignUpRequest.builder()
                                      .username("username")
                                      .nickname("nickname")
-                                     .email("email@email")
-                                     .password("password")
-                                     .build(),
-                        SignUpRequest.builder()
-                                     .username("username")
-                                     .nickname("nickname")
-                                     .email("email@email")
+                                     .email("existing@email.com")
                                      .password("password")
                                      .build(),
                         ErrorResponse.builder()
                                      .message("Sign up failed")
                                      .statusCode(400)
-                                     .errors(Arrays.asList("User(email@email) already exists"))
+                                     .errors(Arrays.asList("User email 'existing@email.com' already exists"))
                                      .build()
                 ), Arguments.of(
                         "실패 - 이미 가입한 닉네임(nickname)",
                         SignUpRequest.builder()
                                      .username("username")
-                                     .nickname("nickname")
-                                     .email("email@email")
-                                     .password("password")
-                                     .build(),
-                        SignUpRequest.builder()
-                                     .username("username")
-                                     .nickname("nickname")
+                                     .nickname("existing")
                                      .email("email2@email")
                                      .password("password")
                                      .build(),
                         ErrorResponse.builder()
                                      .message("Sign up failed")
                                      .statusCode(400)
-                                     .errors(Arrays.asList("User nickname 'nickname' already exists"))
+                                     .errors(Arrays.asList("User nickname 'existing' already exists"))
                                      .build()
                 )
         );

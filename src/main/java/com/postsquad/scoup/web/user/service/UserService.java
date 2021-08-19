@@ -9,8 +9,6 @@ import com.postsquad.scoup.web.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -20,11 +18,8 @@ public class UserService {
     public long signUp(SignUpRequest signUpRequest) {
         User user = UserMapper.INSTANCE.signUpRequestToUser(signUpRequest);
 
-        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
-
-        if (existingUser.isPresent()) {
-            // FIXME: 아래처럼 수정할 수 있을 듯
-            throw new UserAlreadyExistsException(existingUser.get());
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new EmailAlreadyExistsException(user);
         }
 
         if (userRepository.existsByNickname(user.getNickname())) {

@@ -1,9 +1,11 @@
 package com.postsquad.scoup.web.user.service;
 
+import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -15,6 +17,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.assertj.core.api.BDDAssertions.thenThrownBy;
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest(classes = UserService.class)
 public class UserServiceTest {
@@ -34,6 +38,26 @@ public class UserServiceTest {
 
         Mockito.when(userRepository.findByEmail(TEST_USER.getEmail()))
                .thenReturn(Optional.of(TEST_USER));
+    }
+
+    @Test
+    void signUpThrowsEmailAlreadyExistsException() {
+        String existingEmail = "existing@email.com";
+        given(userRepository.existsByEmail(existingEmail))
+                .willReturn(true);
+
+        thenThrownBy(() -> userService.signUp(SignUpRequest.builder().email(existingEmail).build()))
+                .isInstanceOf(EmailAlreadyExistsException.class);
+    }
+
+    @Test
+    void signUpThrowsNicknameAlreadyExistsException() {
+        String existingNickname = "existing";
+        given(userRepository.existsByNickname(existingNickname))
+                .willReturn(true);
+
+        thenThrownBy(() -> userService.signUp(SignUpRequest.builder().nickname(existingNickname).build()))
+                .isInstanceOf(NicknameAlreadyExistsException.class);
     }
 
     @ParameterizedTest
