@@ -4,8 +4,8 @@ import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class GroupCreationRequest extends GroupBaseRequest {
 
