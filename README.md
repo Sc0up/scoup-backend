@@ -12,9 +12,9 @@ SCOUP : Schedule For Group
 
 ## 공통 기획
 
-- 회의록 https://goldenrod-string-7f8.notion.site/f32b24e0bfe342f5903a5205c5cede61
-- 시나리오 https://docs.google.com/spreadsheets/d/1Ybww-QdL-P2zxyGYcWt0KAMxFF0z99ZPsv7ghPUSmM0/edit#gid=0
-- 스토리보드(진행 중) https://docs.google.com/presentation/d/1yZeXxSYeO6yuCtz6WqnfKAGjhf9Notrq7G2qvNhI9dA/edit#slide=id.p
+- [회의록](https://goldenrod-string-7f8.notion.site/f32b24e0bfe342f5903a5205c5cede61)
+- [시나리오](https://docs.google.com/spreadsheets/d/1Ybww-QdL-P2zxyGYcWt0KAMxFF0z99ZPsv7ghPUSmM0/edit#gid=0)
+- [스토리보드(진행 중)](https://docs.google.com/presentation/d/1yZeXxSYeO6yuCtz6WqnfKAGjhf9Notrq7G2qvNhI9dA/edit#slide=id.p)
 
 <!-- 추후 공통 레포로 이동 고려 -->
 
@@ -48,10 +48,10 @@ SCOUP : Schedule For Group
 
 ## 관리 중인 문서
 
-- API 유스케이스 https://docs.google.com/spreadsheets/d/1YqVxbVj4CtCC0iNIOA7JNs6kpJ4xCPY21wKqrXlSoAs/edit#gid=1572791990
+- [API 유스케이스](https://docs.google.com/spreadsheets/d/1YqVxbVj4CtCC0iNIOA7JNs6kpJ4xCPY21wKqrXlSoAs/edit#gid=1572791990)
 
-- 개발 컨벤션 https://goldenrod-string-7f8.notion.site/Convention-1a98aa39c64b4a99a06e8fe217718a56
+- [개발 컨벤션](https://goldenrod-string-7f8.notion.site/Convention-1a98aa39c64b4a99a06e8fe217718a56)
 
-- 용어 정리 https://goldenrod-string-7f8.notion.site/181ecdb4ea684098a192b50e1d887347
+- [용어 정리](https://goldenrod-string-7f8.notion.site/181ecdb4ea684098a192b50e1d887347)
 
-- API 문서(컨셉 -> 초안 진행 중) https://goldenrod-string-7f8.notion.site/API-6f8d83dde50c4a0295472e6b9790ba44
+- [API 문서(컨셉 -> 초안 진행 중)](https://goldenrod-string-7f8.notion.site/API-6f8d83dde50c4a0295472e6b9790ba44)
