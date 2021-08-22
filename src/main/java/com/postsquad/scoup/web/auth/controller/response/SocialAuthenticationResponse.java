@@ -8,6 +8,8 @@ import lombok.*;
 @Getter
 public class SocialAuthenticationResponse {
 
+    private String oAuthType;
+
     private String socialServiceId;
 
     private String username;
@@ -15,13 +17,4 @@ public class SocialAuthenticationResponse {
     private String email;
 
     private String avatarUrl;
-
-    public static SocialAuthenticationResponse from(OAuthUserResponse oAuthUserResponse) {
-        return SocialAuthenticationResponse.builder()
-                                           .socialServiceId(String.valueOf(oAuthUserResponse.getId()))
-                                           .username(oAuthUserResponse.getLogin())
-                                           .email(oAuthUserResponse.getEmail())
-                                           .avatarUrl(oAuthUserResponse.getAvatarUrl())
-                                           .build();
-    }
 }
