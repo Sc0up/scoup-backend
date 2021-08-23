@@ -30,7 +30,7 @@ public interface SocialAuthenticationResponseMapper {
 
     @Mappings({
             @Mapping(target = "oAuthType", source = "type"),
-            @Mapping(target = "socialServiceId", source = "googleUserResponse.id"),
+            @Mapping(target = "socialServiceId", source = "googleUserResponse.sub"),
             @Mapping(target = "username", source = "googleUserResponse.name"),
             @Mapping(target = "email", source = "googleUserResponse.email"),
             @Mapping(target = "avatarUrl", source = "googleUserResponse.picture")
