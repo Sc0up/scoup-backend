@@ -1,13 +1,13 @@
 package com.postsquad.scoup.web.auth.service;
 
 import com.postsquad.scoup.web.auth.controller.request.TokenRequestWithGrantType;
-import com.postsquad.scoup.web.auth.controller.response.TokenResponse;
 import com.postsquad.scoup.web.auth.controller.response.GoogleUserResponse;
+import com.postsquad.scoup.web.auth.controller.response.TokenResponse;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponseMapper;
+import com.postsquad.scoup.web.auth.exception.OAuthUserNotFoundException;
 import com.postsquad.scoup.web.auth.exception.TokenNotFoundException;
 import com.postsquad.scoup.web.auth.exception.OAuthRequestNotValidException;
-import com.postsquad.scoup.web.auth.exception.OAuthUserNotFoundException;
 import com.postsquad.scoup.web.auth.exception.OAuthException;
 import com.postsquad.scoup.web.auth.property.OAuthProperties;
 import com.postsquad.scoup.web.auth.property.OAuthProperty;
@@ -50,6 +50,6 @@ public class GoogleOAuth extends OAuth {
                                                          .bodyToMono(GoogleUserResponse.class)
                                                          .blockOptional()
                                                          .orElseThrow(() -> new OAuthException(new OAuthUserNotFoundException()));
-        return SocialAuthenticationResponseMapper.INSTANCE.GoogleUserResponseToSocialAuthenticationResponse(googleUserResponse, type);
+        return SocialAuthenticationResponseMapper.INSTANCE.googleUserResponseToSocialAuthenticationResponse(googleUserResponse, type);
     }
 }

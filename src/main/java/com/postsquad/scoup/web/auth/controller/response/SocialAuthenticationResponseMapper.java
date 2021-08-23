@@ -17,7 +17,7 @@ public interface SocialAuthenticationResponseMapper {
             @Mapping(target = "email", source = "gitHubUserResponse.email"),
             @Mapping(target = "avatarUrl", source = "gitHubUserResponse.avatarUrl")
     })
-    SocialAuthenticationResponse GitHubUserResponseToSocialAuthenticationResponse(GitHubUserResponse gitHubUserResponse, String type);
+    SocialAuthenticationResponse gitHubUserResponseToSocialAuthenticationResponse(GitHubUserResponse gitHubUserResponse, String type);
 
     @Mappings({
             @Mapping(target = "oAuthType", source = "type"),
@@ -26,7 +26,7 @@ public interface SocialAuthenticationResponseMapper {
             @Mapping(target = "email", source = "kakaoUserResponse.kakaoAccount.email"),
             @Mapping(target = "avatarUrl", source = "kakaoUserResponse.kakaoAccount.profile.profileImageUrl")
     })
-    SocialAuthenticationResponse KakaoUserResponseToSocialAuthenticationResponse(KakaoUserResponse kakaoUserResponse, String type);
+    SocialAuthenticationResponse kakaoUserResponseToSocialAuthenticationResponse(KakaoUserResponse kakaoUserResponse, String type);
 
     @Mappings({
             @Mapping(target = "oAuthType", source = "type"),
@@ -35,5 +35,5 @@ public interface SocialAuthenticationResponseMapper {
             @Mapping(target = "email", source = "googleUserResponse.email"),
             @Mapping(target = "avatarUrl", source = "googleUserResponse.picture")
     })
-    SocialAuthenticationResponse GoogleUserResponseToSocialAuthenticationResponse(GoogleUserResponse googleUserResponse, String type);
+    SocialAuthenticationResponse googleUserResponseToSocialAuthenticationResponse(GoogleUserResponse googleUserResponse, String type);
 }
