@@ -4,6 +4,7 @@ import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
+import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
 import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import io.restassured.RestAssured;
@@ -97,7 +98,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ParameterizedTest
     @MethodSource("signUpWhenUserAlreadyExistsProvider")
     @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다.")
-    void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequest, ErrorResponse expectedResponse) {
+    void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
         // given
         String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
@@ -105,8 +106,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                                        .port(port)
                                                        .basePath(path)
                                                        .contentType(ContentType.JSON)
-                                                       .body(givenSignUpRequest);
-        givenRequest.post();
+                                                       .body(givenSignUpRequestAlreadyExists);
 
         // when
         Response actualResponse = givenRequest.when()
@@ -130,13 +130,26 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                         SignUpRequest.builder()
                                      .username("username")
                                      .nickname("nickname")
-                                     .email("email@email")
+                                     .email("existing@email.com")
                                      .password("password")
                                      .build(),
                         ErrorResponse.builder()
                                      .message("Sign up failed")
                                      .statusCode(400)
-                                     .errors(Arrays.asList("User(email@email) already exists"))
+                                     .errors(Arrays.asList("User email 'existing@email.com' already exists"))
+                                     .build()
+                ), Arguments.of(
+                        "실패 - 이미 가입한 닉네임(nickname)",
+                        SignUpRequest.builder()
+                                     .username("username")
+                                     .nickname("existing")
+                                     .email("email2@email")
+                                     .password("password")
+                                     .build(),
+                        ErrorResponse.builder()
+                                     .message("Sign up failed")
+                                     .statusCode(400)
+                                     .errors(Arrays.asList("User nickname 'existing' already exists"))
                                      .build()
                 )
         );
@@ -256,14 +269,14 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ParameterizedTest
     @MethodSource("validateEmailProvider")
     @DisplayName("이미 가입된 이메일을 입력할 경우 이메일이 중복되었다는 메시지가 반환된다.")
-    void validateEmail(String description, String givenEmailRequest, EmailValidationResponse expectedEmailResponse) {
+    void validateEmail(String description, String givenEmail, EmailValidationResponse expectedEmailValidationResponse) {
         // given
         String path = "/api/users/validate/email";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
-                                                       .queryParam("email", givenEmailRequest);
+                                                       .queryParam("email", givenEmail);
 
         // when
         Response actualResponse = givenRequest.when()
@@ -278,7 +291,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         then(actualResponse.as(EmailValidationResponse.class))
                 .as("이메일 중복 확인: %s", description)
                 .usingRecursiveComparison()
-                .isEqualTo(expectedEmailResponse);
+                .isEqualTo(expectedEmailValidationResponse);
     }
 
     static Stream<Arguments> validateEmailProvider() {
@@ -296,9 +309,9 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     }
 
     @ParameterizedTest
-    @MethodSource("validateRequestParamProvider")
-    @DisplayName("Request parameter validation")
-    void validateRequestParam(String description, String givenEmailRequest, ErrorResponse expectedResponse) {
+    @MethodSource("validateEmailRequestParamProvider")
+    @DisplayName("email as RequestParam validation")
+    void validateEmailAsRequestParam(String description, String invalidEmail, ErrorResponse expectedResponse) {
         // given
         String path = "/api/users/validate/email";
         RequestSpecification givenRequest = RestAssured.given()
@@ -306,7 +319,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                                        .port(port)
                                                        .basePath(path)
                                                        .header("Accept-Language", "en-US")
-                                                       .queryParam("email", givenEmailRequest);
+                                                       .queryParam("email", invalidEmail);
 
         // when
         Response actualResponse = givenRequest.when()
@@ -325,7 +338,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .isEqualTo(expectedResponse);
     }
 
-    static Stream<Arguments> validateRequestParamProvider() {
+    static Stream<Arguments> validateEmailRequestParamProvider() {
         return Stream.of(
                 Arguments.of(
                         "실패: 빈 문자열",
@@ -350,6 +363,102 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                      .statusCode(HttpStatus.BAD_REQUEST.value())
                                      .message("Method argument not valid.")
                                      .errors(Collections.singletonList("validateEmail.email: must be a well-formed email address"))
+                                     .build()
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("validateNicknameProvider")
+    @DisplayName("이미 가입된 닉네임을 입력할 경우 닉네임이 중복되었다는 메시지가 반환된다.")
+    void validateNickname(String description, String givenNickname, NicknameValidationResponse expectedNicknameValidationResponse) {
+        // given
+        String path = "/api/users/validate/nickname";
+        RequestSpecification givenRequest = RestAssured.given()
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path)
+                                                       .queryParam("nickname", givenNickname);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .log().all()
+                                              .get()
+                                              .andReturn();
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
+        then(actualResponse.as(NicknameValidationResponse.class))
+                .as("닉네임 중복 확인: %s", description)
+                .usingRecursiveComparison()
+                .isEqualTo(expectedNicknameValidationResponse);
+    }
+
+    static Stream<Arguments> validateNicknameProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "성공: 중복된 닉네임",
+                        "existing",
+                        NicknameValidationResponse.valueOf(true)
+                ),
+                Arguments.of(
+                        "성공: 중복되지 않은 닉네임",
+                        "notExistingNickname",
+                        NicknameValidationResponse.valueOf(false)
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("validateNicknameRequestParamProvider")
+    @DisplayName("nickname as RequestParam validation")
+    void validateNicknameAsRequestParam(String description, String invalidNickname, ErrorResponse expectedResponse) {
+        // given
+        String path = "/api/users/validate/nickname";
+        RequestSpecification givenRequest = RestAssured.given()
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path)
+                                                       .header("Accept-Language", "en-US")
+                                                       .queryParam("nickname", invalidNickname);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .log().all()
+                                              .get()
+                                              .andReturn();
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.BAD_REQUEST.value());
+        then(actualResponse.as(ErrorResponse.class))
+                .as("닉네임 중복 확인: ", description)
+                .usingRecursiveComparison()
+                .ignoringFields(ignoringFieldsForErrorResponse)
+                .isEqualTo(expectedResponse);
+    }
+
+    static Stream<Arguments> validateNicknameRequestParamProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "실패: 빈 문자열",
+                        "",
+                        ErrorResponse.builder()
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .message("Method argument not valid.")
+                                     .errors(Collections.singletonList("validateNickname.nickname: must not be empty"))
+                                     .build()
+                ),
+                Arguments.of(
+                        "실패: null",
+                        null,
+                        ErrorResponse.builder()
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .message("Method argument not valid.")
+                                     .errors(Collections.singletonList("validateNickname.nickname: must not be empty"))
                                      .build()
                 )
         );
