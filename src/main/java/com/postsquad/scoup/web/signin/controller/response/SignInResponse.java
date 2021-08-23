@@ -1,12 +1,12 @@
-package com.postsquad.scoup.web.user.controller.response;
+package com.postsquad.scoup.web.signin.controller.response;
 
 import com.postsquad.scoup.web.image.controller.ImageResponse;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 public class SignInResponse {
 
-    private String jwt;
+    private String accessToken;
 
     private String nickname;
 
