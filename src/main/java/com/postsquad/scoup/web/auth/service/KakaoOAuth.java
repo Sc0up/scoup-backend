@@ -1,11 +1,11 @@
 package com.postsquad.scoup.web.auth.service;
 
-import com.postsquad.scoup.web.auth.controller.request.AccessTokenRequestWithGrantType;
-import com.postsquad.scoup.web.auth.controller.response.AccessTokenResponse;
+import com.postsquad.scoup.web.auth.controller.request.TokenRequestWithGrantType;
+import com.postsquad.scoup.web.auth.controller.response.TokenResponse;
 import com.postsquad.scoup.web.auth.controller.response.KakaoUserResponse;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponseMapper;
-import com.postsquad.scoup.web.auth.exception.AccessTokenNotFoundException;
+import com.postsquad.scoup.web.auth.exception.TokenNotFoundException;
 import com.postsquad.scoup.web.auth.exception.OAuthRequestNotValidException;
 import com.postsquad.scoup.web.auth.exception.OAuthUserNotFoundException;
 import com.postsquad.scoup.web.auth.exception.OAuthException;
@@ -26,23 +26,23 @@ public class KakaoOAuth extends OAuth {
         super(webClient, oAuthProperties);
     }
 
-    protected AccessTokenResponse getToken(OAuthProperty oAuthProperty, String code) {
-        MultiValueMap<String, String> accessTokenRequest = AccessTokenRequestWithGrantType.of(oAuthProperty, code);
+    protected TokenResponse getToken(OAuthProperty oAuthProperty, String code) {
+        MultiValueMap<String, String> tokenRequest = TokenRequestWithGrantType.of(oAuthProperty, code);
         return webClient.post()
                         .uri(oAuthProperty.getAccessTokenUri())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .bodyValue(accessTokenRequest)
+                        .bodyValue(tokenRequest)
                         .retrieve()
                         .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(() -> new OAuthException(new OAuthRequestNotValidException())))
-                        .bodyToMono(AccessTokenResponse.class)
+                        .bodyToMono(TokenResponse.class)
                         .blockOptional()
-                        .orElseThrow(() -> new OAuthException(new AccessTokenNotFoundException()));
+                        .orElseThrow(() -> new OAuthException(new TokenNotFoundException()));
     }
 
-    protected SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, String accessToken, String type) {
+    protected SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, TokenResponse token, String type) {
         KakaoUserResponse kakaoUserResponse = webClient.get()
                                                        .uri(oAuthProperty.getUserUri())
-                                                       .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                                                       .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.getAccessToken())
                                                        .retrieve()
                                                        .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(() -> new OAuthException(new OAuthRequestNotValidException())))
                                                        .bodyToMono(KakaoUserResponse.class)

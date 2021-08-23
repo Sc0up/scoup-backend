@@ -1,6 +1,6 @@
 package com.postsquad.scoup.web.auth.service;
 
-import com.postsquad.scoup.web.auth.controller.response.AccessTokenResponse;
+import com.postsquad.scoup.web.auth.controller.response.TokenResponse;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
 import com.postsquad.scoup.web.auth.property.OAuthProperties;
 import com.postsquad.scoup.web.auth.property.OAuthProperty;
@@ -18,17 +18,16 @@ public abstract class OAuth {
 
     public SocialAuthenticationResponse readOAuthUserData(String type, String code) {
         OAuthProperty property = oAuthProperties.getProperty(type);
-        AccessTokenResponse token = getToken(property, code);
-        return getOAuthUserInfo(property, token.getAccessToken(), type);
+        return getOAuthUserInfo(property, getToken(property, code), type);
     }
 
     public SocialAuthenticationResponse readOAuthUserDataFromHeader(String type, String header) {
         OAuthProperty property = oAuthProperties.getProperty(type);
         String accessToken = header.substring(TOKEN.length()).trim();
-        return getOAuthUserInfo(property, accessToken, type);
+        return getOAuthUserInfo(property, new TokenResponse(accessToken), type);
     }
 
-    abstract AccessTokenResponse getToken(OAuthProperty oAuthProperty, String code);
+    abstract TokenResponse getToken(OAuthProperty oAuthProperty, String code);
 
-    abstract SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, String accessToken, String type);
+    abstract SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, TokenResponse accessToken, String type);
 }
