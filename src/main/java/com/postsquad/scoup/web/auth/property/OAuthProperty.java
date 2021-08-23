@@ -5,7 +5,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Getter
 @PropertySource(value = "classpath:auth.properties")
-public class OAuthProperty {
+public abstract class OAuthProperty {
     public static final String TOKEN = "token";
 
     protected String accessTokenUri;
