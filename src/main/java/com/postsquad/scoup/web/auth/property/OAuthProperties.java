@@ -14,7 +14,7 @@ public class OAuthProperties {
 
     private static final Map<OAuthType, OAuthProperty> PROPERTIES = new HashMap<>();
 
-    public OAuthProperties(GitHubProperty gitHubProperty, KakaoProperty kakaoProperty, GoogleProperty googleProperty) {
+    private OAuthProperties(GitHubProperty gitHubProperty, KakaoProperty kakaoProperty, GoogleProperty googleProperty) {
         PROPERTIES.put(GITHUB, gitHubProperty);
         PROPERTIES.put(KAKAO, kakaoProperty);
         PROPERTIES.put(GOOGLE, googleProperty);
