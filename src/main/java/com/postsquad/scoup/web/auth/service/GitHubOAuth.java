@@ -1,11 +1,11 @@
 package com.postsquad.scoup.web.auth.service;
 
-import com.postsquad.scoup.web.auth.controller.request.AccessTokenRequest;
-import com.postsquad.scoup.web.auth.controller.response.AccessTokenResponse;
+import com.postsquad.scoup.web.auth.controller.request.TokenRequest;
+import com.postsquad.scoup.web.auth.controller.response.TokenResponse;
 import com.postsquad.scoup.web.auth.controller.response.GitHubUserResponse;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponseMapper;
-import com.postsquad.scoup.web.auth.exception.AccessTokenNotFoundException;
+import com.postsquad.scoup.web.auth.exception.TokenNotFoundException;
 import com.postsquad.scoup.web.auth.exception.OAuthRequestNotValidException;
 import com.postsquad.scoup.web.auth.exception.OAuthUserNotFoundException;
 import com.postsquad.scoup.web.auth.exception.OAuthException;
@@ -25,44 +25,32 @@ public class GitHubOAuth extends OAuth {
         super(webClient, oAuthProperties);
     }
 
-    public SocialAuthenticationResponse readOAuthUserData(String type, String code) {
-        OAuthProperty property = oAuthProperties.getProperty(type);
-        AccessTokenResponse token = getToken(property, code);
-        return getOAuthUserInfo(property, token.getAccessToken(), type);
-    }
-
-    public SocialAuthenticationResponse readOAuthUserDataFromHeader(String type, String header) {
-        OAuthProperty property = oAuthProperties.getProperty(type);
-        String accessToken = header.substring(TOKEN.length()).trim();
-        return getOAuthUserInfo(property, accessToken, type);
-    }
-
     @Override
-    protected AccessTokenResponse getToken(OAuthProperty oAuthProperty, String code) {
-        AccessTokenRequest accessTokenRequest = AccessTokenRequest.builder()
-                                                                  .clientId(oAuthProperty.getClientId())
-                                                                  .clientSecret(oAuthProperty.getClientSecret())
-                                                                  .redirectUri(oAuthProperty.getRedirectUri())
-                                                                  .code(code)
-                                                                  .build();
+    protected TokenResponse getToken(OAuthProperty oAuthProperty, String code) {
+        TokenRequest tokenRequest = TokenRequest.builder()
+                                                .clientId(oAuthProperty.getClientId())
+                                                .clientSecret(oAuthProperty.getClientSecret())
+                                                .redirectUri(oAuthProperty.getRedirectUri())
+                                                .code(code)
+                                                .build();
 
         return webClient.post()
                         .uri(oAuthProperty.getAccessTokenUri())
                         .accept(MediaType.APPLICATION_JSON)
-                        .bodyValue(accessTokenRequest)
+                        .bodyValue(tokenRequest)
                         .retrieve()
                         .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(() -> new OAuthException(new OAuthRequestNotValidException())))
-                        .bodyToMono(AccessTokenResponse.class)
+                        .bodyToMono(TokenResponse.class)
                         .blockOptional()
-                        .orElseThrow(() -> new OAuthException(new AccessTokenNotFoundException()));
+                        .orElseThrow(() -> new OAuthException(new TokenNotFoundException()));
     }
 
     @Override
-    protected SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, String accessToken, String type) {
+    protected SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, TokenResponse token, String type) {
         GitHubUserResponse gitHubUserResponse = webClient.get()
                                                          .uri(oAuthProperty.getUserUri())
                                                          .accept(MediaType.APPLICATION_JSON)
-                                                         .header(HttpHeaders.AUTHORIZATION, TOKEN + " " + accessToken)
+                                                         .header(HttpHeaders.AUTHORIZATION, TOKEN + " " + token.getAccessToken())
                                                          .retrieve()
                                                          .onStatus(HttpStatus::is4xxClientError, error -> Mono.error(() -> new OAuthException(new OAuthRequestNotValidException())))
                                                          .bodyToMono(GitHubUserResponse.class)

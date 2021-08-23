@@ -8,7 +8,7 @@ import lombok.Getter;
 @Builder
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AccessTokenRequest {
+public class TokenRequest {
 
     private final String clientId;
 
