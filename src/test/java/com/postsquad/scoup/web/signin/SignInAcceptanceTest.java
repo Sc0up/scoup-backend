@@ -1,9 +1,8 @@
 package com.postsquad.scoup.web.signin;
 
-import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
@@ -13,6 +12,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -42,6 +42,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
 
     @ParameterizedTest
     @MethodSource("signInProvider")
+    @DisplayName("이메일 계정으로 로그인 한다")
     void signIn(
             String description,
             SignUpRequest givenSignUpRequest,
@@ -64,16 +65,24 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                                               .post();
         // then
         actualResponse.then()
+                      .log().all()
                       .statusCode(HttpStatus.OK.value());
         /*
          * TODO
          *  - 리프래쉬토큰
          *  - DTO
-         *   - 액세스 토큰
-         *   -
+         *   - 액세스 토큰 -> exp 달라 verify는 되지만 assertion불가.
          */
         SignedJWT actualRefreshToken = SignedJWT.parse(actualResponse.cookie("refresh"));
-        then(actualRefreshToken.verify(macSigner())).isTrue();
+
+        then(actualRefreshToken.verify(macVerifier()))
+                .as("로그인 결과(리프래쉬토큰 서명 검증) : %s", description)
+                .isTrue();
+        then(actualRefreshToken.getJWTClaimsSet().getSubject())
+                .as("로그인 결과(리프래쉬토큰 sub) : %s", description)
+                // TODO: 실제 userid와 비교 필요
+                .isEqualTo("userid");
+
         then(actualResponse.as(SignInResponse.class))
                 .as("로그인 결과 : %s", description)
                 .usingRecursiveComparison()
@@ -105,7 +114,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
         );
     }
 
-    private JWSVerifier macSigner() throws JOSEException {
+    private JWSVerifier macVerifier() throws JOSEException {
         return new MACVerifier(jwtSecret);
     }
 }
