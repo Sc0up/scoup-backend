@@ -51,7 +51,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다.")
     void signUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
         // given
-        String path = "/api/sign-up";
+        String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
@@ -99,7 +99,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다.")
     void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequest, ErrorResponse expectedResponse) {
         // given
-        String path = "/api/sign-up";
+        String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
@@ -147,7 +147,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("회원가입 DTO validation")
     void signUpWithValidation(String description, SignUpRequest givenSignUpRequest, ErrorResponse expectedResponse) {
         // given
-        String path = "/api/sign-up";
+        String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
@@ -258,7 +258,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("이미 가입된 이메일을 입력할 경우 이메일이 중복되었다는 메시지가 반환된다.")
     void validateEmail(String description, String givenEmailRequest, EmailValidationResponse expectedEmailResponse) {
         // given
-        String path = "/api/validate/email";
+        String path = "/api/users/validate/email";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
@@ -300,7 +300,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("Request parameter validation")
     void validateRequestParam(String description, String givenEmailRequest, ErrorResponse expectedResponse) {
         // given
-        String path = "/api/validate/email";
+        String path = "/api/users/validate/email";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)

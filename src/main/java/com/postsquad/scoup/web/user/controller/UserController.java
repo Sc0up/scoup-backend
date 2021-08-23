@@ -16,12 +16,13 @@ import javax.validation.constraints.NotEmpty;
 
 @RequiredArgsConstructor
 @Validated
+@RequestMapping("/users")
 @RestController
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/sign-up")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     // FIXME: https://github.com/Sc0up/scoup-backend/issues/18 논의 결과에 따라 수정 필요
     public long signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
