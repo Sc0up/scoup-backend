@@ -7,7 +7,7 @@ public class GitHubUserResponse {
 
     private Long id;
 
-    private String login;
+    private String name;
 
     private String email;
 

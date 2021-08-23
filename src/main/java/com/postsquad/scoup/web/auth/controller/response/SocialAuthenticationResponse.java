@@ -13,7 +13,7 @@ public class SocialAuthenticationResponse {
 
     private String socialServiceId;
 
-    private String username;
+    private String name;
 
     private String email;
 
