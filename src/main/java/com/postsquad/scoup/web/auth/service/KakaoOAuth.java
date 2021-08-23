@@ -11,7 +11,7 @@ import com.postsquad.scoup.web.auth.exception.OAuthUserNotFoundException;
 import com.postsquad.scoup.web.auth.exception.OAuthException;
 import com.postsquad.scoup.web.auth.property.OAuthProperties;
 import com.postsquad.scoup.web.auth.property.OAuthProperty;
-import com.postsquad.scoup.web.auth.property.OAuthType;
+import com.postsquad.scoup.web.auth.OAuthType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

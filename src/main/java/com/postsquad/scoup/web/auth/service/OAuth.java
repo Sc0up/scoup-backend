@@ -4,11 +4,9 @@ import com.postsquad.scoup.web.auth.controller.response.TokenResponse;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
 import com.postsquad.scoup.web.auth.property.OAuthProperties;
 import com.postsquad.scoup.web.auth.property.OAuthProperty;
-import com.postsquad.scoup.web.auth.property.OAuthType;
+import com.postsquad.scoup.web.auth.OAuthType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.util.Locale;
 
 @RequiredArgsConstructor
 public abstract class OAuth {

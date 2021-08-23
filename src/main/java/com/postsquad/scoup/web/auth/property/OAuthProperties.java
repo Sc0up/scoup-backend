@@ -1,12 +1,13 @@
 package com.postsquad.scoup.web.auth.property;
 
+import com.postsquad.scoup.web.auth.OAuthType;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.postsquad.scoup.web.auth.property.OAuthType.*;
+import static com.postsquad.scoup.web.auth.OAuthType.*;
 
 @Component
 @Getter

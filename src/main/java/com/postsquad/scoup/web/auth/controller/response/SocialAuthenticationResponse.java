@@ -1,6 +1,6 @@
 package com.postsquad.scoup.web.auth.controller.response;
 
-import com.postsquad.scoup.web.auth.property.OAuthType;
+import com.postsquad.scoup.web.auth.OAuthType;
 import lombok.*;
 
 @NoArgsConstructor

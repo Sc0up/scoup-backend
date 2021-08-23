@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.auth.property;
+package com.postsquad.scoup.web.auth;
 
 public enum OAuthType {
     GITHUB,
