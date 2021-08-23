@@ -11,6 +11,7 @@ import com.postsquad.scoup.web.auth.exception.OAuthUserNotFoundException;
 import com.postsquad.scoup.web.auth.exception.OAuthException;
 import com.postsquad.scoup.web.auth.property.OAuthProperties;
 import com.postsquad.scoup.web.auth.property.OAuthProperty;
+import com.postsquad.scoup.web.auth.property.OAuthType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ public class KakaoOAuth extends OAuth {
         super(webClient, oAuthProperties);
     }
 
+    @Override
     protected TokenResponse getToken(OAuthProperty oAuthProperty, String code) {
         MultiValueMap<String, String> tokenRequest = TokenRequestWithGrantType.of(oAuthProperty, code);
         return webClient.post()
@@ -39,7 +41,8 @@ public class KakaoOAuth extends OAuth {
                         .orElseThrow(() -> new OAuthException(new TokenNotFoundException()));
     }
 
-    protected SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, TokenResponse token, String type) {
+    @Override
+    protected SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, TokenResponse token, OAuthType type) {
         KakaoUserResponse kakaoUserResponse = webClient.get()
                                                        .uri(oAuthProperty.getUserUri())
                                                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.getAccessToken())

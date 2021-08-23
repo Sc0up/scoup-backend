@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web.auth.service;
 
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
+import com.postsquad.scoup.web.auth.property.OAuthType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +15,11 @@ public class OAuthService {
 
     public SocialAuthenticationResponse readOAuthUserData(String type, String code) {
         OAuth oAuth = oAuthMap.get(type.toLowerCase());
-        return oAuth.readOAuthUserData(type, code);
+        return oAuth.readOAuthUserData(OAuthType.valueOf(type.toUpperCase()), code);
     }
 
     public SocialAuthenticationResponse readOAuthUserDataFromHeader(String type, String header) {
         OAuth oAuth = oAuthMap.get(type.toLowerCase());
-        return oAuth.readOAuthUserDataFromHeader(type, header);
+        return oAuth.readOAuthUserDataFromHeader(OAuthType.valueOf(type.toUpperCase()), header);
     }
 }

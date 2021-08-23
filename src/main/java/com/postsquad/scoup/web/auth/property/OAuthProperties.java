@@ -20,8 +20,7 @@ public class OAuthProperties {
         PROPERTIES.put(GOOGLE, googleProperty);
     }
 
-    public OAuthProperty getProperty(String type) {
-        OAuthType oAuthType = OAuthType.valueOf(type.toUpperCase());
-        return PROPERTIES.get(oAuthType);
+    public OAuthProperty getProperty(OAuthType type) {
+        return PROPERTIES.get(type);
     }
 }

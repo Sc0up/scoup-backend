@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.auth.controller.response;
 
+import com.postsquad.scoup.web.auth.property.OAuthType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -17,7 +18,7 @@ public interface SocialAuthenticationResponseMapper {
             @Mapping(target = "email", source = "gitHubUserResponse.email"),
             @Mapping(target = "avatarUrl", source = "gitHubUserResponse.avatarUrl")
     })
-    SocialAuthenticationResponse gitHubUserResponseToSocialAuthenticationResponse(GitHubUserResponse gitHubUserResponse, String type);
+    SocialAuthenticationResponse gitHubUserResponseToSocialAuthenticationResponse(GitHubUserResponse gitHubUserResponse, OAuthType type);
 
     @Mappings({
             @Mapping(target = "oAuthType", source = "type"),
@@ -26,7 +27,7 @@ public interface SocialAuthenticationResponseMapper {
             @Mapping(target = "email", source = "kakaoUserResponse.kakaoAccount.email"),
             @Mapping(target = "avatarUrl", source = "kakaoUserResponse.kakaoAccount.profile.profileImageUrl")
     })
-    SocialAuthenticationResponse kakaoUserResponseToSocialAuthenticationResponse(KakaoUserResponse kakaoUserResponse, String type);
+    SocialAuthenticationResponse kakaoUserResponseToSocialAuthenticationResponse(KakaoUserResponse kakaoUserResponse, OAuthType type);
 
     @Mappings({
             @Mapping(target = "oAuthType", source = "type"),
@@ -35,5 +36,5 @@ public interface SocialAuthenticationResponseMapper {
             @Mapping(target = "email", source = "googleUserResponse.email"),
             @Mapping(target = "avatarUrl", source = "googleUserResponse.picture")
     })
-    SocialAuthenticationResponse googleUserResponseToSocialAuthenticationResponse(GoogleUserResponse googleUserResponse, String type);
+    SocialAuthenticationResponse googleUserResponseToSocialAuthenticationResponse(GoogleUserResponse googleUserResponse, OAuthType type);
 }

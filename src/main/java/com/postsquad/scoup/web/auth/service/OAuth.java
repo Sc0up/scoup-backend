@@ -4,8 +4,11 @@ import com.postsquad.scoup.web.auth.controller.response.TokenResponse;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
 import com.postsquad.scoup.web.auth.property.OAuthProperties;
 import com.postsquad.scoup.web.auth.property.OAuthProperty;
+import com.postsquad.scoup.web.auth.property.OAuthType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.Locale;
 
 @RequiredArgsConstructor
 public abstract class OAuth {
@@ -16,12 +19,12 @@ public abstract class OAuth {
 
     protected final OAuthProperties oAuthProperties;
 
-    public SocialAuthenticationResponse readOAuthUserData(String type, String code) {
+    public SocialAuthenticationResponse readOAuthUserData(OAuthType type, String code) {
         OAuthProperty property = oAuthProperties.getProperty(type);
         return getOAuthUserInfo(property, getToken(property, code), type);
     }
 
-    public SocialAuthenticationResponse readOAuthUserDataFromHeader(String type, String header) {
+    public SocialAuthenticationResponse readOAuthUserDataFromHeader(OAuthType type, String header) {
         OAuthProperty property = oAuthProperties.getProperty(type);
         String accessToken = header.substring(TOKEN.length()).trim();
         return getOAuthUserInfo(property, new TokenResponse(accessToken), type);
@@ -29,5 +32,5 @@ public abstract class OAuth {
 
     abstract TokenResponse getToken(OAuthProperty oAuthProperty, String code);
 
-    abstract SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, TokenResponse accessToken, String type);
+    abstract SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, TokenResponse accessToken, OAuthType type);
 }

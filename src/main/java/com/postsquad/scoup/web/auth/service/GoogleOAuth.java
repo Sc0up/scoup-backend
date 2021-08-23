@@ -11,6 +11,7 @@ import com.postsquad.scoup.web.auth.exception.OAuthRequestNotValidException;
 import com.postsquad.scoup.web.auth.exception.OAuthException;
 import com.postsquad.scoup.web.auth.property.OAuthProperties;
 import com.postsquad.scoup.web.auth.property.OAuthProperty;
+import com.postsquad.scoup.web.auth.property.OAuthType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,7 +41,7 @@ public class GoogleOAuth extends OAuth {
     }
 
     @Override
-    protected SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, TokenResponse token, String type) {
+    protected SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, TokenResponse token, OAuthType type) {
         GoogleUserResponse googleUserResponse = webClient.post()
                                                          .uri(oAuthProperty.getUserUri())
                                                          .contentType(MediaType.APPLICATION_FORM_URLENCODED)

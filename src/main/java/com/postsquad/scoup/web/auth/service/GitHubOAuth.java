@@ -11,6 +11,7 @@ import com.postsquad.scoup.web.auth.exception.OAuthUserNotFoundException;
 import com.postsquad.scoup.web.auth.exception.OAuthException;
 import com.postsquad.scoup.web.auth.property.OAuthProperties;
 import com.postsquad.scoup.web.auth.property.OAuthProperty;
+import com.postsquad.scoup.web.auth.property.OAuthType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,7 +47,7 @@ public class GitHubOAuth extends OAuth {
     }
 
     @Override
-    protected SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, TokenResponse token, String type) {
+    protected SocialAuthenticationResponse getOAuthUserInfo(OAuthProperty oAuthProperty, TokenResponse token, OAuthType type) {
         GitHubUserResponse gitHubUserResponse = webClient.get()
                                                          .uri(oAuthProperty.getUserUri())
                                                          .accept(MediaType.APPLICATION_JSON)

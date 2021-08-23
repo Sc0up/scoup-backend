@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.auth.controller.response;
 
+import com.postsquad.scoup.web.auth.property.OAuthType;
 import lombok.*;
 
 @NoArgsConstructor
@@ -8,7 +9,7 @@ import lombok.*;
 @Getter
 public class SocialAuthenticationResponse {
 
-    private String oAuthType;
+    private OAuthType oAuthType;
 
     private String socialServiceId;
 
