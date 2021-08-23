@@ -11,12 +11,16 @@ public class KakaoUserResponse {
 
     @Getter
     static class KakaoAccount {
+
         private String email;
+
         private Profile profile;
 
         @Getter
         static class Profile {
+
             private String profileImageUrl;
+            
             private String nickname;
         }
     }
