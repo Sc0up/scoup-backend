@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class OAuthService {
 
     private final Map<String, OAuth> oAuthMap;
