@@ -9,6 +9,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,6 +35,11 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                                   .name("name")
                                   .description("description")
                                   .build());
+    }
+
+    @AfterEach
+    void tearDown() {
+        groupRepository.deleteAll();
     }
 
     @ParameterizedTest
@@ -70,11 +76,11 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "성공",
                         GroupCreationRequest.builder()
-                                            .name("name")
+                                            .name("group name")
                                             .description("description")
                                             .build(),
                         Group.builder()
-                             .name("name")
+                             .name("group name")
                              .description("description")
                              .build()
                 )
