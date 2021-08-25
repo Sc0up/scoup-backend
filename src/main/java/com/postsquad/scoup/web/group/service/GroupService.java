@@ -2,6 +2,7 @@ package com.postsquad.scoup.web.group.service;
 
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.domain.Group;
+import com.postsquad.scoup.web.group.exception.GroupNameAlreadyExistException;
 import com.postsquad.scoup.web.group.mapper.GroupMapper;
 import com.postsquad.scoup.web.group.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,11 @@ public class GroupService {
     private final GroupRepository groupRepository;
 
     public Long create(GroupCreationRequest groupCreationRequest) {
+
+        if (groupRepository.existsByName(groupCreationRequest.getName())) {
+            throw new GroupNameAlreadyExistException(groupCreationRequest.getName());
+        }
+
         Group group = GroupMapper.INSTANCE.groupCreationRequestToGroup(groupCreationRequest);
 
         return groupRepository.save(group).getId();
