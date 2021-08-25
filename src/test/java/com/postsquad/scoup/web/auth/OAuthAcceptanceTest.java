@@ -35,7 +35,7 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
                 .baseUri(BASE_URL)
                 .port(port)
                 .basePath(socialAuthenticationPath)
-                .queryParam("type", "github")
+                .queryParam("type", "GITHUB")
                 .header(HttpHeaders.AUTHORIZATION, "token " + accessToken);
 
         // when
@@ -77,7 +77,7 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
                 .baseUri(BASE_URL)
                 .port(port)
                 .basePath(socialAuthenticationPath)
-                .queryParam("type", "github")
+                .queryParam("type", "GITHUB")
                 .header(HttpHeaders.AUTHORIZATION, "token " + invalidToken);
 
         // when
