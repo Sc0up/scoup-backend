@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.signin;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
@@ -22,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import java.text.ParseException;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 
 class SignInAcceptanceTest extends AcceptanceTestBase {
@@ -86,9 +88,10 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
         then(actualResponse.as(SignInResponse.class))
                 .as("로그인 결과 : %s", description)
                 .usingRecursiveComparison()
-                .ignoringFields("accessToken.exp")
+                .ignoringFields("accessToken")
                 .isEqualTo(expectedSignInResponse);
 
+        checkAccessToken(actualResponse.as(SignInResponse.class).getAccessToken(), "userid");
     }
 
     static Stream<Arguments> signInProvider() {
@@ -112,6 +115,15 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                                       .build()
                 )
         );
+    }
+
+    private void checkAccessToken(String token, String userId) throws ParseException, JOSEException {
+        SignedJWT actualRefreshToken = SignedJWT.parse(token);
+        actualRefreshToken.verify(macVerifier());
+        JWTClaimsSet jwtClaimsSet = actualRefreshToken.getJWTClaimsSet();
+
+        jwtClaimsSet.getSubject();
+        assertThat(jwtClaimsSet.getSubject()).isEqualTo(userId);
     }
 
     private JWSVerifier macVerifier() throws JOSEException {

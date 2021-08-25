@@ -37,10 +37,44 @@ public class SignInController {
         response.addCookie(cookie);
 
         return SignInResponse.builder()
-                             .accessToken("accessToken")
+                             .accessToken(accessToken())
                              .nickname("nickname")
                              .email("email")
                              .build();
+    }
+
+    private String accessToken() throws JOSEException {
+        JWSSigner jwsSigner = new MACSigner(jwtSecret);
+        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS256);
+
+        // TODO: 실제 userid와 연결 필요
+        JWTClaimsSet jwtClaimsSet = claimsSetForAccessToken("userid");
+
+        SignedJWT signedJWT = new SignedJWT(
+                jwsHeader,
+                jwtClaimsSet
+        );
+
+        signedJWT.sign(jwsSigner);
+        return signedJWT.serialize();
+    }
+
+    private JWTClaimsSet claimsSetForAccessToken(String userId) {
+        return new JWTClaimsSet.Builder()
+                .subject(userId)
+                .expirationTime(expirationTimeForAccessToken())
+                .build();
+    }
+
+    private LocalDateTime expirationDateTimeForAccessToken() {
+        return LocalDateTime.now()
+                            .plusMinutes(30);
+    }
+
+    private Date expirationTimeForAccessToken() {
+        LocalDateTime expirationDateTime = expirationDateTimeForAccessToken();
+
+        return Date.from(expirationDateTime.toInstant(ZoneOffset.UTC));
     }
 
     private String refreshToken() throws JOSEException {
