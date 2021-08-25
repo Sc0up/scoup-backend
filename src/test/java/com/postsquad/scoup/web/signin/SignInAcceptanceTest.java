@@ -33,15 +33,16 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
     @Value("${jwt.secret.mac}")
     String jwtSecret;
 
-    private void signUp(SignUpRequest signUpRequest) {
+    private long signUp(SignUpRequest signUpRequest) {
         String path = "/api/users";
-        RestAssured.given()
-                   .baseUri(BASE_URL)
-                   .port(port)
-                   .basePath(path)
-                   .contentType(ContentType.JSON)
-                   .body(signUpRequest)
-                   .post();
+        return RestAssured.given()
+                          .baseUri(BASE_URL)
+                          .port(port)
+                          .basePath(path)
+                          .contentType(ContentType.JSON)
+                          .body(signUpRequest)
+                          .post()
+                          .as(int.class);
     }
 
     @ParameterizedTest
@@ -54,7 +55,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
             SignInResponse expectedSignInResponse
     ) throws ParseException, JOSEException {
         // given
-        signUp(givenSignUpRequest);
+        long userId = signUp(givenSignUpRequest);
         String path = "/api/sign-in";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
@@ -85,7 +86,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
         then(actualRefreshToken.getJWTClaimsSet().getSubject())
                 .as("로그인 결과(리프래쉬토큰 sub) : %s", description)
                 // TODO: 실제 userid와 비교 필요
-                .isEqualTo("userid");
+                .isEqualTo(String.valueOf(userId));
 
         then(actualRefreshToken.getJWTClaimsSet().getExpirationTime())
                 .as("로그인 결과(리프래쉬토큰 sub) : %s", description)
@@ -98,7 +99,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 .ignoringFields("accessToken")
                 .isEqualTo(expectedSignInResponse);
 
-        checkAccessToken(actualResponse.as(SignInResponse.class).getAccessToken(), "userid");
+        checkAccessToken(actualResponse.as(SignInResponse.class).getAccessToken(), String.valueOf(userId));
     }
 
     static Stream<Arguments> signInProvider() {

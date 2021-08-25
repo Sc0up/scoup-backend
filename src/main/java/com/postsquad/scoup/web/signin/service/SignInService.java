@@ -1,24 +1,14 @@
 package com.postsquad.scoup.web.signin.service;
 
 import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSSigner;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
+import com.postsquad.scoup.web.signin.controller.SignInTokenGenerator;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import com.postsquad.scoup.web.signin.controller.response.SignInResponse;
 import com.postsquad.scoup.web.signin.mapper.SignInResponseMapper;
 import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Date;
 
 @RequiredArgsConstructor
 @Service
@@ -26,10 +16,9 @@ public class SignInService {
 
     private final UserRepository userRepository;
 
-    @Value("${jwt.secret.mac}")
-    private String jwtSecret;
+    private final SignInTokenGenerator signInTokenGenerator;
 
-
+    // TODO: JOSEException SignInTokenGenerator안에서 끝내기
     public SignInResponse signIn(SignInRequest signInRequest) throws JOSEException {
 
         User user = userRepository.findByEmail(signInRequest.getEmail())
@@ -40,40 +29,9 @@ public class SignInService {
             // TODO: 2-2-2에서 검증
         }
 
-        return SignInResponseMapper.INSTANCE.userToSignInResponse(user, accessToken());
-    }
+        String accessToken = signInTokenGenerator.accessToken(user.getId());
+        String refreshToken = signInTokenGenerator.refreshToken(user.getId());
 
-    private String accessToken() throws JOSEException {
-        JWSSigner jwsSigner = new MACSigner(jwtSecret);
-        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS256);
-
-        // TODO: 실제 userid와 연결 필요
-        JWTClaimsSet jwtClaimsSet = claimsSetForAccessToken("userid");
-
-        SignedJWT signedJWT = new SignedJWT(
-                jwsHeader,
-                jwtClaimsSet
-        );
-
-        signedJWT.sign(jwsSigner);
-        return signedJWT.serialize();
-    }
-
-    private JWTClaimsSet claimsSetForAccessToken(String userId) {
-        return new JWTClaimsSet.Builder()
-                .subject(userId)
-                .expirationTime(expirationTimeForAccessToken())
-                .build();
-    }
-
-    private LocalDateTime expirationDateTimeForAccessToken() {
-        return LocalDateTime.now()
-                            .plusMinutes(30);
-    }
-
-    private Date expirationTimeForAccessToken() {
-        LocalDateTime expirationDateTime = expirationDateTimeForAccessToken();
-
-        return Date.from(expirationDateTime.toInstant(ZoneOffset.UTC));
+        return SignInResponseMapper.INSTANCE.userToSignInResponse(user, accessToken, refreshToken);
     }
 }
