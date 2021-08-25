@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -85,6 +87,11 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 // TODO: 실제 userid와 비교 필요
                 .isEqualTo("userid");
 
+        then(actualRefreshToken.getJWTClaimsSet().getExpirationTime())
+                .as("로그인 결과(리프래쉬토큰 sub) : %s", description)
+                .isAfter(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                .isBefore(LocalDateTime.now().plusWeeks(2).toInstant(ZoneOffset.UTC));
+
         then(actualResponse.as(SignInResponse.class))
                 .as("로그인 결과 : %s", description)
                 .usingRecursiveComparison()
@@ -124,6 +131,9 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
 
         jwtClaimsSet.getSubject();
         assertThat(jwtClaimsSet.getSubject()).isEqualTo(userId);
+        assertThat(jwtClaimsSet.getExpirationTime())
+                .isAfter(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                .isBefore(LocalDateTime.now().plusMinutes(30).toInstant(ZoneOffset.UTC));
     }
 
     private JWSVerifier macVerifier() throws JOSEException {
