@@ -116,9 +116,8 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                                      .password("password")
                                      .build(),
                         SignInResponse.builder()
-                                      .accessToken("accessToken")
                                       .nickname("nickname")
-                                      .email("email")
+                                      .email("email@email")
                                       .build()
                 )
         );
