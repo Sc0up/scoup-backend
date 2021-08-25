@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.auth.controller;
 
+import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.auth.exception.OAuthException;
 import com.postsquad.scoup.web.auth.service.OAuthService;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
@@ -16,12 +17,12 @@ public class OAuthController {
     private final OAuthService oAuthService;
 
     @GetMapping("/user-data")
-    public SocialAuthenticationResponse readOAuthUserData(@RequestParam String type, @RequestParam String code) {
+    public SocialAuthenticationResponse readOAuthUserData(@RequestParam(value = "type") OAuthType type, @RequestParam String code) {
         return oAuthService.readOAuthUserData(type, code);
     }
 
     @GetMapping("/user-data/token")
-    public SocialAuthenticationResponse readOAuthUserDataWithToken(@RequestParam String type, @RequestHeader("Authorization") String header) {
+    public SocialAuthenticationResponse readOAuthUserDataWithToken(@RequestParam(value = "type") OAuthType type, @RequestHeader("Authorization") String header) {
         return oAuthService.readOAuthUserDataFromHeader(type, header);
     }
 
