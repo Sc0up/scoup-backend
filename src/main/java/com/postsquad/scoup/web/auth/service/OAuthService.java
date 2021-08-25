@@ -1,27 +1,25 @@
 package com.postsquad.scoup.web.auth.service;
 
-import com.postsquad.scoup.web.auth.controller.response.AccessTokenResponse;
-import com.postsquad.scoup.web.auth.OAuth;
-import com.postsquad.scoup.web.auth.controller.response.OAuthUserResponse;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
+import com.postsquad.scoup.web.auth.OAuthType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class OAuthService {
 
-    private final OAuth oauth;
+    private final Map<String, OAuth> oAuthMap;
 
-    public SocialAuthenticationResponse readOAuthUserData(String code) {
-        AccessTokenResponse token = oauth.getToken(code);
-        OAuthUserResponse oAuthUserInfo = oauth.getOAuthUserInfo(token.getAccessToken());
-        return SocialAuthenticationResponse.from(oAuthUserInfo);
+    public SocialAuthenticationResponse readOAuthUserData(String type, String code) {
+        OAuth oAuth = oAuthMap.get(type.toLowerCase());
+        return oAuth.readOAuthUserData(OAuthType.valueOf(type.toUpperCase()), code);
     }
 
-    public SocialAuthenticationResponse readOAuthUserDataWithToken(String header) {
-        OAuthUserResponse oAuthUserInfo = oauth.getOAuthUserInfoFromHeader(header);
-        return SocialAuthenticationResponse.from(oAuthUserInfo);
+    public SocialAuthenticationResponse readOAuthUserDataFromHeader(String type, String header) {
+        OAuth oAuth = oAuthMap.get(type.toLowerCase());
+        return oAuth.readOAuthUserDataFromHeader(OAuthType.valueOf(type.toUpperCase()), header);
     }
 }

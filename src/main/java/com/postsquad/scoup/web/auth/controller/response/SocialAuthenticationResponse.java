@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.auth.controller.response;
 
+import com.postsquad.scoup.web.auth.OAuthType;
 import lombok.*;
 
 @NoArgsConstructor
@@ -8,20 +9,13 @@ import lombok.*;
 @Getter
 public class SocialAuthenticationResponse {
 
+    private OAuthType oAuthType;
+
     private String socialServiceId;
 
-    private String username;
+    private String name;
 
     private String email;
 
     private String avatarUrl;
-
-    public static SocialAuthenticationResponse from(OAuthUserResponse oAuthUserResponse) {
-        return SocialAuthenticationResponse.builder()
-                                           .socialServiceId(String.valueOf(oAuthUserResponse.getId()))
-                                           .username(oAuthUserResponse.getLogin())
-                                           .email(oAuthUserResponse.getEmail())
-                                           .avatarUrl(oAuthUserResponse.getAvatarUrl())
-                                           .build();
-    }
 }

@@ -35,6 +35,7 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
                 .baseUri(BASE_URL)
                 .port(port)
                 .basePath(socialAuthenticationPath)
+                .queryParam("type", "github")
                 .header(HttpHeaders.AUTHORIZATION, "token " + accessToken);
 
         // when
@@ -58,7 +59,7 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
                         SocialAuthenticationResponse
                                 .builder()
                                 .socialServiceId("68000537")
-                                .username("janeljs")
+                                .name("JiSun Lim")
                                 .email("jisunlim818@gmail.com")
                                 .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
                                 .build()
@@ -76,6 +77,7 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
                 .baseUri(BASE_URL)
                 .port(port)
                 .basePath(socialAuthenticationPath)
+                .queryParam("type", "github")
                 .header(HttpHeaders.AUTHORIZATION, "token " + invalidToken);
 
         // when
@@ -100,7 +102,7 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
                         ErrorResponse.builder()
                                      .statusCode(HttpStatus.BAD_REQUEST.value())
                                      .message("Failed to get user data from the resource server.")
-                                     .errors(List.of("GitHub request fails validation."))
+                                     .errors(List.of("OAuth request fails validation."))
                                      .build()
                 )
         );
