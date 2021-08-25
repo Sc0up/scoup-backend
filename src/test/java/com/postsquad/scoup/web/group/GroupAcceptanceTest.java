@@ -119,9 +119,9 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                         .description("description")
                         .build(),
                         ErrorResponse.builder()
-                        .message("Failed to create group.")
+                        .message("Failed to create group")
                         .statusCode(400)
-                        .errors(Arrays.asList("Group name 'name' already exists."))
+                        .errors(Arrays.asList("Group name 'name' already exists"))
                         .build()
                 )
         );
