@@ -1,10 +1,8 @@
 package com.postsquad.scoup.web.auth.property;
 
 import lombok.Getter;
-import org.springframework.context.annotation.PropertySource;
 
 @Getter
-@PropertySource(value = "classpath:auth.properties")
 public abstract class OAuthProperty {
     public static final String TOKEN = "token";
 

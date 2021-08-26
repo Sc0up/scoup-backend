@@ -9,8 +9,8 @@ import java.util.Map;
 
 import static com.postsquad.scoup.web.auth.OAuthType.*;
 
-@Component
 @Getter
+@Component
 public class OAuthProperties {
 
     private static final Map<OAuthType, OAuthProperty> PROPERTIES = new HashMap<>();

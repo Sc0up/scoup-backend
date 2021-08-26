@@ -7,19 +7,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class OAuthService {
 
     private final Map<String, OAuth> oAuthMap;
 
-    public SocialAuthenticationResponse readOAuthUserData(String type, String code) {
-        OAuth oAuth = oAuthMap.get(type.toLowerCase());
-        return oAuth.readOAuthUserData(OAuthType.valueOf(type.toUpperCase()), code);
+    public SocialAuthenticationResponse readOAuthUserData(OAuthType type, String code) {
+        OAuth oAuth = oAuthMap.get(type.name().toLowerCase());
+        return oAuth.readOAuthUserData(type, code);
     }
 
-    public SocialAuthenticationResponse readOAuthUserDataFromHeader(String type, String header) {
-        OAuth oAuth = oAuthMap.get(type.toLowerCase());
-        return oAuth.readOAuthUserDataFromHeader(OAuthType.valueOf(type.toUpperCase()), header);
+    public SocialAuthenticationResponse readOAuthUserDataFromHeader(OAuthType type, String header) {
+        OAuth oAuth = oAuthMap.get(type.name().toLowerCase());
+        return oAuth.readOAuthUserDataFromHeader(type, header);
     }
 }
