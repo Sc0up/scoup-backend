@@ -8,14 +8,17 @@ import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import com.postsquad.scoup.web.signin.controller.response.SignInResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
+import com.postsquad.scoup.web.user.repository.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 
@@ -30,6 +33,14 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
 
     @Value("${jwt.secret.mac}")
     String jwtSecret;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+    }
 
     private long signUp(SignUpRequest signUpRequest) {
         String path = "/api/users";
