@@ -22,11 +22,11 @@ public class SignInTokenGenerator {
 
 
     public String accessToken(long userId) {
-        return signInToken(userId, LocalDateTime.now().plusWeeks(2));
+        return signInToken(userId, LocalDateTime.now().plusMinutes(30));
     }
 
     public String refreshToken(long userId) {
-        return signInToken(userId, LocalDateTime.now().plusMinutes(30));
+        return signInToken(userId, LocalDateTime.now().plusWeeks(2));
     }
 
     private String signInToken(long userId, LocalDateTime expirationTime) {
