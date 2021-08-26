@@ -5,6 +5,7 @@ import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.SignedJWT;
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import com.postsquad.scoup.web.signin.controller.response.SignInResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
@@ -25,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -205,5 +207,73 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
     private JWSVerifier macVerifier() throws JOSEException {
         // TODO: 서비스에서 검증 필요시 해당 메소드로 대체
         return new MACVerifier(jwtSecret);
+    }
+
+    @ParameterizedTest
+    @MethodSource("validateSignInRequestProvider")
+    @DisplayName("이메일 계정으로 로그인 한다 - request validation")
+    void validateSignInRequest(
+            String description,
+            SignUpRequest givenSignUpRequest,
+            SignInRequest givenSignInRequest,
+            ErrorResponse expectedErrorResponse
+    ) {
+        // given
+        signUp(givenSignUpRequest);
+        RequestSpecification givenRequest = signInRequest(givenSignInRequest);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .header("Accept-Language", "en-US")
+                                              .log().all(true)
+                                              .post();
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.BAD_REQUEST.value());
+
+        then(actualResponse.as(ErrorResponse.class))
+                .as("로그인 요청 검증 : %s", description)
+                .usingRecursiveComparison()
+                .ignoringFields(ignoringFieldsForErrorResponse)
+                .isEqualTo(expectedErrorResponse);
+    }
+
+    static Stream<Arguments> validateSignInRequestProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "이메일 없음",
+                        SignUpRequest.builder()
+                                     .nickname("nickname")
+                                     .username("username")
+                                     .email("email@email")
+                                     .password("password")
+                                     .build(),
+                        SignInRequest.builder()
+                                     .password("")
+                                     .build(),
+                        ErrorResponse.builder()
+                                     .message("Method argument not valid.")
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .errors(Collections.singletonList("email: must not be null"))
+                                     .build()
+                ), Arguments.of(
+                        "비밀번호 없음",
+                        SignUpRequest.builder()
+                                     .nickname("nickname")
+                                     .username("username")
+                                     .email("email@email")
+                                     .password("password")
+                                     .build(),
+                        SignInRequest.builder()
+                                     .email("")
+                                     .build(),
+                        ErrorResponse.builder()
+                                     .message("Method argument not valid.")
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .errors(Collections.singletonList("password: must not be null"))
+                                     .build()
+                )
+        );
     }
 }
