@@ -17,7 +17,7 @@ public class OAuthController {
     private final OAuthService oAuthService;
 
     @GetMapping("/user-data")
-    public SocialAuthenticationResponse readOAuthUserData(@RequestParam(value = "type") OAuthType type, @RequestParam String code) {
+    public SocialAuthenticationResponse readOAuthUserData(@RequestParam OAuthType type, @RequestParam String code) {
         return oAuthService.readOAuthUserData(type, code);
     }
 
