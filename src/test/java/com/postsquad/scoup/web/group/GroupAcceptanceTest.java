@@ -121,14 +121,14 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "실패 - 이미 존재하는 그룹 이름",
                         GroupCreationRequest.builder()
-                        .name("name")
-                        .description("description")
-                        .build(),
+                                            .name("name")
+                                            .description("description")
+                                            .build(),
                         ErrorResponse.builder()
-                        .message("Failed to create group")
-                        .statusCode(400)
-                        .errors(Arrays.asList("Group name 'name' already exists"))
-                        .build()
+                                     .message("Failed to create group")
+                                     .statusCode(400)
+                                     .errors(Arrays.asList("Group name 'name' already exists"))
+                                     .build()
                 )
         );
     }
