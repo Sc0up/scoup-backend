@@ -142,7 +142,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 .isTrue();
         then(actualAccessToken.getJWTClaimsSet().getSubject())
                 .as("로그인 결과(access token subject 검증) : %s", description)
-                .isEqualTo(userId);
+                .isEqualTo(String.valueOf(userId));
         then(actualAccessToken.getJWTClaimsSet().getExpirationTime())
                 .as("로그인 결과(access token expiration time 검증) : %s", description)
                 .isAfter(LocalDateTime.now().toInstant(ZoneOffset.UTC))
