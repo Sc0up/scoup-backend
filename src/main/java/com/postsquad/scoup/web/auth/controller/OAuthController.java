@@ -22,7 +22,7 @@ public class OAuthController {
     }
 
     @GetMapping("/user-data/token")
-    public SocialAuthenticationResponse readOAuthUserDataWithToken(@RequestParam(value = "type") OAuthType type, @RequestHeader("Authorization") String header) {
+    public SocialAuthenticationResponse readOAuthUserDataWithToken(@RequestParam OAuthType type, @RequestHeader("Authorization") String header) {
         return oAuthService.readOAuthUserDataFromHeader(type, header);
     }
 
