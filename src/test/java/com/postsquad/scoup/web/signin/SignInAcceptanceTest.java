@@ -72,12 +72,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                       .log().all()
                       .statusCode(HttpStatus.OK.value());
-        /*
-         * TODO
-         *  - 리프래쉬토큰
-         *  - DTO
-         *   - 액세스 토큰 -> exp 달라 verify는 되지만 assertion불가.
-         */
+
         SignedJWT actualRefreshToken = SignedJWT.parse(actualResponse.cookie("refresh"));
 
         then(actualRefreshToken.verify(macVerifier()))
@@ -85,7 +80,6 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 .isTrue();
         then(actualRefreshToken.getJWTClaimsSet().getSubject())
                 .as("로그인 결과(리프래쉬토큰 sub) : %s", description)
-                // TODO: 실제 userid와 비교 필요
                 .isEqualTo(String.valueOf(userId));
 
         then(actualRefreshToken.getJWTClaimsSet().getExpirationTime())
