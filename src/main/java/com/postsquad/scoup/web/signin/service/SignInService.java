@@ -1,6 +1,5 @@
 package com.postsquad.scoup.web.signin.service;
 
-import com.nimbusds.jose.JOSEException;
 import com.postsquad.scoup.web.signin.controller.SignInTokenGenerator;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import com.postsquad.scoup.web.signin.controller.response.SignInResponse;
@@ -18,8 +17,7 @@ public class SignInService {
 
     private final SignInTokenGenerator signInTokenGenerator;
 
-    // TODO: JOSEException SignInTokenGenerator안에서 끝내기
-    public SignInResponse signIn(SignInRequest signInRequest) throws JOSEException {
+    public SignInResponse signIn(SignInRequest signInRequest) {
 
         User user = userRepository.findByEmail(signInRequest.getEmail())
                                   // TODO: 2-2-2에서 검증

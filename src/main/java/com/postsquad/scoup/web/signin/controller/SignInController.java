@@ -1,6 +1,5 @@
 package com.postsquad.scoup.web.signin.controller;
 
-import com.nimbusds.jose.JOSEException;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import com.postsquad.scoup.web.signin.controller.response.SignInResponse;
 import com.postsquad.scoup.web.signin.service.SignInService;
@@ -22,7 +21,7 @@ public class SignInController {
     private final SignInService signInService;
 
     @PostMapping
-    public SignInResponse signIn(@RequestBody @Valid SignInRequest signInRequest, HttpServletResponse response) throws JOSEException {
+    public SignInResponse signIn(@RequestBody @Valid SignInRequest signInRequest, HttpServletResponse response) {
         SignInResponse signInResponse = signInService.signIn(signInRequest);
 
         Cookie cookie = new Cookie("refresh", signInResponse.getRefreshToken());

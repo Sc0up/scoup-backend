@@ -1,12 +1,12 @@
 package com.postsquad.scoup.web.signin.controller;
 
-import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -21,19 +21,21 @@ public class SignInTokenGenerator {
     private String jwtSecret;
 
 
-    public String accessToken(long userId) throws JOSEException {
+    public String accessToken(long userId) {
         return signInToken(userId, LocalDateTime.now().plusWeeks(2));
     }
 
-    public String refreshToken(long userId) throws JOSEException {
+    public String refreshToken(long userId) {
         return signInToken(userId, LocalDateTime.now().plusMinutes(30));
     }
 
-    private String signInToken(long userId, LocalDateTime expirationTime) throws JOSEException {
+    private String signInToken(long userId, LocalDateTime expirationTime) {
         return signInToken(String.valueOf(userId), Date.from(expirationTime.toInstant(ZoneOffset.UTC)));
     }
 
-    private String signInToken(String userId, Date expirationTime) throws JOSEException {
+    @SneakyThrows
+    private String signInToken(String userId, Date expirationTime) {
+        // TODO: 토큰 검증 들어갈때 처리하기
         JWSSigner jwsSigner = new MACSigner(jwtSecret);
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS256);
 
