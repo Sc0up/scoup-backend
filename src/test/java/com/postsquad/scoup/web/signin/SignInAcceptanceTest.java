@@ -3,7 +3,6 @@ package com.postsquad.scoup.web.signin;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
@@ -25,7 +24,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 
 class SignInAcceptanceTest extends AcceptanceTestBase {
@@ -45,24 +43,28 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                           .as(int.class);
     }
 
+    private RequestSpecification signInRequest(SignInRequest signInRequest) {
+        String path = "/api/sign-in";
+        return RestAssured.given()
+                          .baseUri(BASE_URL)
+                          .port(port)
+                          .basePath(path)
+                          .contentType(ContentType.JSON)
+                          .body(signInRequest);
+    }
+
     @ParameterizedTest
     @MethodSource("signInProvider")
-    @DisplayName("이메일 계정으로 로그인 한다")
-    void signIn(
+    @DisplayName("이메일 계정으로 로그인 한다 - response body 검증")
+    void signInVerifyResponseBody(
             String description,
             SignUpRequest givenSignUpRequest,
             SignInRequest givenSignInRequest,
             SignInResponse expectedSignInResponse
-    ) throws ParseException, JOSEException {
+    ) {
         // given
-        long userId = signUp(givenSignUpRequest);
-        String path = "/api/sign-in";
-        RequestSpecification givenRequest = RestAssured.given()
-                                                       .baseUri(BASE_URL)
-                                                       .port(port)
-                                                       .basePath(path)
-                                                       .contentType(ContentType.JSON)
-                                                       .body(givenSignInRequest);
+        signUp(givenSignUpRequest);
+        RequestSpecification givenRequest = signInRequest(givenSignInRequest);
 
         // when
         Response actualResponse = givenRequest.when()
@@ -73,27 +75,11 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                       .log().all()
                       .statusCode(HttpStatus.OK.value());
 
-        SignedJWT actualRefreshToken = SignedJWT.parse(actualResponse.cookie("refresh"));
-
-        then(actualRefreshToken.verify(macVerifier()))
-                .as("로그인 결과(리프래쉬토큰 서명 검증) : %s", description)
-                .isTrue();
-        then(actualRefreshToken.getJWTClaimsSet().getSubject())
-                .as("로그인 결과(리프래쉬토큰 sub) : %s", description)
-                .isEqualTo(String.valueOf(userId));
-
-        then(actualRefreshToken.getJWTClaimsSet().getExpirationTime())
-                .as("로그인 결과(리프래쉬토큰 sub) : %s", description)
-                .isAfter(LocalDateTime.now().toInstant(ZoneOffset.UTC))
-                .isBefore(LocalDateTime.now().plusWeeks(2).toInstant(ZoneOffset.UTC));
-
         then(actualResponse.as(SignInResponse.class))
                 .as("로그인 결과 : %s", description)
                 .usingRecursiveComparison()
                 .ignoringFields("accessToken")
                 .isEqualTo(expectedSignInResponse);
-
-        checkAccessToken(actualResponse.as(SignInResponse.class).getAccessToken(), String.valueOf(userId));
     }
 
     static Stream<Arguments> signInProvider() {
@@ -118,19 +104,95 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
         );
     }
 
-    private void checkAccessToken(String token, String userId) throws ParseException, JOSEException {
-        SignedJWT actualRefreshToken = SignedJWT.parse(token);
-        actualRefreshToken.verify(macVerifier());
-        JWTClaimsSet jwtClaimsSet = actualRefreshToken.getJWTClaimsSet();
+    @ParameterizedTest
+    @MethodSource("signInVerifyTokenProvider")
+    @DisplayName("이메일 계정으로 로그인 한다 - access token 검증")
+    void signInVerifyAccessToken(
+            String description,
+            SignUpRequest givenSignUpRequest,
+            SignInRequest givenSignInRequest
+    ) throws ParseException, JOSEException {
+        // given
+        long userId = signUp(givenSignUpRequest);
+        RequestSpecification givenRequest = signInRequest(givenSignInRequest);
 
-        jwtClaimsSet.getSubject();
-        assertThat(jwtClaimsSet.getSubject()).isEqualTo(userId);
-        assertThat(jwtClaimsSet.getExpirationTime())
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .log().all(true)
+                                              .post();
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
+
+        SignedJWT actualAccessToken = SignedJWT.parse(actualResponse.as(SignInResponse.class).getAccessToken());
+        then(actualAccessToken.verify(macVerifier()))
+                .as("로그인 결과(access token 서명 검증) : %s", description)
+                .isTrue();
+        then(actualAccessToken.getJWTClaimsSet().getSubject())
+                .as("로그인 결과(access token subject 검증) : %s", description)
+                .isEqualTo(userId);
+        then(actualAccessToken.getJWTClaimsSet().getExpirationTime())
+                .as("로그인 결과(access token expiration time 검증) : %s", description)
                 .isAfter(LocalDateTime.now().toInstant(ZoneOffset.UTC))
                 .isBefore(LocalDateTime.now().plusMinutes(30).toInstant(ZoneOffset.UTC));
     }
 
+    @ParameterizedTest
+    @MethodSource("signInVerifyTokenProvider")
+    @DisplayName("이메일 계정으로 로그인 한다 - refresh token 검증")
+    void signInVerifyRefreshToken(
+            String description,
+            SignUpRequest givenSignUpRequest,
+            SignInRequest givenSignInRequest
+    ) throws ParseException, JOSEException {
+        // given
+        long userId = signUp(givenSignUpRequest);
+        RequestSpecification givenRequest = signInRequest(givenSignInRequest);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .log().all(true)
+                                              .post();
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
+
+        SignedJWT actualRefreshToken = SignedJWT.parse(actualResponse.cookie("refresh"));
+        then(actualRefreshToken.verify(macVerifier()))
+                .as("로그인 결과(refresh token 서명 검증) : %s", description)
+                .isTrue();
+        then(actualRefreshToken.getJWTClaimsSet().getSubject())
+                .as("로그인 결과(refresh token subject 검증) : %s", description)
+                .isEqualTo(String.valueOf(userId));
+        then(actualRefreshToken.getJWTClaimsSet().getExpirationTime())
+                .as("로그인 결과(refresh token expiration time 검증) : %s", description)
+                .isAfter(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                .isBefore(LocalDateTime.now().plusWeeks(2).toInstant(ZoneOffset.UTC));
+    }
+
+    static Stream<Arguments> signInVerifyTokenProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "성공",
+                        SignUpRequest.builder()
+                                     .nickname("nickname")
+                                     .username("username")
+                                     .email("email@email")
+                                     .password("password")
+                                     .build(),
+                        SignInRequest.builder()
+                                     .email("email@email")
+                                     .password("password")
+                                     .build()
+                )
+        );
+    }
+
     private JWSVerifier macVerifier() throws JOSEException {
+        // TODO: 서비스에서 검증 필요시 해당 메소드로 대체
         return new MACVerifier(jwtSecret);
     }
 }
