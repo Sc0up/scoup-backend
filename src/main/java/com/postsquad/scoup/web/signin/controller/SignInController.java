@@ -30,6 +30,6 @@ public class SignInController {
 
         response.addCookie(cookie);
 
-        return signInService.signIn(signInRequest);
+        return signInResponse;
     }
 }
