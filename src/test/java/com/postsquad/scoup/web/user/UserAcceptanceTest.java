@@ -52,7 +52,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @ParameterizedTest
     @MethodSource("signUpProvider")
-    @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다.")
+    @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다")
     void signUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
         // given
         String path = "/api/users";
@@ -153,7 +153,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @ParameterizedTest
     @MethodSource("signUpWhenUserAlreadyExistsProvider")
-    @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다.")
+    @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다")
     void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
         // given
         String path = "/api/users";
@@ -324,7 +324,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @ParameterizedTest
     @MethodSource("validateEmailProvider")
-    @DisplayName("이미 가입된 이메일을 입력할 경우 이메일이 중복되었다는 메시지가 반환된다.")
+    @DisplayName("이미 가입된 이메일을 입력할 경우 이메일이 중복되었다는 메시지가 반환된다")
     void validateEmail(String description, String givenEmail, EmailValidationResponse expectedEmailValidationResponse) {
         // given
         String path = "/api/users/validate/email";
@@ -426,7 +426,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @ParameterizedTest
     @MethodSource("validateNicknameProvider")
-    @DisplayName("이미 가입된 닉네임을 입력할 경우 닉네임이 중복되었다는 메시지가 반환된다.")
+    @DisplayName("이미 가입된 닉네임을 입력할 경우 닉네임이 중복되었다는 메시지가 반환된다")
     void validateNickname(String description, String givenNickname, NicknameValidationResponse expectedNicknameValidationResponse) {
         // given
         String path = "/api/users/validate/nickname";
