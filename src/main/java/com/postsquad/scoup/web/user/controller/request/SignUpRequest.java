@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.user.controller.request;
 
+import com.postsquad.scoup.web.auth.OAuthType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,10 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 @Data
 public class SignUpRequest {
+
+    private OAuthType oAuthType;
+
+    private String socialServiceId;
 
     @NotEmpty
     private String nickname;
