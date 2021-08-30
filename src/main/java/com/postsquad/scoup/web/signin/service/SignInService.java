@@ -1,6 +1,5 @@
 package com.postsquad.scoup.web.signin.service;
 
-import com.postsquad.scoup.web.signin.controller.SignInTokenGenerator;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import com.postsquad.scoup.web.signin.controller.response.SignInResponse;
 import com.postsquad.scoup.web.signin.mapper.SignInResponseMapper;
