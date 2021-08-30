@@ -16,7 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public long signUp(SignUpRequest signUpRequest) {
-        User user = UserMapper.INSTANCE.signUpRequestToUser(signUpRequest);
+        User user = UserMapper.INSTANCE.map(signUpRequest);
 
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyExistsException(user);

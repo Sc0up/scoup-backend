@@ -16,7 +16,7 @@ class UserMapperTest {
     @MethodSource("signUpRequestToUserProvider")
     void signUpRequestToUser(SignUpRequest givenSignUpRequest, User expectedUser) {
         //when
-        User actualUser = UserMapper.INSTANCE.signUpRequestToUser(givenSignUpRequest);
+        User actualUser = UserMapper.INSTANCE.map(givenSignUpRequest);
 
         //then
         then(actualUser).usingRecursiveComparison()

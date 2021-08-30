@@ -1,14 +1,22 @@
 package com.postsquad.scoup.web.user.mapper;
 
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
+import com.postsquad.scoup.web.user.domain.OAuthInfo;
 import com.postsquad.scoup.web.user.domain.User;
-import org.mapstruct.Mapper;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    User signUpRequestToUser(SignUpRequest signUpRequest);
+    User map(SignUpRequest signUpRequest);
+
+    @AfterMapping
+    default void addOAuthInfo(@MappingTarget User.UserBuilder userBuilder, SignUpRequest signUpRequest) {
+        userBuilder.oAuthInfo(List.of(new OAuthInfo(signUpRequest.getOAuthType(), signUpRequest.getSocialServiceId())));
+    }
 }
