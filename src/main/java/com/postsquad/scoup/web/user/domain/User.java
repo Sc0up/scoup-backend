@@ -1,15 +1,13 @@
 package com.postsquad.scoup.web.user.domain;
 
 import com.postsquad.scoup.web.common.BaseEntity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -35,16 +33,24 @@ public class User extends BaseEntity {
     @Column(length = 30, nullable = false)
     private String password;
 
-    protected User(String nickname, String username, String email, String avatarUrl, String password) {
+    @ElementCollection(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id")
+    private List<OAuthInfo> oAuthInfo = new ArrayList<>();
+
+    protected User(String nickname, String username, String email, String avatarUrl, String password, List<OAuthInfo> oAuthInfo) {
         this.nickname = nickname;
         this.username = username;
         this.email = email;
         this.avatarUrl = avatarUrl;
         this.password = password;
+        if (oAuthInfo != null) {
+            this.oAuthInfo = oAuthInfo;
+        }
     }
 
     @Builder
-    public static User of(String nickname, String username, String email, String avatarUrl, String password) {
-        return new User(nickname, username, email, avatarUrl, password);
+    public static User of(String nickname, String username, String email, String avatarUrl, String password, List<OAuthInfo> oAuthInfo) {
+        return new User(nickname, username, email, avatarUrl, password, oAuthInfo);
     }
 }
