@@ -276,4 +276,44 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 )
         );
     }
+
+    @ParameterizedTest
+    @MethodSource("signInWithNotExistingUserProvider")
+    @DisplayName("이메일 계정으로 회원가입 하지 않은 경우 로그인 되지 않는다")
+    void signInWithNotExistingUser(String description, SignInRequest givenSignInRequest, ErrorResponse expectedErrorResponse) {
+        // given
+        RequestSpecification givenRequest = signInRequest(givenSignInRequest);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .log().all(true)
+                                              .post();
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
+
+        then(actualResponse.as(ErrorResponse.class))
+                .as("로그인 실패 : %s", description)
+                .usingRecursiveComparison()
+                .ignoringFields(ignoringFieldsForErrorResponse)
+                .isEqualTo(expectedErrorResponse);
+    }
+
+    static Stream<Arguments> signInWithNotExistingUserProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "이메일이 존재하지 않음",
+                        SignInRequest.builder()
+                                     .email("email@email")
+                                     .password("password")
+                                     .build(),
+                        ErrorResponse.builder()
+                                     .message("Sign in failed")
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .errors(Collections.singletonList("User 'email@email' not exists"))
+                                     .build()
+                )
+        );
+    }
 }
