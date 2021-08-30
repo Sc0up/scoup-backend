@@ -1,10 +1,12 @@
 package com.postsquad.scoup.web.user;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
+import com.postsquad.scoup.web.user.domain.OAuthInfo;
 import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import io.restassured.RestAssured;
@@ -22,6 +24,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -90,6 +93,59 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                             .username("username")
                             .email("email@email")
                             .password("password")
+                            .build()
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("socialSignUpProvider")
+    @DisplayName("신규 사용자는 소셜 서비스를 통해 회원가입을 할 수 있다")
+    void socialSignUp(String description, SignUpRequest givenSocialSignUpRequest, User expectedUser) {
+        // given
+        String path = "/api/users";
+        RequestSpecification givenRequest = RestAssured.given()
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path)
+                                                       .contentType(ContentType.JSON)
+                                                       .body(givenSocialSignUpRequest);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .log().all(true)
+                                              .post();
+
+        // then
+        actualResponse.then()
+                      .statusCode(HttpStatus.CREATED.value());
+        then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
+                .as("회원가입 결과 : %s", description)
+                .usingRecursiveComparison()
+                .ignoringFields(ignoringFieldsForResponseWithId)
+                .isEqualTo(expectedUser);
+    }
+
+    private static Stream<Arguments> socialSignUpProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "성공",
+                        SignUpRequest.builder()
+                                     .oAuthType(OAuthType.GITHUB)
+                                     .socialServiceId("1234567")
+                                     .nickname("nickname")
+                                     .username("username")
+                                     .email("email@email")
+                                     .password("password")
+                                     .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
+                                     .build(),
+                        User.builder()
+                            .nickname("nickname")
+                            .username("username")
+                            .email("email@email")
+                            .password("password")
+                            .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
+                            .oAuthInfo(List.of(new OAuthInfo(OAuthType.GITHUB, "1234567")))
                             .build()
                 )
         );
