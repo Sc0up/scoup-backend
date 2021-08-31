@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.signin.service;
+package com.postsquad.scoup.web.signin.exception;
 
 public class SignInFailedException extends RuntimeException {
 

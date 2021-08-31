@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web.signin.service;
 
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
+import com.postsquad.scoup.web.signin.exception.UserNotFoundException;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

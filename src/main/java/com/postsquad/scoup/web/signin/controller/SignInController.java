@@ -3,7 +3,7 @@ package com.postsquad.scoup.web.signin.controller;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import com.postsquad.scoup.web.signin.controller.response.SignInResponse;
-import com.postsquad.scoup.web.signin.service.SignInFailedException;
+import com.postsquad.scoup.web.signin.exception.SignInFailedException;
 import com.postsquad.scoup.web.signin.service.SignInService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
