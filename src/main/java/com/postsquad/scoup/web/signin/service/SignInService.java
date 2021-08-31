@@ -18,7 +18,7 @@ public class SignInService {
 
     public SignInResponse signIn(SignInRequest signInRequest) {
         User user = userRepository.findByEmail(signInRequest.getEmail())
-                                  .orElseThrow(() -> new SignInFailedException("User '" + signInRequest.getEmail() + "' not exists"));
+                                  .orElseThrow(() -> new UserNotFoundException(signInRequest.getEmail()));
 
         if (!user.getPassword().equals(signInRequest.getPassword())) {
             // TODO: 2-2-3에서 검증
