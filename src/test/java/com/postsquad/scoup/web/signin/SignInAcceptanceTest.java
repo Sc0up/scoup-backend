@@ -291,7 +291,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
         // then
         actualResponse.then()
                       .log().all()
-                      .statusCode(HttpStatus.OK.value());
+                      .statusCode(HttpStatus.BAD_REQUEST.value());
 
         then(actualResponse.as(ErrorResponse.class))
                 .as("로그인 실패 : %s", description)
@@ -312,6 +312,17 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                                      .message("Sign in failed")
                                      .statusCode(HttpStatus.BAD_REQUEST.value())
                                      .errors(Collections.singletonList("User 'email@email' not exists"))
+                                     .build()
+                ), Arguments.of(
+                        "이메일이 존재하지 않음",
+                        SignInRequest.builder()
+                                     .email("email2@email")
+                                     .password("password")
+                                     .build(),
+                        ErrorResponse.builder()
+                                     .message("Sign in failed")
+                                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                                     .errors(Collections.singletonList("User 'email2@email' not exists"))
                                      .build()
                 )
         );

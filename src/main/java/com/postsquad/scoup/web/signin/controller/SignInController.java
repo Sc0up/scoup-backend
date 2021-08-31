@@ -1,13 +1,13 @@
 package com.postsquad.scoup.web.signin.controller;
 
+import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import com.postsquad.scoup.web.signin.controller.response.SignInResponse;
+import com.postsquad.scoup.web.signin.service.SignInFailedException;
 import com.postsquad.scoup.web.signin.service.SignInService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -31,5 +31,11 @@ public class SignInController {
         response.addCookie(cookie);
 
         return signInResponse;
+    }
+
+    @ExceptionHandler(SignInFailedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse signInFailedExceptionHandler(SignInFailedException signInFailedException) {
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST, signInFailedException.getMessage(), signInFailedException.description());
     }
 }

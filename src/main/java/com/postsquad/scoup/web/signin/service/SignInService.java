@@ -17,13 +17,11 @@ public class SignInService {
     private final SignInTokenGenerator signInTokenGenerator;
 
     public SignInResponse signIn(SignInRequest signInRequest) {
-
         User user = userRepository.findByEmail(signInRequest.getEmail())
-                                  // TODO: 2-2-2에서 검증
-                                  .orElseThrow();
+                                  .orElseThrow(() -> new SignInFailedException("User '" + signInRequest.getEmail() + "' not exists"));
 
         if (!user.getPassword().equals(signInRequest.getPassword())) {
-            // TODO: 2-2-2에서 검증
+            // TODO: 2-2-3에서 검증
         }
 
         String accessToken = signInTokenGenerator.accessToken(user.getId());
