@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,10 +16,10 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class SignUpRequest {
 
-    @NotEmpty
+    @NotNull
     private OAuthType oAuthType;
 
-    @NotEmpty
+    @NotNull
     private String socialServiceId;
 
     @NotEmpty
