@@ -58,35 +58,18 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ParameterizedTest
     @ArgumentsSource(EmailSignUpProvider.class)
     @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다")
-    void emailSignUp(String description, SignUpRequest givenEmailSignUpRequest, User expectedUser) {
-        // given
-        String path = "/api/users";
-        RequestSpecification givenRequest = RestAssured.given()
-                                                       .baseUri(BASE_URL)
-                                                       .port(port)
-                                                       .basePath(path)
-                                                       .contentType(ContentType.JSON)
-                                                       .body(givenEmailSignUpRequest);
-
-        // when
-        Response actualResponse = givenRequest.when()
-                                              .log().all(true)
-                                              .post();
-
-        // then
-        actualResponse.then()
-                      .statusCode(HttpStatus.CREATED.value());
-        then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
-                .as("회원가입 결과 : %s", description)
-                .usingRecursiveComparison()
-                .ignoringFields(ignoringFieldsForResponseWithId)
-                .isEqualTo(expectedUser);
+    void emailSignUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
+        signUp(description, givenSignUpRequest, expectedUser);
     }
 
     @ParameterizedTest
     @ArgumentsSource(SocialSignUpProvider.class)
     @DisplayName("신규 사용자는 소셜 서비스를 통해 회원가입을 할 수 있다")
-    void socialSignUp(String description, SignUpRequest givenSocialSignUpRequest, User expectedUser) {
+    void socialSignUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
+        signUp(description, givenSignUpRequest, expectedUser);
+    }
+
+    private void signUp(String description, SignUpRequest givenSocialSignUpRequest, User expectedUser) {
         // given
         String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
