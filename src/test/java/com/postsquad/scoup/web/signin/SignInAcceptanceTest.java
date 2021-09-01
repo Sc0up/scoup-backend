@@ -5,6 +5,7 @@ import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.SignedJWT;
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import com.postsquad.scoup.web.signin.controller.response.SignInResponse;
@@ -100,6 +101,8 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "성공",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
                                      .email("email@email")
@@ -191,6 +194,8 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "성공",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
                                      .email("email@email")
@@ -244,6 +249,8 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "이메일 없음",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
                                      .email("email@email")
@@ -260,6 +267,8 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "비밀번호 없음",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
                                      .email("email@email")
