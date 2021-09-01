@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.user.domain;
 import com.postsquad.scoup.web.auth.OAuthType;
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,6 +13,7 @@ import javax.persistence.Enumerated;
 @Embeddable
 public class OAuthUser {
 
+    @Column(name = "oauth_type")
     @Enumerated(EnumType.STRING)
     private OAuthType oAuthType;
 
