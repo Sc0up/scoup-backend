@@ -1,13 +1,12 @@
 package com.postsquad.scoup.web.user;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
-import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
-import com.postsquad.scoup.web.user.domain.OAuthUser;
 import com.postsquad.scoup.web.user.domain.User;
+import com.postsquad.scoup.web.user.provider.*;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -17,15 +16,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -51,9 +44,9 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     }
 
     @ParameterizedTest
-    @MethodSource("signUpProvider")
+    @ArgumentsSource(EmailSignUpProvider.class)
     @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다")
-    void signUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
+    void emailSignUp(String description, SignUpRequest givenEmailSignUpRequest, User expectedUser) {
         // given
         String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
@@ -61,7 +54,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                                        .port(port)
                                                        .basePath(path)
                                                        .contentType(ContentType.JSON)
-                                                       .body(givenSignUpRequest);
+                                                       .body(givenEmailSignUpRequest);
 
         // when
         Response actualResponse = givenRequest.when()
@@ -78,31 +71,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .isEqualTo(expectedUser);
     }
 
-    static Stream<Arguments> signUpProvider() {
-        return Stream.of(
-                Arguments.of(
-                        "성공",
-                        SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
-                                     .socialServiceId("")
-                                     .nickname("nickname")
-                                     .username("username")
-                                     .email("email@email")
-                                     .password("password")
-                                     .build(),
-                        User.builder()
-                            .nickname("nickname")
-                            .username("username")
-                            .email("email@email")
-                            .password("password")
-                            .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "")))
-                            .build()
-                )
-        );
-    }
-
     @ParameterizedTest
-    @MethodSource("socialSignUpProvider")
+    @ArgumentsSource(SocialSignUpProvider.class)
     @DisplayName("신규 사용자는 소셜 서비스를 통해 회원가입을 할 수 있다")
     void socialSignUp(String description, SignUpRequest givenSocialSignUpRequest, User expectedUser) {
         // given
@@ -129,33 +99,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .isEqualTo(expectedUser);
     }
 
-    static Stream<Arguments> socialSignUpProvider() {
-        return Stream.of(
-                Arguments.of(
-                        "성공",
-                        SignUpRequest.builder()
-                                     .oAuthType(OAuthType.GITHUB)
-                                     .socialServiceId("1234567")
-                                     .nickname("nickname")
-                                     .username("username")
-                                     .email("email@email")
-                                     .password("password")
-                                     .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
-                                     .build(),
-                        User.builder()
-                            .nickname("nickname")
-                            .username("username")
-                            .email("email@email")
-                            .password("password")
-                            .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
-                            .oAuthUsers(List.of(OAuthUser.of(OAuthType.GITHUB, "1234567")))
-                            .build()
-                )
-        );
-    }
-
     @ParameterizedTest
-    @MethodSource("signUpWhenUserAlreadyExistsProvider")
+    @ArgumentsSource(SignUpWhenUserAlreadyExistsProvider.class)
     @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다")
     void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
         // given
@@ -182,44 +127,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .isEqualTo(expectedResponse);
     }
 
-    static Stream<Arguments> signUpWhenUserAlreadyExistsProvider() {
-        return Stream.of(
-                Arguments.of(
-                        "실패 - 이미 가입한 이메일(email@email)",
-                        SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
-                                     .socialServiceId("")
-                                     .username("username")
-                                     .nickname("nickname")
-                                     .email("existing@email.com")
-                                     .password("password")
-                                     .build(),
-                        ErrorResponse.builder()
-                                     .message("Sign up failed")
-                                     .statusCode(400)
-                                     .errors(Arrays.asList("User email 'existing@email.com' already exists"))
-                                     .build()
-                ), Arguments.of(
-                        "실패 - 이미 가입한 닉네임(nickname)",
-                        SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
-                                     .socialServiceId("")
-                                     .username("username")
-                                     .nickname("existing")
-                                     .email("email2@email")
-                                     .password("password")
-                                     .build(),
-                        ErrorResponse.builder()
-                                     .message("Sign up failed")
-                                     .statusCode(400)
-                                     .errors(Arrays.asList("User nickname 'existing' already exists"))
-                                     .build()
-                )
-        );
-    }
-
     @ParameterizedTest
-    @MethodSource("signUpWithValidationProvider")
+    @ArgumentsSource(SignUpWithValidationProvider.class)
     @DisplayName("회원가입 DTO validation")
     void signUpWithValidation(String description, SignUpRequest givenSignUpRequest, ErrorResponse expectedResponse) {
         // given
@@ -249,100 +158,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .isEqualTo(expectedResponse);
     }
 
-    static Stream<Arguments> signUpWithValidationProvider() {
-        return Stream.of(
-                Arguments.of(
-                        "실패 - nickname 없음",
-                        SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
-                                     .socialServiceId("")
-                                     .username("username")
-                                     .email("email@email")
-                                     .password("password")
-                                     .build(),
-                        ErrorResponse.builder()
-                                     .message("Method argument not valid.")
-                                     .statusCode(400)
-                                     .errors(Arrays.asList("nickname: 비어 있을 수 없습니다"))
-                                     .build()
-                ), Arguments.of(
-                        "실패 - username 없음",
-                        SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
-                                     .socialServiceId("")
-                                     .nickname("nickname")
-                                     .email("email@email")
-                                     .password("password")
-                                     .build(),
-                        ErrorResponse.builder()
-                                     .message("Method argument not valid.")
-                                     .statusCode(400)
-                                     .errors(Arrays.asList("username: 비어 있을 수 없습니다"))
-                                     .build()
-                ), Arguments.of(
-                        "실패 - email 없음",
-                        SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
-                                     .socialServiceId("")
-                                     .nickname("nickname")
-                                     .username("username")
-                                     .password("password")
-                                     .build(),
-                        ErrorResponse.builder()
-                                     .message("Method argument not valid.")
-                                     .statusCode(400)
-                                     .errors(Arrays.asList("email: 비어 있을 수 없습니다"))
-                                     .build()
-                ), Arguments.of(
-                        "실패 - password 없음",
-                        SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
-                                     .socialServiceId("")
-                                     .nickname("nickname")
-                                     .username("username")
-                                     .email("email@email")
-                                     .build(),
-                        ErrorResponse.builder()
-                                     .message("Method argument not valid.")
-                                     .statusCode(400)
-                                     .errors(Arrays.asList("password: 비어 있을 수 없습니다"))
-                                     .build()
-                ), Arguments.of(
-                        "실패 - email 형식 다름",
-                        SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
-                                     .socialServiceId("")
-                                     .nickname("nickname")
-                                     .username("username")
-                                     .email("email")
-                                     .password("password")
-                                     .build(),
-                        ErrorResponse.builder()
-                                     .message("Method argument not valid.")
-                                     .statusCode(400)
-                                     .errors(Arrays.asList("email: 올바른 형식의 이메일 주소여야 합니다"))
-                                     .build()
-                ), Arguments.of(
-                        "실패 - 모두 없음",
-                        SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
-                                     .socialServiceId("")
-                                     .build(),
-                        ErrorResponse.builder()
-                                     .message("Method argument not valid.")
-                                     .statusCode(400)
-                                     .errors(Arrays.asList(
-                                             "nickname: 비어 있을 수 없습니다",
-                                             "email: 비어 있을 수 없습니다",
-                                             "password: 비어 있을 수 없습니다",
-                                             "username: 비어 있을 수 없습니다"
-                                     )).build()
-                )
-        );
-    }
-
     @ParameterizedTest
-    @MethodSource("validateEmailProvider")
+    @ArgumentsSource(ValidateEmailProvider.class)
     @DisplayName("이미 가입된 이메일을 입력할 경우 이메일이 중복되었다는 메시지가 반환된다")
     void validateEmail(String description, String givenEmail, EmailValidationResponse expectedEmailValidationResponse) {
         // given
@@ -369,22 +186,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .isEqualTo(expectedEmailValidationResponse);
     }
 
-    static Stream<Arguments> validateEmailProvider() {
-        return Stream.of(
-                Arguments.of(
-                        "성공: 중복된 이메일",
-                        "existing@email.com",
-                        EmailValidationResponse.valueOf(true)
-                ), Arguments.of(
-                        "성공: 중복되지 않은 이메일",
-                        "notExisting@email.com",
-                        EmailValidationResponse.valueOf(false)
-                )
-        );
-    }
-
     @ParameterizedTest
-    @MethodSource("validateEmailRequestParamProvider")
+    @ArgumentsSource(ValidateEmailRequestParamProvider.class)
     @DisplayName("email as RequestParam validation")
     void validateEmailAsRequestParam(String description, String invalidEmail, ErrorResponse expectedResponse) {
         // given
@@ -413,38 +216,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .isEqualTo(expectedResponse);
     }
 
-    static Stream<Arguments> validateEmailRequestParamProvider() {
-        return Stream.of(
-                Arguments.of(
-                        "실패: 빈 문자열",
-                        "",
-                        ErrorResponse.builder()
-                                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                                     .message("Method argument not valid.")
-                                     .errors(Collections.singletonList("validateEmail.email: must not be empty"))
-                                     .build()
-                ), Arguments.of(
-                        "실패: null",
-                        null,
-                        ErrorResponse.builder()
-                                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                                     .message("Method argument not valid.")
-                                     .errors(Collections.singletonList("validateEmail.email: must not be empty"))
-                                     .build()
-                ), Arguments.of(
-                        "실패: 이메일 형식",
-                        "email",
-                        ErrorResponse.builder()
-                                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                                     .message("Method argument not valid.")
-                                     .errors(Collections.singletonList("validateEmail.email: must be a well-formed email address"))
-                                     .build()
-                )
-        );
-    }
-
     @ParameterizedTest
-    @MethodSource("validateNicknameProvider")
+    @ArgumentsSource(ValidateNicknameProvider.class)
     @DisplayName("이미 가입된 닉네임을 입력할 경우 닉네임이 중복되었다는 메시지가 반환된다")
     void validateNickname(String description, String givenNickname, NicknameValidationResponse expectedNicknameValidationResponse) {
         // given
@@ -471,23 +244,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .isEqualTo(expectedNicknameValidationResponse);
     }
 
-    static Stream<Arguments> validateNicknameProvider() {
-        return Stream.of(
-                Arguments.of(
-                        "성공: 중복된 닉네임",
-                        "existing",
-                        NicknameValidationResponse.valueOf(true)
-                ),
-                Arguments.of(
-                        "성공: 중복되지 않은 닉네임",
-                        "notExistingNickname",
-                        NicknameValidationResponse.valueOf(false)
-                )
-        );
-    }
-
     @ParameterizedTest
-    @MethodSource("validateNicknameRequestParamProvider")
+    @ArgumentsSource(ValidateNicknameRequestParamProvider.class)
     @DisplayName("nickname as RequestParam validation")
     void validateNicknameAsRequestParam(String description, String invalidNickname, ErrorResponse expectedResponse) {
         // given
@@ -514,28 +272,5 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .usingRecursiveComparison()
                 .ignoringFields(ignoringFieldsForErrorResponse)
                 .isEqualTo(expectedResponse);
-    }
-
-    static Stream<Arguments> validateNicknameRequestParamProvider() {
-        return Stream.of(
-                Arguments.of(
-                        "실패: 빈 문자열",
-                        "",
-                        ErrorResponse.builder()
-                                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                                     .message("Method argument not valid.")
-                                     .errors(Collections.singletonList("validateNickname.nickname: must not be empty"))
-                                     .build()
-                ),
-                Arguments.of(
-                        "실패: null",
-                        null,
-                        ErrorResponse.builder()
-                                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                                     .message("Method argument not valid.")
-                                     .errors(Collections.singletonList("validateNickname.nickname: must not be empty"))
-                                     .build()
-                )
-        );
     }
 }
