@@ -31,6 +31,23 @@ class UserMapperTest {
         return Stream.of(
                 Arguments.arguments(
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
+                                     .nickname("nickname")
+                                     .username("username")
+                                     .email("email")
+                                     .password("password")
+                                     .build(),
+                        User.builder()
+                            .nickname("nickname")
+                            .username("username")
+                            .email("email")
+                            .password("password")
+                            .oAuthInfoList(List.of(new OAuthInfo(OAuthType.NONE, "")))
+                            .build()
+                ),
+                Arguments.arguments(
+                        SignUpRequest.builder()
                                      .oAuthType(OAuthType.GITHUB)
                                      .socialServiceId("1234567")
                                      .nickname("nickname")
@@ -45,7 +62,7 @@ class UserMapperTest {
                             .email("email@email")
                             .password("password")
                             .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
-                            .oAuthInfo(List.of(new OAuthInfo(OAuthType.GITHUB, "1234567")))
+                            .oAuthInfoList(List.of(new OAuthInfo(OAuthType.GITHUB, "1234567")))
                             .build()
                 )
         );
