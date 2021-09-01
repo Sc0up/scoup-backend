@@ -83,6 +83,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "성공",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
                                      .email("email@email")
@@ -93,6 +95,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                             .username("username")
                             .email("email@email")
                             .password("password")
+                            .oAuthInfoList(List.of(new OAuthInfo(OAuthType.NONE, "")))
                             .build()
                 )
         );
@@ -184,6 +187,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "실패 - 이미 가입한 이메일(email@email)",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .username("username")
                                      .nickname("nickname")
                                      .email("existing@email.com")
@@ -197,6 +202,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "실패 - 이미 가입한 닉네임(nickname)",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .username("username")
                                      .nickname("existing")
                                      .email("email2@email")
@@ -247,6 +254,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "실패 - nickname 없음",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .username("username")
                                      .email("email@email")
                                      .password("password")
@@ -259,6 +268,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "실패 - username 없음",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .email("email@email")
                                      .password("password")
@@ -271,6 +282,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "실패 - email 없음",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
                                      .password("password")
@@ -283,6 +296,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "실패 - password 없음",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
                                      .email("email@email")
@@ -295,6 +310,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "실패 - email 형식 다름",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
                                      .email("email")
@@ -308,6 +325,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "실패 - 모두 없음",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .build(),
                         ErrorResponse.builder()
                                      .message("Method argument not valid.")
