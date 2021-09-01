@@ -126,7 +126,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 .isEqualTo(expectedUser);
     }
 
-    private static Stream<Arguments> socialSignUpProvider() {
+    static Stream<Arguments> socialSignUpProvider() {
         return Stream.of(
                 Arguments.of(
                         "성공",
