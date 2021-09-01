@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.user.service;
 
+import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
@@ -17,6 +18,10 @@ public class UserService {
 
     public long signUp(SignUpRequest signUpRequest) {
         User user = UserMapper.INSTANCE.map(signUpRequest);
+
+        if (user.getFirstRegisteredOAuthType() != OAuthType.NONE && userRepository.existsByOAuthUser(user.getFirstRegisteredOAuthUser())) {
+            throw new OAuthUserAlreadyExistsException(user);
+        }
 
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyExistsException(user);
