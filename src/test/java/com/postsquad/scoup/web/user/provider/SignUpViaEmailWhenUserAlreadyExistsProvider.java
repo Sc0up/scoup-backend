@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-public class SignUpWhenUserAlreadyExistsProvider implements ArgumentsProvider {
+public class SignUpViaEmailWhenUserAlreadyExistsProvider implements ArgumentsProvider {
 
     @Override
     public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
