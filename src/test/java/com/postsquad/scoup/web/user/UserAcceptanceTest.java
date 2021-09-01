@@ -1,10 +1,12 @@
 package com.postsquad.scoup.web.user;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
+import com.postsquad.scoup.web.user.domain.OAuthUser;
 import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import io.restassured.RestAssured;
@@ -22,6 +24,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -49,7 +52,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @ParameterizedTest
     @MethodSource("signUpProvider")
-    @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다.")
+    @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다")
     void signUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
         // given
         String path = "/api/users";
@@ -80,6 +83,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "성공",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
                                      .email("email@email")
@@ -90,6 +95,60 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                             .username("username")
                             .email("email@email")
                             .password("password")
+                            .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "")))
+                            .build()
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("socialSignUpProvider")
+    @DisplayName("신규 사용자는 소셜 서비스를 통해 회원가입을 할 수 있다")
+    void socialSignUp(String description, SignUpRequest givenSocialSignUpRequest, User expectedUser) {
+        // given
+        String path = "/api/users";
+        RequestSpecification givenRequest = RestAssured.given()
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path)
+                                                       .contentType(ContentType.JSON)
+                                                       .body(givenSocialSignUpRequest);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .log().all(true)
+                                              .post();
+
+        // then
+        actualResponse.then()
+                      .statusCode(HttpStatus.CREATED.value());
+        then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
+                .as("회원가입 결과 : %s", description)
+                .usingRecursiveComparison()
+                .ignoringFields(ignoringFieldsForResponseWithId)
+                .isEqualTo(expectedUser);
+    }
+
+    static Stream<Arguments> socialSignUpProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "성공",
+                        SignUpRequest.builder()
+                                     .oAuthType(OAuthType.GITHUB)
+                                     .socialServiceId("1234567")
+                                     .nickname("nickname")
+                                     .username("username")
+                                     .email("email@email")
+                                     .password("password")
+                                     .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
+                                     .build(),
+                        User.builder()
+                            .nickname("nickname")
+                            .username("username")
+                            .email("email@email")
+                            .password("password")
+                            .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
+                            .oAuthUsers(List.of(OAuthUser.of(OAuthType.GITHUB, "1234567")))
                             .build()
                 )
         );
@@ -97,7 +156,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @ParameterizedTest
     @MethodSource("signUpWhenUserAlreadyExistsProvider")
-    @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다.")
+    @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다")
     void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
         // given
         String path = "/api/users";
@@ -128,6 +187,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "실패 - 이미 가입한 이메일(email@email)",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .username("username")
                                      .nickname("nickname")
                                      .email("existing@email.com")
@@ -141,6 +202,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "실패 - 이미 가입한 닉네임(nickname)",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .username("username")
                                      .nickname("existing")
                                      .email("email2@email")
@@ -191,6 +254,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "실패 - nickname 없음",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .username("username")
                                      .email("email@email")
                                      .password("password")
@@ -203,6 +268,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "실패 - username 없음",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .email("email@email")
                                      .password("password")
@@ -215,6 +282,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "실패 - email 없음",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
                                      .password("password")
@@ -227,6 +296,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "실패 - password 없음",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
                                      .email("email@email")
@@ -239,6 +310,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "실패 - email 형식 다름",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
                                      .email("email")
@@ -252,6 +325,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "실패 - 모두 없음",
                         SignUpRequest.builder()
+                                     .oAuthType(OAuthType.NONE)
+                                     .socialServiceId("")
                                      .build(),
                         ErrorResponse.builder()
                                      .message("Method argument not valid.")
@@ -268,7 +343,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @ParameterizedTest
     @MethodSource("validateEmailProvider")
-    @DisplayName("이미 가입된 이메일을 입력할 경우 이메일이 중복되었다는 메시지가 반환된다.")
+    @DisplayName("이미 가입된 이메일을 입력할 경우 이메일이 중복되었다는 메시지가 반환된다")
     void validateEmail(String description, String givenEmail, EmailValidationResponse expectedEmailValidationResponse) {
         // given
         String path = "/api/users/validate/email";
@@ -370,7 +445,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @ParameterizedTest
     @MethodSource("validateNicknameProvider")
-    @DisplayName("이미 가입된 닉네임을 입력할 경우 닉네임이 중복되었다는 메시지가 반환된다.")
+    @DisplayName("이미 가입된 닉네임을 입력할 경우 닉네임이 중복되었다는 메시지가 반환된다")
     void validateNickname(String description, String givenNickname, NicknameValidationResponse expectedNicknameValidationResponse) {
         // given
         String path = "/api/users/validate/nickname";
