@@ -36,21 +36,21 @@ public class User extends BaseEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
-    private List<OAuthInfo> oAuthInfo = new ArrayList<>();
+    private List<OAuthInfo> oAuthInfoList = new ArrayList<>();
 
-    protected User(String nickname, String username, String email, String avatarUrl, String password, List<OAuthInfo> oAuthInfo) {
+    protected User(String nickname, String username, String email, String avatarUrl, String password, List<OAuthInfo> oAuthInfoList) {
         this.nickname = nickname;
         this.username = username;
         this.email = email;
         this.avatarUrl = avatarUrl;
         this.password = password;
-        if (oAuthInfo != null) {
-            this.oAuthInfo = oAuthInfo;
+        if (oAuthInfoList != null) {
+            this.oAuthInfoList = oAuthInfoList;
         }
     }
 
     @Builder
-    public static User of(String nickname, String username, String email, String avatarUrl, String password, List<OAuthInfo> oAuthInfo) {
-        return new User(nickname, username, email, avatarUrl, password, oAuthInfo);
+    public static User of(String nickname, String username, String email, String avatarUrl, String password, List<OAuthInfo> oAuthInfoList) {
+        return new User(nickname, username, email, avatarUrl, password, oAuthInfoList);
     }
 }

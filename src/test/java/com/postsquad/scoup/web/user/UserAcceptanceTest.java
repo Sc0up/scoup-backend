@@ -145,7 +145,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                             .email("email@email")
                             .password("password")
                             .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
-                            .oAuthInfo(List.of(new OAuthInfo(OAuthType.GITHUB, "1234567")))
+                            .oAuthInfoList(List.of(new OAuthInfo(OAuthType.GITHUB, "1234567")))
                             .build()
                 )
         );
