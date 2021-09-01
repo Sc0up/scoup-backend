@@ -34,8 +34,6 @@ public class User extends BaseEntity {
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id")
     private List<OAuthUser> oAuthUsers = new ArrayList<>();
 
     protected User(String nickname, String username, String email, String avatarUrl, String password, List<OAuthUser> oAuthUsers) {
