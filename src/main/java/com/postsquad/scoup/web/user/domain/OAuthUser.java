@@ -11,7 +11,7 @@ import javax.persistence.Enumerated;
 @AllArgsConstructor
 @Getter
 @Embeddable
-public class OAuthInfo {
+public class OAuthUser {
 
     @Enumerated(EnumType.STRING)
     private OAuthType oAuthType;

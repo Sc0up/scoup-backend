@@ -6,7 +6,7 @@ import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
-import com.postsquad.scoup.web.user.domain.OAuthInfo;
+import com.postsquad.scoup.web.user.domain.OAuthUser;
 import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import io.restassured.RestAssured;
@@ -95,7 +95,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                             .username("username")
                             .email("email@email")
                             .password("password")
-                            .oAuthInfoList(List.of(new OAuthInfo(OAuthType.NONE, "")))
+                            .oAuthUsers(List.of(new OAuthUser(OAuthType.NONE, "")))
                             .build()
                 )
         );
@@ -148,7 +148,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                             .email("email@email")
                             .password("password")
                             .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
-                            .oAuthInfoList(List.of(new OAuthInfo(OAuthType.GITHUB, "1234567")))
+                            .oAuthUsers(List.of(new OAuthUser(OAuthType.GITHUB, "1234567")))
                             .build()
                 )
         );

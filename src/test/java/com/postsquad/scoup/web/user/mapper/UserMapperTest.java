@@ -2,7 +2,7 @@ package com.postsquad.scoup.web.user.mapper;
 
 import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
-import com.postsquad.scoup.web.user.domain.OAuthInfo;
+import com.postsquad.scoup.web.user.domain.OAuthUser;
 import com.postsquad.scoup.web.user.domain.User;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -43,7 +43,7 @@ class UserMapperTest {
                             .username("username")
                             .email("email")
                             .password("password")
-                            .oAuthInfoList(List.of(new OAuthInfo(OAuthType.NONE, "")))
+                            .oAuthUsers(List.of(new OAuthUser(OAuthType.NONE, "")))
                             .build()
                 ),
                 Arguments.arguments(
@@ -62,7 +62,7 @@ class UserMapperTest {
                             .email("email@email")
                             .password("password")
                             .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
-                            .oAuthInfoList(List.of(new OAuthInfo(OAuthType.GITHUB, "1234567")))
+                            .oAuthUsers(List.of(new OAuthUser(OAuthType.GITHUB, "1234567")))
                             .build()
                 )
         );
