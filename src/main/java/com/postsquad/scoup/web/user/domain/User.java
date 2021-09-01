@@ -44,9 +44,7 @@ public class User extends BaseEntity {
         this.email = email;
         this.avatarUrl = avatarUrl;
         this.password = password;
-        if (oAuthInfoList != null) {
-            this.oAuthInfoList = oAuthInfoList;
-        }
+        this.oAuthInfoList = oAuthInfoList;
     }
 
     @Builder

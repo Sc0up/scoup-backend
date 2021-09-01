@@ -15,8 +15,10 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class SignUpRequest {
 
+    @NotEmpty
     private OAuthType oAuthType;
 
+    @NotEmpty
     private String socialServiceId;
 
     @NotEmpty
