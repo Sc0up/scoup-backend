@@ -95,7 +95,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                             .username("username")
                             .email("email@email")
                             .password("password")
-                            .oAuthUsers(List.of(new OAuthUser(OAuthType.NONE, "")))
+                            .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "")))
                             .build()
                 )
         );
@@ -148,7 +148,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                             .email("email@email")
                             .password("password")
                             .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
-                            .oAuthUsers(List.of(new OAuthUser(OAuthType.GITHUB, "1234567")))
+                            .oAuthUsers(List.of(OAuthUser.of(OAuthType.GITHUB, "1234567")))
                             .build()
                 )
         );

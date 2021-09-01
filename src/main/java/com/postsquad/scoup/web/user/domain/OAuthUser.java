@@ -8,7 +8,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 @Embeddable
 public class OAuthUser {
@@ -17,4 +16,14 @@ public class OAuthUser {
     private OAuthType oAuthType;
 
     private String socialServiceId;
+
+    protected OAuthUser(OAuthType oAuthType, String socialServiceId) {
+        this.oAuthType = oAuthType;
+        this.socialServiceId = socialServiceId;
+    }
+
+    @Builder
+    public static OAuthUser of(OAuthType oAuthType, String socialServiceId) {
+        return new OAuthUser(oAuthType, socialServiceId);
+    }
 }

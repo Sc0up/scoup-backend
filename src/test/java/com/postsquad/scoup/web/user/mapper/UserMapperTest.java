@@ -43,7 +43,7 @@ class UserMapperTest {
                             .username("username")
                             .email("email")
                             .password("password")
-                            .oAuthUsers(List.of(new OAuthUser(OAuthType.NONE, "")))
+                            .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "")))
                             .build()
                 ),
                 Arguments.arguments(
@@ -62,7 +62,7 @@ class UserMapperTest {
                             .email("email@email")
                             .password("password")
                             .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
-                            .oAuthUsers(List.of(new OAuthUser(OAuthType.GITHUB, "1234567")))
+                            .oAuthUsers(List.of(OAuthUser.of(OAuthType.GITHUB, "1234567")))
                             .build()
                 )
         );
