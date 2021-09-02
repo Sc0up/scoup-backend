@@ -34,8 +34,8 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
     EntityManager entityManager;
 
     @ParameterizedTest
-    @MethodSource("readProvider")
-    void read(
+    @MethodSource("readAllProvider")
+    void readAll(
             String description,
             List<Schedule> givenSchedules,
             ScheduleCandidateReadRequest givenScheduleCandidateReadRequest,
@@ -59,7 +59,7 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
         Response actualResponse = givenRequest.when()
                                               .accept(ContentType.JSON)
                                               .log().all()
-                                              .post();
+                                              .get();
 
         // then
         actualResponse.then()
@@ -73,21 +73,31 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
 
     }
 
-    static Stream<Arguments> readProvider() {
+    static Stream<Arguments> readAllProvider() {
+        class ReadAllTestData {
+            Schedule schedule1() {
+                return Schedule.builder()
+                               .title("title")
+                               .dueDateTime(LocalDateTime.now())
+                               .scheduleCandidates(Arrays.asList(
+                                       scheduleCandidate1()
+                               )).build();
+            }
+
+            ScheduleCandidate scheduleCandidate1() {
+                return ScheduleCandidate.builder()
+                                        .isConfirmed(false)
+                                        .startDateTime(LocalDateTime.parse("2021-09-01T12:00"))
+                                        .endDateTime(LocalDateTime.parse("2021-09-01T15:00"))
+                                        .build();
+            }
+        }
+        ReadAllTestData readAllTestData = new ReadAllTestData();
         return Stream.of(
                 Arguments.of(
                         "",
                         Arrays.asList(
-                                Schedule.builder()
-                                        .title("title")
-                                        .dueDateTime(LocalDateTime.now())
-                                        .scheduleCandidates(Arrays.asList(
-                                                ScheduleCandidate.builder()
-                                                                 .isConfirmed(false)
-                                                                 .startDateTime(LocalDateTime.now())
-                                                                 .endDateTime(LocalDateTime.now())
-                                                                 .build()
-                                        )).build()
+                                readAllTestData.schedule1()
                         ),
                         ScheduleCandidateReadRequest.builder()
                                                     .startDate(LocalDate.now())
@@ -98,8 +108,8 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
                                         LocalDate.now(),
                                         Arrays.asList(
                                                 ScheduleCandidateReadAllResponse.builder()
-                                                                                .startDateTime(LocalDateTime.now())
-                                                                                .endDateTime(LocalDateTime.now())
+                                                                                .startDateTime(readAllTestData.scheduleCandidate1().getStartDateTime())
+                                                                                .endDateTime(readAllTestData.scheduleCandidate1().getEndDateTime())
                                                                                 .isConfirmed(false)
                                                                                 .scheduleTitle("title")
                                                                                 .build()
