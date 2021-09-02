@@ -3,7 +3,7 @@ package com.postsquad.scoup.web.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postsquad.scoup.web.signin.controller.SignInInterceptor;
 import com.postsquad.scoup.web.user.UserArgumentResolver;
-import io.netty.resolver.DefaultAddressResolverGroup;:
+import io.netty.resolver.DefaultAddressResolverGroup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
