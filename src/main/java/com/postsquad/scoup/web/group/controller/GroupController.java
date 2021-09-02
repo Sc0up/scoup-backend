@@ -4,6 +4,8 @@ import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.exception.GroupCreationFailedException;
 import com.postsquad.scoup.web.group.service.GroupService;
+import com.postsquad.scoup.web.user.LoggedInUser;
+import com.postsquad.scoup.web.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +21,8 @@ public class GroupController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long create(@RequestBody @Valid GroupCreationRequest groupCreationRequest) {
-        return groupService.create(groupCreationRequest);
+    public Long create(@RequestBody @Valid GroupCreationRequest groupCreationRequest, @LoggedInUser User user) {
+        return groupService.create(groupCreationRequest, user);
     }
 
     @ExceptionHandler(GroupCreationFailedException.class)

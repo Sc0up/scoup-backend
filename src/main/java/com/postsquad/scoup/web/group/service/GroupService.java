@@ -5,6 +5,7 @@ import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.group.exception.GroupNameAlreadyExistException;
 import com.postsquad.scoup.web.group.mapper.GroupMapper;
 import com.postsquad.scoup.web.group.repository.GroupRepository;
+import com.postsquad.scoup.web.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +15,13 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
 
-    public Long create(GroupCreationRequest groupCreationRequest) {
+    public Long create(GroupCreationRequest groupCreationRequest, User user) {
 
         if (groupRepository.existsByName(groupCreationRequest.getName())) {
             throw new GroupNameAlreadyExistException(groupCreationRequest.getName());
         }
 
-        Group group = GroupMapper.INSTANCE.groupCreationRequestToGroup(groupCreationRequest);
+        Group group = GroupMapper.INSTANCE.groupCreationRequestToGroup(groupCreationRequest, user);
 
         return groupRepository.save(group).getId();
     }
