@@ -18,6 +18,11 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     boolean existsByNickname(String nickname);
 
-    @Query("select case when count(u)>0 then true else false end from User u where :oAuthUser member of u.oAuthUsers")
-    boolean existsByOAuthUser(@Param("oAuthUser") OAuthUser oAuthUser);
+    @Query(value = "select count(*) from \"oauth_user\" where \"oauth_type\"=:oAuthType and \"social_service_id\"=:socialServiceId",
+           nativeQuery = true)
+    long existsByOAuthUser(@Param("oAuthType") String oAuthType, @Param("socialServiceId") String socialServiceId);
+
+    default boolean existsByOAuthUser(OAuthUser oAuthUser) {
+        return existsByOAuthUser(oAuthUser.getOAuthTypeName(), oAuthUser.getSocialServiceId()) > 0;
+    }
 }
