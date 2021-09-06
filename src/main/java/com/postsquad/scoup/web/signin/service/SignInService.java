@@ -1,8 +1,8 @@
 package com.postsquad.scoup.web.signin.service;
 
-import com.postsquad.scoup.web.signin.controller.SignInTokenGenerator;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import com.postsquad.scoup.web.signin.controller.response.SignInResponse;
+import com.postsquad.scoup.web.signin.exception.UserNotFoundException;
 import com.postsquad.scoup.web.signin.mapper.SignInResponseMapper;
 import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
@@ -18,13 +18,11 @@ public class SignInService {
     private final SignInTokenGenerator signInTokenGenerator;
 
     public SignInResponse signIn(SignInRequest signInRequest) {
-
         User user = userRepository.findByEmail(signInRequest.getEmail())
-                                  // TODO: 2-2-2에서 검증
-                                  .orElseThrow();
+                                  .orElseThrow(() -> new UserNotFoundException(signInRequest.getEmail()));
 
         if (!user.getPassword().equals(signInRequest.getPassword())) {
-            // TODO: 2-2-2에서 검증
+            // TODO: 2-2-3에서 검증
         }
 
         String accessToken = signInTokenGenerator.accessToken(user.getId());

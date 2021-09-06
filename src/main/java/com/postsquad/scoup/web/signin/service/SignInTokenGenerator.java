@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.signin.controller;
+package com.postsquad.scoup.web.signin.service;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
