@@ -38,16 +38,6 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .avatarUrl("avatarUrl")
                                 .password("password")
                                 .build());
-        if (testInfo.getTags().contains("social-sign-up-fail")) {
-            userRepository.save(User.builder()
-                                    .nickname("nickname")
-                                    .username("username")
-                                    .email("email@email.com")
-                                    .avatarUrl("avatarUrl")
-                                    .password("password")
-                                    .oAuthUsers(List.of(OAuthUser.of(OAuthType.GITHUB, "1234567")))
-                                    .build());
-        }
     }
 
     @AfterEach
@@ -103,9 +93,16 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @ParameterizedTest
     @ArgumentsSource(SignUpViaSocialWhenUserAlreadyExistsProvider.class)
-    @Tag("social-sign-up-fail")
     @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다 - 소셜")
     void signUpViaSocialWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
+        userRepository.save(User.builder()
+                                .nickname("nickname")
+                                .username("username")
+                                .email("email@email.com")
+                                .avatarUrl("avatarUrl")
+                                .password("password")
+                                .oAuthUsers(List.of(OAuthUser.of(OAuthType.GITHUB, "1234567")))
+                                .build());
         signUpWhenUserAlreadyExists(description, givenSignUpRequestAlreadyExists, expectedResponse);
     }
 

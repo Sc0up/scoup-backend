@@ -20,7 +20,7 @@ public class SignUpViaSocialWhenUserAlreadyExistsProvider implements ArgumentsPr
                                      .oAuthType(OAuthType.GITHUB)
                                      .socialServiceId("1234567")
                                      .username("username")
-                                     .nickname("existing")
+                                     .nickname("nickname2")
                                      .email("email2@email")
                                      .password("password")
                                      .build(),
