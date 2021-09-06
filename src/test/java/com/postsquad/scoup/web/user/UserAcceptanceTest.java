@@ -30,7 +30,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     UserRepository userRepository;
 
     @BeforeEach
-    void setUp(TestInfo testInfo) {
+    void setUp() {
         userRepository.save(User.builder()
                                 .nickname("existing")
                                 .username("username")
