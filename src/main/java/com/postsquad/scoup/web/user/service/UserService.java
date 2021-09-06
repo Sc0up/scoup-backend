@@ -19,7 +19,7 @@ public class UserService {
     public long signUp(SignUpRequest signUpRequest) {
         User user = UserMapper.INSTANCE.map(signUpRequest);
 
-        if (user.getFirstRegisteredOAuthType() != OAuthType.NONE && userRepository.existsByOAuthUser(user.getFirstRegisteredOAuthUser())) {
+        if (user.isOAuthUser() && userRepository.existsByOAuthUser(user.getFirstRegisteredOAuthUser())) {
             throw new OAuthUserAlreadyExistsException(user);
         }
 
