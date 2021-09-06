@@ -20,9 +20,9 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query(value = "select count(*) from \"oauth_user\" where \"oauth_type\"=:oAuthType and \"social_service_id\"=:socialServiceId",
            nativeQuery = true)
-    long existsByOAuthUser(@Param("oAuthType") String oAuthType, @Param("socialServiceId") String socialServiceId);
+    long countOAuthUSer(@Param("oAuthType") String oAuthType, @Param("socialServiceId") String socialServiceId);
 
     default boolean existsByOAuthUser(OAuthUser oAuthUser) {
-        return existsByOAuthUser(oAuthUser.getOAuthTypeName(), oAuthUser.getSocialServiceId()) > 0;
+        return countOAuthUSer(oAuthUser.getOAuthTypeName(), oAuthUser.getSocialServiceId()) > 0;
     }
 }

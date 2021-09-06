@@ -1,6 +1,5 @@
 package com.postsquad.scoup.web.user.service;
 
-import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
