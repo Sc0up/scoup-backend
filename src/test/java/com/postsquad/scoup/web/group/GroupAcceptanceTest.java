@@ -1,17 +1,18 @@
 package com.postsquad.scoup.web.group;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
 import com.postsquad.scoup.web.group.domain.Group;
-import com.postsquad.scoup.web.group.repository.GroupRepository;
-import com.postsquad.scoup.web.user.domain.OAuthUser;
-import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.group.provider.CreateGroupProvider;
 import com.postsquad.scoup.web.group.provider.CreateGroupWithExistingNameProvider;
 import com.postsquad.scoup.web.group.provider.ModifyGroupProvider;
 import com.postsquad.scoup.web.group.provider.ValidateGroupCreationRequestProvider;
+import com.postsquad.scoup.web.group.repository.GroupRepository;
+import com.postsquad.scoup.web.user.domain.OAuthUser;
+import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -26,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -47,7 +48,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                                        .password("password")
                                        .avatarUrl("url")
                                        .username("username")
-                                       .oAuthUsers(new ArrayList<>())
+                                       .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "1")))
                                        .build();
 
     @BeforeEach
