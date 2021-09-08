@@ -25,7 +25,7 @@ public class GroupMapperTest {
     @MethodSource("groupCreationRequestToGroupProvider")
     void groupCreationRequestToGroup(GroupCreationRequest givenGroupCreationRequest, Group expectedGroup) {
         // when
-        Group group = GroupMapper.INSTANCE.groupCreationRequestToGroup(givenGroupCreationRequest, TEST_OWNER);
+        Group group = GroupMapper.INSTANCE.map(givenGroupCreationRequest, TEST_OWNER);
 
         // then
         then(group).usingRecursiveComparison()

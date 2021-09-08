@@ -13,5 +13,5 @@ public interface GroupMapper {
     GroupMapper INSTANCE = Mappers.getMapper(GroupMapper.class);
 
     @Mapping(target = "owner", source = "owner")
-    Group groupCreationRequestToGroup(GroupCreationRequest groupCreationRequest, User owner);
+    Group map(GroupCreationRequest groupCreationRequest, User owner);
 }

@@ -24,7 +24,7 @@ public class GroupService {
             throw new GroupNameAlreadyExistException(groupCreationRequest.getName());
         }
 
-        Group group = GroupMapper.INSTANCE.groupCreationRequestToGroup(groupCreationRequest, user);
+        Group group = GroupMapper.INSTANCE.map(groupCreationRequest, user);
 
         return groupRepository.save(group).getId();
     }
