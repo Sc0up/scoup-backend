@@ -1,11 +1,14 @@
 package com.postsquad.scoup.web.schedule.controller.response;
 
-import lombok.Getter;
+import lombok.*;
 
 import java.util.List;
 
-@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
 public class ScheduleCandidateResponses {
 
-    private List<ScheduleCandidateResponse> scheduleCandidateResponses;
+    private List<ScheduleCandidateResponse> scheduleCandidates;
 }
