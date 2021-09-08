@@ -6,6 +6,7 @@ import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
 import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.group.repository.GroupRepository;
+import com.postsquad.scoup.web.user.domain.OAuthUser;
 import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.group.provider.CreateGroupProvider;
 import com.postsquad.scoup.web.group.provider.CreateGroupWithExistingNameProvider;
@@ -24,6 +25,8 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
+
+import java.util.ArrayList;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -44,6 +47,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                                        .password("password")
                                        .avatarUrl("url")
                                        .username("username")
+                                       .oAuthUsers(new ArrayList<>())
                                        .build();
 
     @BeforeEach
@@ -95,7 +99,6 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         then(actualGroup.getOwner())
                 .usingRecursiveComparison()
                 .ignoringFields(ignoringFieldsForResponseWithId)
-                .ignoringFields("oAuthUsers")
                 .isEqualTo(expectedGroup.getOwner());
     }
 
