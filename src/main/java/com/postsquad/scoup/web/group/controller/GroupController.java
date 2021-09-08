@@ -2,6 +2,7 @@ package com.postsquad.scoup.web.group.controller;
 
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
+import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
 import com.postsquad.scoup.web.group.exception.GroupCreationFailedException;
 import com.postsquad.scoup.web.group.service.GroupService;
 import com.postsquad.scoup.web.user.LoggedInUser;
@@ -29,5 +30,11 @@ public class GroupController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse groupCreationFailedExceptionHandler(GroupCreationFailedException groupCreationFailedException) {
         return ErrorResponse.of(HttpStatus.BAD_REQUEST, groupCreationFailedException.getMessage(), groupCreationFailedException.getDescription());
+    }
+
+    @PutMapping("/{groupId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Long update(@PathVariable Long groupId, @RequestBody @Valid GroupModificationRequest groupModificationRequest, @LoggedInUser User user) {
+        return groupService.update(groupId, groupModificationRequest, user);
     }
 }
