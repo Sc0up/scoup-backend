@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.group;
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
+import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
 import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.group.repository.GroupRepository;
 import com.postsquad.scoup.web.user.domain.User;
@@ -46,11 +47,12 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
 
     @BeforeEach
     void setUp() {
+        TEST_USER = userRepository.save(TEST_USER);
         groupRepository.save(Group.builder()
                                   .name("name")
                                   .description("description")
+                                  .owner(TEST_USER)
                                   .build());
-        userRepository.save(TEST_USER);
     }
 
     @AfterEach
@@ -82,11 +84,18 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                       .log().all()
                       .statusCode(HttpStatus.CREATED.value());
-        then(groupRepository.findById(actualResponse.body().as(Long.class)).orElse(null))
+        Group actualGroup = groupRepository.findById(actualResponse.body().as(Long.class)).orElse(null);
+        then(actualGroup)
                 .as("그룹 생성: %s", description)
                 .usingRecursiveComparison()
                 .ignoringFields(ignoringFieldsForResponseWithId)
+                .ignoringFields("owner")
                 .isEqualTo(expectedGroup);
+        then(actualGroup.getOwner())
+                .usingRecursiveComparison()
+                .ignoringFields(ignoringFieldsForResponseWithId)
+                .ignoringFields("oAuthUsers")
+                .isEqualTo(expectedGroup.getOwner());
     }
 
     static Stream<Arguments> createGroupProvider() {
@@ -101,8 +110,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                              .name("group name")
                              .description("description")
                              .owner(TEST_USER)
-                             .build(),
-                        TEST_USER
+                             .build()
                 )
         );
     }
@@ -202,57 +210,52 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         );
     }
 
-    // 일단 엔티티에 오너 추가
-    // 그룹 생성시에 토큰에서 유저아이디 꺼내서 오너 등록
-    // 토큰에 있는 유저 아이디로 유저 조회
-    // 수정할 그룹의 오너인지 확인
-    // 그룹 수정
-//    @ParameterizedTest
-//    @MethodSource("modifyGroupProvider")
-//    @DisplayName("사용자가 그룹을 수정 할 수 있다")
-//    void modifyGroup(String description, GroupModificationRequest givenGroupModificationRequest, Group expectedGroup) {
-//        // given
-//        // TODO: 헤더에 토큰 필요
-//        String path = "/api/group";
-//        RequestSpecification givenRequest = RestAssured.given()
-//                                                       .baseUri(BASE_URL)
-//                                                       .port(port)
-//                                                       .basePath(path)
-//                                                       .contentType(ContentType.JSON)
-//                                                       .header("Accept-Language", "en-US")
-//                                                       .header("Authorization", TEST_TOKEN)
-//                                                       .body(givenGroupModificationRequest);
-//
-//        // when
-//        Response actualResponse = givenRequest.when()
-//                                              .log().all()
-//                                              .put();
-//
-//        // then
-//        // TODO: 뭘 리턴하지? 일단은 수정된 그룹의 아이디를 리턴한다고 가정
-//        actualResponse.then()
-//                      .log().all()
-//                      .statusCode(HttpStatus.NO_CONTENT.value());
-//        then(groupRepository.findById(actualResponse.as(Long.class)).orElse(null))
-//                .as("그룹 수정: %s" + description)
-//                .usingRecursiveComparison()
-//                .ignoringFields(ignoringFieldsForResponse)
-//                .isEqualTo(expectedGroup);
-//    }
-//
-//    static Stream<Arguments> modifyGroupProvider() {
-//        return Stream.of(
-//                Arguments.of(
-//                        "성공",
-//                        GroupModificationRequest.builder()
-//                                                .name("modifiedName")
-//                                                .description("modified description")
-//                                                .build(),
-//                        Group.builder()
-//                             .name("modifiedName")
-//                             .description("modified description")
-//                             .build()
-//                )
-//        );
-//    }
+    @ParameterizedTest
+    @MethodSource("modifyGroupProvider")
+    @DisplayName("사용자가 그룹을 수정 할 수 있다")
+    void modifyGroup(String description, Long givenGroupId, GroupModificationRequest givenGroupModificationRequest, Group expectedGroup) {
+        // given
+        String path = "/api/groups/";
+        RequestSpecification givenRequest = RestAssured.given()
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath(path + givenGroupId)
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Accept-Language", "en-US")
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .body(givenGroupModificationRequest);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .log().all()
+                                              .put();
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
+        then(groupRepository.findById(actualResponse.as(Long.class)).orElse(null))
+                .as("그룹 수정: %s", description)
+                .usingRecursiveComparison()
+                .ignoringFields(ignoringFieldsForResponseWithId)
+                .ignoringFields("owner")
+                .isEqualTo(expectedGroup);
+    }
+
+    static Stream<Arguments> modifyGroupProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "성공",
+                        1L,
+                        GroupModificationRequest.builder()
+                                                .name("modifiedName")
+                                                .description("modified description")
+                                                .build(),
+                        Group.builder()
+                             .name("modifiedName")
+                             .description("modified description")
+                             .build()
+                )
+        );
+    }
 }
