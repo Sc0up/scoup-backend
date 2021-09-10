@@ -1,10 +1,12 @@
 package com.postsquad.scoup.web.user;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
+import com.postsquad.scoup.web.user.domain.OAuthUser;
 import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.provider.*;
 import com.postsquad.scoup.web.user.repository.UserRepository;
@@ -12,13 +14,13 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -46,35 +48,18 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ParameterizedTest
     @ArgumentsSource(EmailSignUpProvider.class)
     @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다")
-    void emailSignUp(String description, SignUpRequest givenEmailSignUpRequest, User expectedUser) {
-        // given
-        String path = "/api/users";
-        RequestSpecification givenRequest = RestAssured.given()
-                                                       .baseUri(BASE_URL)
-                                                       .port(port)
-                                                       .basePath(path)
-                                                       .contentType(ContentType.JSON)
-                                                       .body(givenEmailSignUpRequest);
-
-        // when
-        Response actualResponse = givenRequest.when()
-                                              .log().all(true)
-                                              .post();
-
-        // then
-        actualResponse.then()
-                      .statusCode(HttpStatus.CREATED.value());
-        then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
-                .as("회원가입 결과 : %s", description)
-                .usingRecursiveComparison()
-                .ignoringFields(ignoringFieldsForResponseWithId)
-                .isEqualTo(expectedUser);
+    void emailSignUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
+        signUp(description, givenSignUpRequest, expectedUser);
     }
 
     @ParameterizedTest
     @ArgumentsSource(SocialSignUpProvider.class)
     @DisplayName("신규 사용자는 소셜 서비스를 통해 회원가입을 할 수 있다")
-    void socialSignUp(String description, SignUpRequest givenSocialSignUpRequest, User expectedUser) {
+    void socialSignUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
+        signUp(description, givenSignUpRequest, expectedUser);
+    }
+
+    private void signUp(String description, SignUpRequest givenSocialSignUpRequest, User expectedUser) {
         // given
         String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()
@@ -100,9 +85,28 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(SignUpWhenUserAlreadyExistsProvider.class)
-    @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다")
-    void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
+    @ArgumentsSource(SignUpViaEmailWhenUserAlreadyExistsProvider.class)
+    @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다 - 이메일")
+    void signUpViaEmailWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
+        signUpWhenUserAlreadyExists(description, givenSignUpRequestAlreadyExists, expectedResponse);
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(SignUpViaSocialWhenUserAlreadyExistsProvider.class)
+    @DisplayName("기사용자가 회원가입을 한 경우 회원가입이 되지 않는다 - 소셜")
+    void signUpViaSocialWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
+        userRepository.save(User.builder()
+                                .nickname("nickname")
+                                .username("username")
+                                .email("email@email.com")
+                                .avatarUrl("avatarUrl")
+                                .password("password")
+                                .oAuthUsers(List.of(OAuthUser.of(OAuthType.GITHUB, "1234567")))
+                                .build());
+        signUpWhenUserAlreadyExists(description, givenSignUpRequestAlreadyExists, expectedResponse);
+    }
+
+    private void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
         // given
         String path = "/api/users";
         RequestSpecification givenRequest = RestAssured.given()

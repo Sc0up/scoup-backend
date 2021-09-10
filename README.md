@@ -48,7 +48,7 @@ SCOUP : Schedule For Group
 
 ## 관리 중인 문서
 
-- [API 유스케이스](https://docs.google.com/spreadsheets/d/1YqVxbVj4CtCC0iNIOA7JNs6kpJ4xCPY21wKqrXlSoAs/edit#gid=1572791990)
+- [API 유스케이스](https://goldenrod-string-7f8.notion.site/3b0c24a75fc9453995a4ee6f2a68ddc5?v=dc737d0d26e344f2b2b181f82e647fba)
 
 - [개발 컨벤션](https://goldenrod-string-7f8.notion.site/Convention-1a98aa39c64b4a99a06e8fe217718a56)
 

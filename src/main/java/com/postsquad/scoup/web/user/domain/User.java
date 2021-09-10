@@ -1,9 +1,8 @@
 package com.postsquad.scoup.web.user.domain;
 
+import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.common.BaseEntity;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -49,5 +48,17 @@ public class User extends BaseEntity {
     @Builder
     public static User of(String nickname, String username, String email, String avatarUrl, String password, List<OAuthUser> oAuthUsers) {
         return new User(nickname, username, email, avatarUrl, password, oAuthUsers);
+    }
+
+    public OAuthUser getFirstRegisteredOAuthUser() {
+        return this.oAuthUsers.get(0);
+    }
+
+    public OAuthType getFirstRegisteredOAuthType() {
+        return this.oAuthUsers.get(0).getOAuthType();
+    }
+
+    public boolean isOAuthUser() {
+        return getFirstRegisteredOAuthType() != OAuthType.NONE;
     }
 }
