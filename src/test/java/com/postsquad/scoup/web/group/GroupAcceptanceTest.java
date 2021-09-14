@@ -11,7 +11,6 @@ import com.postsquad.scoup.web.group.provider.CreateGroupWithExistingNameProvide
 import com.postsquad.scoup.web.group.provider.ModifyGroupProvider;
 import com.postsquad.scoup.web.group.provider.ValidateGroupCreationRequestProvider;
 import com.postsquad.scoup.web.group.repository.GroupRepository;
-import com.postsquad.scoup.web.signin.service.SignInTokenGenerator;
 import com.postsquad.scoup.web.user.domain.OAuthUser;
 import com.postsquad.scoup.web.user.domain.User;
 import com.postsquad.scoup.web.user.repository.UserRepository;
@@ -48,7 +47,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                                 .password("password")
                                 .avatarUrl("url")
                                 .username("username")
-                                .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "1")))
+                                .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "")))
                                 .build();
 
     @BeforeEach

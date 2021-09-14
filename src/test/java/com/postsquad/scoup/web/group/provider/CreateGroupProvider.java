@@ -33,7 +33,7 @@ public class CreateGroupProvider implements ArgumentsProvider {
                                         .password("password")
                                         .avatarUrl("url")
                                         .username("username")
-                                        .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "1")))
+                                        .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "")))
                                         .build())
                              .build()
                 )
