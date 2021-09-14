@@ -5,13 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 @Data
-public class ScheduleBaseResponse {
+public class UnconfirmedScheduleResponse extends ScheduleBaseResponse {
 
-    private String title;
-
-    private String description;
+    private List<ScheduleCandidateResponse> scheduleCandidates;
 }
