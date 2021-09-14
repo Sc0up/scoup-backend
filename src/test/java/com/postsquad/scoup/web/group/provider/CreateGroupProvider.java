@@ -1,15 +1,17 @@
 package com.postsquad.scoup.web.group.provider;
 
-import com.postsquad.scoup.web.group.GroupAcceptanceTest;
+import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.domain.Group;
+import com.postsquad.scoup.web.user.domain.OAuthUser;
+import com.postsquad.scoup.web.user.domain.User;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 
+import java.util.List;
 import java.util.stream.Stream;
 
-import static com.postsquad.scoup.web.group.GroupAcceptanceTest.TEST_USER;
 
 public class CreateGroupProvider implements ArgumentsProvider {
 
@@ -25,7 +27,14 @@ public class CreateGroupProvider implements ArgumentsProvider {
                         Group.builder()
                              .name("group name")
                              .description("description")
-                             .owner(TEST_USER)
+                             .owner(User.builder()
+                                        .nickname("nickname")
+                                        .email("email@email.com")
+                                        .password("password")
+                                        .avatarUrl("url")
+                                        .username("username")
+                                        .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "1")))
+                                        .build())
                              .build()
                 )
         );

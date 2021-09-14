@@ -31,7 +31,7 @@ import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GroupAcceptanceTest extends AcceptanceTestBase {
 
     @Autowired
@@ -42,28 +42,18 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
 
     // temporary token with sub(userId) = 1, exp = 2023-01-01T00:00:00.000(Korean Standard Time)
     private static String TEST_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjcyNDk4ODAwfQ.DXojMeUGIq77XWvQK0luZtZhsi-c6s9qjiiu9vHhkbg";
-    public static User TEST_USER = User.builder()
-                                       .nickname("nickname")
-                                       .email("email@email.com")
-                                       .password("password")
-                                       .avatarUrl("url")
-                                       .username("username")
-                                       .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "1")))
-                                       .build();
+    private User testUser;
 
     @BeforeEach
     void setUp() {
-        TEST_USER = userRepository.save(TEST_USER);
-        groupRepository.save(Group.builder()
-                                  .name("name")
-                                  .description("description")
-                                  .owner(TEST_USER)
-                                  .build());
-    }
-
-    @AfterEach
-    void tearDown() {
-        groupRepository.deleteAll();
+        testUser = userRepository.save(User.builder()
+                                           .nickname("nickname")
+                                           .email("email@email.com")
+                                           .password("password")
+                                           .avatarUrl("url")
+                                           .username("username")
+                                           .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "1")))
+                                           .build());
     }
 
     @ParameterizedTest
@@ -108,6 +98,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("중복된 그룹 이름이 있으면 그룹 생성을 할 수 없다.")
     void createGroupWithExistingName(String description, GroupCreationRequest givenGroupCreationRequest, ErrorResponse expectedResponse) {
         // given
+        groupRepository.save(Group.builder().name("name").description("").build());
         String path = "/api/groups";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
@@ -169,6 +160,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("사용자가 그룹을 수정 할 수 있다")
     void modifyGroup(String description, Long givenGroupId, GroupModificationRequest givenGroupModificationRequest, Group expectedGroup) {
         // given
+        groupRepository.save(Group.builder().name("name").description("").owner(testUser).build());
         String path = "/api/groups/";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
