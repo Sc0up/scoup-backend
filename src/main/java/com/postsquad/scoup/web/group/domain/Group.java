@@ -44,4 +44,8 @@ public class Group extends BaseEntity {
         this.description = groupModificationRequest.getDescription();
         return this;
     }
+
+    public boolean verifyOwner(User user) {
+        return this.owner.equals(user);
+    }
 }
