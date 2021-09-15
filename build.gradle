@@ -55,6 +55,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor  'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+    implementation "com.google.guava:guava:16+"
 }
 
 test {
