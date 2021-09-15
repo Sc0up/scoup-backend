@@ -23,11 +23,6 @@ public class AcceptanceTestBase {
 
     @BeforeEach
     void cleanUpDatabase() {
-        if (RestAssured.port == RestAssured.UNDEFINED_PORT) {
-            RestAssured.port = port;
-            databaseCleanup.afterPropertiesSet();
-        }
-
         databaseCleanup.execute();
     }
 
