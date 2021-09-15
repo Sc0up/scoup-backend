@@ -38,6 +38,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'io.rest-assured:rest-assured'
+    testImplementation 'com.google.guava:guava:16+'
     implementation 'com.nimbusds:nimbus-jose-jwt'
 
     /* MapStruct
@@ -55,8 +56,6 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor  'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-
-    implementation "com.google.guava:guava:16+"
 }
 
 test {
