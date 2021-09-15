@@ -37,11 +37,6 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                                   .build());
     }
 
-    @AfterEach
-    void tearDown() {
-        groupRepository.deleteAll();
-    }
-
     @ParameterizedTest
     @MethodSource("createGroupProvider")
     @DisplayName("사용자가 새로운 그룹을 생성할 수 있다.")

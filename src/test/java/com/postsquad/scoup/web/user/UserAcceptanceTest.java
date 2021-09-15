@@ -40,11 +40,6 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                                 .build());
     }
 
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAll();
-    }
-
     @ParameterizedTest
     @ArgumentsSource(EmailSignUpProvider.class)
     @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다")
