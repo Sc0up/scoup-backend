@@ -5,6 +5,7 @@ import io.restassured.RestAssured;
 import io.restassured.config.ObjectMapperConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.internal.mapping.Jackson2Mapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -16,6 +17,14 @@ public class AcceptanceTestBase {
 
     @LocalServerPort
     protected int port;
+
+    @Autowired
+    private DatabaseCleanup databaseCleanup;
+
+    @BeforeEach
+    void cleanUpDatabase() {
+        databaseCleanup.execute();
+    }
 
     @Autowired
     protected ObjectMapper objectMapper;

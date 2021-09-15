@@ -40,11 +40,6 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
     @Autowired
     UserRepository userRepository;
 
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAll();
-    }
-
     private long signUp(SignUpRequest signUpRequest) {
         String path = "/api/users";
         return RestAssured.given()
