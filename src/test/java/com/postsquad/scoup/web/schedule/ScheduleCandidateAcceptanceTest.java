@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.schedulecandidate;
+package com.postsquad.scoup.web.schedule;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateReadRequest;
