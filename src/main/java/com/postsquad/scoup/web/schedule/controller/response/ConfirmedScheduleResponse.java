@@ -11,17 +11,13 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Data
-public class ScheduleCandidateResponse {
-
-    private Long candidateId;
+public class ConfirmedScheduleResponse extends ScheduleBaseResponse {
 
     private LocalDateTime startDateTime;
 
     private LocalDateTime endDateTime;
-
-    private LocalDateTime dueDateTime;
 
     private List<ConfirmedParticipantResponse> confirmedParticipants;
 }
