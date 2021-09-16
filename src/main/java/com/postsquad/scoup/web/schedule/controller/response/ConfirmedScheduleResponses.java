@@ -1,17 +1,17 @@
 package com.postsquad.scoup.web.schedule.controller.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 @Data
-public class ScheduleBaseResponse {
+public class ConfirmedScheduleResponses {
 
-    private String title;
-
-    private String description;
+     private List<ConfirmedScheduleResponse> confirmedSchedules;
 }
