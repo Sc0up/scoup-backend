@@ -1,6 +1,5 @@
 package com.postsquad.scoup.web.common;
 
-import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateReadRequest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -41,11 +40,11 @@ class ObjectMapperUtilsTest {
                                 "start_date", new String[]{"2021-09-10"},
                                 "end_date", new String[]{"2021-09-10"}
                         ),
-                        ScheduleCandidateReadRequest.class,
-                        ScheduleCandidateReadRequest.builder()
-                                                    .startDate(LocalDate.of(2021, 9, 10))
-                                                    .endDate(LocalDate.of(2021, 9, 10))
-                                                    .build()
+                        RequestDtoForConvertRequestParameterToObjectTest.class,
+                        new RequestDtoForConvertRequestParameterToObjectTest(
+                                LocalDate.of(2021, 9, 10),
+                                LocalDate.of(2021, 9, 10)
+                        )
                 )
         );
     }
