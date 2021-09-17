@@ -66,7 +66,7 @@ class ScheduleCandidateRepositoryTest {
 
         return Stream.of(
                 Arguments.arguments(
-                        "범위 안쪽",
+                        "범위 일치",
                         List.of(
                                 Schedule.builder()
                                         .title("title")
@@ -84,6 +84,27 @@ class ScheduleCandidateRepositoryTest {
                                 new Provider().scheduleCandidateOf(
                                         LocalDateTime.of(2021, 9, 1, 0, 0),
                                         LocalDateTime.of(2021, 9, 1, 23, 59)
+                                )
+                        )
+                ), Arguments.arguments(
+                        "범위 안쪽",
+                        List.of(
+                                Schedule.builder()
+                                        .title("title")
+                                        .dueDateTime(LocalDateTime.now())
+                                        .scheduleCandidates(List.of(
+                                                new Provider().scheduleCandidateOf(
+                                                        LocalDateTime.of(2021, 9, 1, 1, 0),
+                                                        LocalDateTime.of(2021, 9, 1, 22, 59)
+                                                )
+                                        )).build()
+                        ),
+                        LocalDate.of(2021, 9, 1),
+                        LocalDate.of(2021, 9, 2),
+                        List.of(
+                                new Provider().scheduleCandidateOf(
+                                        LocalDateTime.of(2021, 9, 1, 1, 0),
+                                        LocalDateTime.of(2021, 9, 1, 22, 59)
                                 )
                         )
                 ), Arguments.arguments(

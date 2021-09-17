@@ -19,8 +19,6 @@ public interface ScheduleCandidateRepository extends CrudRepository<ScheduleCand
            // 범위 오른쪽
            "sc.startDateTime < :endDateTime AND :endDateTime <= sc.endDateTime OR " +
            // 범위 안쪽
-           "sc.startDateTime <= :startDateTime AND :endDateTime < sc.endDateTime")
+           ":startDateTime <= sc.startDateTime  AND sc.endDateTime < :endDateTime")
     List<ScheduleCandidate> findAllByDateTimeIncluding(@Param("startDateTime") LocalDateTime startDateTime, @Param("endDateTime") LocalDateTime endDateTime);
-
-
 }
