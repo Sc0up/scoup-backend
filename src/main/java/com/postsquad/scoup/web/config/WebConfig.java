@@ -26,7 +26,7 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     @Value("${sign-in.interceptor.path-to-exclude}")
-    private final String[] PATH_TO_EXCLUDE;
+    private final String[] SIGNIN_PATH_TO_EXCLUDE;
 
     private final SignInInterceptor signInInterceptor;
 
@@ -52,6 +52,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(signInInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns(PATH_TO_EXCLUDE);
+                .excludePathPatterns(SIGNIN_PATH_TO_EXCLUDE);
     }
 }
