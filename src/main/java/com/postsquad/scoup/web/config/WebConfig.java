@@ -5,10 +5,8 @@ import com.postsquad.scoup.web.signin.controller.SignInInterceptor;
 import com.postsquad.scoup.web.user.UserArgumentResolver;
 import io.netty.resolver.DefaultAddressResolverGroup;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -20,13 +18,11 @@ import reactor.netty.http.client.HttpClient;
 
 import java.util.List;
 
-@PropertySource("classpath:sign-in.properties")
 @RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${sign-in.interceptor.path-to-exclude}")
-    private final String[] SIGNIN_PATH_TO_EXCLUDE;
+    private final String[] SIGNIN_PATH_TO_EXCLUDE = {"/sign-in/**", "/users/**", "/oauth/**", "/h2-console/**"};
 
     private final SignInInterceptor signInInterceptor;
 
