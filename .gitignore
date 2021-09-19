@@ -36,4 +36,6 @@ out/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/auth.key.properties
+
+### auth ###
+auth.key.local.properties

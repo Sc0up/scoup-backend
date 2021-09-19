@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-@PropertySource(value = "classpath:auth.key.properties")
+@PropertySource(value = "${auth.key.properties.path}")
 @Configuration
 public class JasyptConfig {
 
