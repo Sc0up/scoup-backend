@@ -48,7 +48,8 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
                                                        .port(port)
                                                        .basePath(path)
                                                        .contentType(ContentType.JSON)
-                                                       .body(givenScheduleCandidateReadRequest);
+                                                       .queryParam("start_date", givenScheduleCandidateReadRequest.getStartDate().toString())
+                                                       .queryParam("end_date", givenScheduleCandidateReadRequest.getEndDate().toString());
 
         // when
         Response actualResponse = givenRequest.when()
@@ -64,6 +65,8 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
         then(actualResponse.as(ScheduleCandidateReadAllResponses.class))
                 .as("", description)
                 .usingRecursiveComparison()
+                .ignoringFields("scheduleCandidateResponses.id")
+                .ignoringFields("scheduleCandidateResponses.scheduleId")
                 .isEqualTo(expectedScheduleCandidateReadAllResponses);
 
     }
@@ -95,12 +98,12 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
                                 readAllTestData.schedule1()
                         ),
                         ScheduleCandidateReadRequest.builder()
-                                                    .startDate(LocalDate.now())
-                                                    .endDate(LocalDate.now())
+                                                    .startDate(LocalDate.of(2021, 9, 1))
+                                                    .endDate(LocalDate.of(2021, 9, 2))
                                                     .build(),
                         ScheduleCandidateReadAllResponses.from(
                                 Map.of(
-                                        LocalDate.now(),
+                                        LocalDate.of(2021, 9, 1),
                                         Arrays.asList(
                                                 ScheduleCandidateReadAllResponse.builder()
                                                                                 .startDateTime(readAllTestData.scheduleCandidate1().getStartDateTime())
