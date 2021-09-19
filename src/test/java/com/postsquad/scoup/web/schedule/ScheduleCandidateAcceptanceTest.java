@@ -16,8 +16,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -27,11 +25,10 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-@Transactional
 class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
 
     @Autowired
-    EntityManager entityManager;
+    ScheduleCandidateDatabaseHelper scheduleCandidateDatabaseHelper;
 
     @ParameterizedTest
     @MethodSource("readAllProvider")
@@ -42,9 +39,7 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
             ScheduleCandidateReadAllResponses expectedScheduleCandidateReadAllResponses
     ) {
         // given
-        for (Schedule each : givenSchedules) {
-            entityManager.persist(each);
-        }
+        scheduleCandidateDatabaseHelper.setSchedules(givenSchedules);
 
         // TODO: 그룹 연결 후에는 그룹도 넣어줘야함.
         String path = "/api/groups/1/schedule-candidates";
