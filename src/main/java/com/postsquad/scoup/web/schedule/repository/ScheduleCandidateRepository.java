@@ -12,7 +12,7 @@ public interface ScheduleCandidateRepository extends CrudRepository<ScheduleCand
 
     // TODO: Group에 종속적이게 되면 이동해야 할 수 있음
     @Query("SELECT sc " +
-           "FROM ScheduleCandidate sc " +
+           "FROM ScheduleCandidate sc JOIN FETCH sc.schedule " +
            "WHERE " +
            // 범위 왼쪽
            "sc.startDateTime <= :startDateTime AND :startDateTime < sc.endDateTime OR " +

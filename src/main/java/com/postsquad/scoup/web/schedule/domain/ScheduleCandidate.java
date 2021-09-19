@@ -1,10 +1,7 @@
 package com.postsquad.scoup.web.schedule.domain;
 
 import com.postsquad.scoup.web.common.BaseEntity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -22,6 +19,7 @@ public class ScheduleCandidate extends BaseEntity {
     private LocalDateTime endDateTime;
 
     @ManyToOne
+    @Setter // TODO: 스케줄 생성 시 한 번에 처리하면 제거 가능
     private Schedule schedule;
 
     public ScheduleCandidate(boolean isConfirmed, LocalDateTime startDateTime, LocalDateTime endDateTime, Schedule schedule) {

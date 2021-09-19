@@ -30,7 +30,7 @@ public class Schedule extends BaseEntity {
     @ColumnDefault("'" + DEFAULT_COLOR_CODE + "'")
     private String colorCode;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<ScheduleCandidate> scheduleCandidates = new ArrayList<>();
 
     protected Schedule(String title, String description, LocalDateTime dueDateTime, String colorCode) {
