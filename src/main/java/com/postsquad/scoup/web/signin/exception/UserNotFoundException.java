@@ -6,4 +6,8 @@ public class UserNotFoundException extends SignInFailedException {
     public UserNotFoundException(String email) {
         super("User '" + email + "' not exists");
     }
+
+    public UserNotFoundException(Long id) {
+        super("User with id '" + id + "' not exists");
+    }
 }

@@ -31,6 +31,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
     @BeforeEach
     void setUp() {
+        userRepository.deleteAll();
         userRepository.save(User.builder()
                                 .nickname("existing")
                                 .username("username")

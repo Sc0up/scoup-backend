@@ -1,0 +1,19 @@
+name: Heroku test server deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "sc0up"
+          heroku_email: "Dae-Hwa_Jeong@outlook.com"
+          procfile: "web: bash auth-key-properties-creator.sh && java -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/*.jar"
+        env:
+          HD_AUTH_KEY: ${{secrets.AUTH_KEY}}
