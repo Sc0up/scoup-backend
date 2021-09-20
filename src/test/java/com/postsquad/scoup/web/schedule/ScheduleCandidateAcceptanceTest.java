@@ -1,15 +1,20 @@
 package com.postsquad.scoup.web.schedule;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateReadRequest;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponse;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponses;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
 import com.postsquad.scoup.web.schedule.domain.ScheduleCandidate;
+import com.postsquad.scoup.web.user.domain.OAuthUser;
+import com.postsquad.scoup.web.user.domain.User;
+import com.postsquad.scoup.web.user.repository.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -30,6 +35,25 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
     @Autowired
     ScheduleCandidateDatabaseHelper scheduleCandidateDatabaseHelper;
 
+    @Autowired
+    UserRepository userRepository;
+
+    // temporary token with sub(userId) = 1, exp = 2023-01-01T00:00:00.000(Korean Standard Time)
+    private static String TEST_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjcyNDk4ODAwfQ.DXojMeUGIq77XWvQK0luZtZhsi-c6s9qjiiu9vHhkbg";
+    private User testUser = User.builder()
+                                .nickname("nickname")
+                                .email("email@email.com")
+                                .password("password")
+                                .avatarUrl("url")
+                                .username("username")
+                                .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "")))
+                                .build();
+
+    @BeforeEach
+    void setUp() {
+        userRepository.save(testUser);
+    }
+
     @ParameterizedTest
     @MethodSource("readAllProvider")
     void readAll(
@@ -48,6 +72,7 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
                                                        .port(port)
                                                        .basePath(path)
                                                        .contentType(ContentType.JSON)
+                                                       .header("Authorization", TEST_TOKEN)
                                                        .queryParam("start_date", givenScheduleCandidateReadRequest.getStartDate().toString())
                                                        .queryParam("end_date", givenScheduleCandidateReadRequest.getEndDate().toString());
 
