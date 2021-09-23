@@ -22,7 +22,7 @@ jobs:
       - name: Create auth.key.properties file
         env:
           AUTH_KEY: ${{ secrets.AUTH_KEY }}
-        run: echo "$AUTH_KEY" > src/main/resources/auth.key.properties
+        run: bash auth-key-properties-creator.sh "$AUTH_KEY"
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
