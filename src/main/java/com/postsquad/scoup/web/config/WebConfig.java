@@ -24,6 +24,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final String[] SIGNIN_PATH_TO_EXCLUDE = {"/sign-in/**", "/users/**", "/oauth/**", "/h2-console/**"};
 
+    private final RequestParameterArgumentResolver requestParameterArgumentResolver;
+
     private final SignInInterceptor signInInterceptor;
 
     @Bean
@@ -42,6 +44,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new UserArgumentResolver());
+        resolvers.add(requestParameterArgumentResolver);
     }
 
     @Override
