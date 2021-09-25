@@ -73,6 +73,7 @@ jar {
 }
 
 task prTest(type: Test) {
+    dependsOn build
     systemProperty("spring.profiles.active", "deploy-test")
     useJUnitPlatform()
 }
