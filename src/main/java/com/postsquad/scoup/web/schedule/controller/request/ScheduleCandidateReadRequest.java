@@ -17,5 +17,6 @@ public class ScheduleCandidateReadRequest {
     @NotNull
     private LocalDate startDate;
 
+    @NotNull
     private LocalDate endDate;
 }
