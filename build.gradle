@@ -71,3 +71,8 @@ asciidoctor {
 jar {
     enabled = false
 }
+
+task prTest(type: Test) {
+    systemProperty("spring.profiles.active", "deploy-test")
+    useJUnitPlatform()
+}

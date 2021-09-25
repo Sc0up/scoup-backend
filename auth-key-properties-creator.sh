@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-AUTH_KEYS=()
+for _AUTH_KEY in $AUTH_KEY; do
 
-for auth_key in $1; do
-  AUTH_KEYS+=($auth_key)
+  IFS='=' read -ra VALUES <<<"$_AUTH_KEY"
+  echo "${VALUES[@]}"
+  if [ "${VALUES[0]}" = "jasypt.encryptor.password" ]; then
+    export JASYPT_ENCRYPTOR_PASSWORD="${VALUES[1]}"
+  elif [ "${VALUES[0]}" = "jwt.secret.mac" ]; then
+    export JWT_SECRET_MAC="${VALUES[1]}"
+  fi
 done
-
-export JASYPT_ENCRYPTOR_PASSWORD="${AUTH_KEYS[0]}"
-export JWT_SECRET_MAC="${AUTH_KEYS[1]}"

@@ -22,13 +22,13 @@ jobs:
       - name: Create auth.key.properties file
         env:
           AUTH_KEY: ${{ secrets.AUTH_KEY }}
-        run: bash auth-key-properties-creator.sh "$AUTH_KEY"
+        run: source auth-key-properties-creator.sh
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
         id: build-with-gradle
-        run: ./gradlew build
+        run: ./gradlew prTest
         continue-on-error: true
       - name: Show info When Build Failed
         if: steps.build-with-gradle.outcome == 'failure'
-        run: ./gradlew build -i
+        run: ./gradlew prTest -i
