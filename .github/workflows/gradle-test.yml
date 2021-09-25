@@ -26,4 +26,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
+        id: build-with-gradle
         run: ./gradlew build
+        continue-on-error: true
+      - name: Show info When Build Failed
+        if: steps.build-with-gradle.outcome == 'failure'
+        run: ./gradlew build -i
