@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduleCandidateService {
 
-
     private final ScheduleCandidateRepository scheduleCandidateRepository;
 
     public ScheduleCandidateReadAllResponses readAll(long groupId, ScheduleCandidateReadRequest givenScheduleCandidateReadRequest) {
