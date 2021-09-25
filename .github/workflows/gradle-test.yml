@@ -4,8 +4,7 @@
 name: Gradle test for pull request
 
 on:
-  pull_request:
-    branches: [ main ]
+  push:
 
 jobs:
   build:
@@ -22,7 +21,7 @@ jobs:
       - name: Create auth.key.properties file
         env:
           AUTH_KEY: ${{ secrets.AUTH_KEY }}
-        run: echo "$AUTH_KEY" > src/main/resources/auth/auth.key.local.properties && source auth-key-properties-creator.sh
+        run: source auth-key-properties-creator.sh && echo "$AUTH_KEY" > src/main/resources/auth/auth.key.local.properties
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
