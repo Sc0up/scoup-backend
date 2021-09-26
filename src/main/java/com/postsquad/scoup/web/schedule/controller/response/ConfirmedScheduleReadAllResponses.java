@@ -5,13 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "from")
 @Builder
 @Data
-public class ConfirmedParticipantResponse {
+public class ConfirmedScheduleReadAllResponses {
 
-    private String nickname;
-
-    private String username;
+     private List<ConfirmedScheduleReadAllResponse> confirmedSchedules;
 }
