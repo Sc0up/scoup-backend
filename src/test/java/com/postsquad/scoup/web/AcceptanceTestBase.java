@@ -21,13 +21,19 @@ public class AcceptanceTestBase {
     @Autowired
     private DatabaseCleanup databaseCleanup;
 
+    @Autowired
+    private TestDataSetup testDataSetup;
+
     @BeforeEach
     void cleanUpDatabase() {
         databaseCleanup.execute();
+        testDataSetup.execute();
     }
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    protected static final String TEST_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjcyNDk4ODAwfQ.DXojMeUGIq77XWvQK0luZtZhsi-c6s9qjiiu9vHhkbg";
 
     protected String[] ignoringFieldsForResponseWithId = new String[]{"createdDateTime", "modifiedDateTime", "id"};
 
