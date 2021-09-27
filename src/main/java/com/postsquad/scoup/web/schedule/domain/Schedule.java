@@ -71,4 +71,8 @@ public class Schedule extends BaseEntity {
         this.confirmedSchedule = confirmedSchedule;
         confirmedSchedule.setSchedule(this);
     }
+
+    public boolean isConfirmed() {
+        return this.confirmedSchedule != null;
+    }
 }
