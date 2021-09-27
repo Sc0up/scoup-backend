@@ -1,7 +1,11 @@
 package com.postsquad.scoup.web.schedule;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.TestEntityManager;
+import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleReadAllResponses;
+import com.postsquad.scoup.web.schedule.domain.ConfirmedSchedule;
+import com.postsquad.scoup.web.schedule.domain.Schedule;
 import com.postsquad.scoup.web.schedule.provider.ConfirmedScheduleReadAllProvider;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -13,13 +17,17 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
 
     @Autowired
-    ConfirmedScheduleTestDataSetup confirmedScheduleTestDataSetup;
+    TestEntityManager testEntityManager;
 
     @ParameterizedTest
     @ArgumentsSource(ConfirmedScheduleReadAllProvider.class)
@@ -27,14 +35,38 @@ class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
     void readAllConfirmedSchedules(String description, Long givenGroupId,
                                    ConfirmedScheduleReadAllResponses expectedConfirmedScheduleReadAllResponses) {
         // given
-        confirmedScheduleTestDataSetup.execute();
+        testEntityManager.persist(testUser);
+
+        Group group = Group.builder()
+                           .name("name")
+                           .description("")
+                           .schedules(new ArrayList<>())
+                           .owner(testUser)
+                           .build();
+
+        Schedule schedule = Schedule.builder()
+                                    .group(group)
+                                    .title("schedule title")
+                                    .description("schedule description")
+                                    .dueDateTime(LocalDateTime.of(2021, 9, 23, 0, 0))
+                                    .build();
+        group.addSchedule(schedule);
+
+        ConfirmedSchedule confirmedSchedule = ConfirmedSchedule.builder()
+                                                               .colorCode("#CAB8FF")
+                                                               .startDateTime(LocalDateTime.of(2021, 9, 25, 9, 0))
+                                                               .endDateTime(LocalDateTime.of(2021, 9, 25, 11, 0))
+                                                               .confirmedParticipants(List.of(testUser))
+                                                               .build();
+        schedule.setConfirmedSchedule(confirmedSchedule);
+        testEntityManager.persist(group);
         String path = "/api/groups/{groupId}/confirmed-schedules";
 
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
-                                                       .pathParam("groupId", 1L)
+                                                       .pathParam("groupId", givenGroupId)
                                                        .contentType(ContentType.JSON)
                                                        .header(AUTHORIZATION, TEST_TOKEN);
 
