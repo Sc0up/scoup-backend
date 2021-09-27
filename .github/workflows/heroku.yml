@@ -14,6 +14,6 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "sc0up"
           heroku_email: "Dae-Hwa_Jeong@outlook.com"
-          procfile: "web: bash auth-key-properties-creator.sh && java -Dserver.port=$PORT -Dspring.profiles.active=deploy-test $JAVA_OPTS -jar build/libs/*.jar"
+          procfile: "web: source auth-key-properties-creator.sh && java -Dserver.port=$PORT -Dspring.profiles.active=deploy-test $JAVA_OPTS -jar build/libs/*.jar"
         env:
           HD_AUTH_KEY: ${{secrets.AUTH_KEY}}
