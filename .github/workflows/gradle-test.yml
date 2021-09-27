@@ -22,8 +22,13 @@ jobs:
       - name: Create auth.key.properties file
         env:
           AUTH_KEY: ${{ secrets.AUTH_KEY }}
-        run: echo "$AUTH_KEY" > src/main/resources/auth.key.properties
+        run: echo "$AUTH_KEY" > src/main/resources/auth/auth.key.local.properties
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
+        id: build-with-gradle
         run: ./gradlew build
+        continue-on-error: true
+      - name: Show info When Build Failed
+        if: steps.build-with-gradle.outcome == 'failure'
+        run: ./gradlew build -i

@@ -18,8 +18,6 @@ public class ScheduleCandidate extends BaseEntity {
     @Setter
     private Schedule schedule;
 
-    private String colorCode;
-
     private LocalDateTime startDateTime;
 
     private LocalDateTime endDateTime;

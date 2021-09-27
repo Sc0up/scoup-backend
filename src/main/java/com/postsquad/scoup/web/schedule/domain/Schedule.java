@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.schedule.domain;
 import com.postsquad.scoup.web.common.BaseEntity;
 import com.postsquad.scoup.web.group.domain.Group;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +14,8 @@ import java.util.List;
 @Getter
 @Entity
 public class Schedule extends BaseEntity {
+
+    private static final String DEFAULT_COLOR_CODE = "#00ff0000";
 
     @ManyToOne
     @JoinColumn(name = "group_id")
@@ -26,6 +29,9 @@ public class Schedule extends BaseEntity {
     private String description;
 
     private LocalDateTime dueDateTime;
+
+    @ColumnDefault("'" + DEFAULT_COLOR_CODE + "'")
+    private String colorCode;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn
