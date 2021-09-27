@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.schedule.domain;
 import com.postsquad.scoup.web.common.BaseEntity;
 import com.postsquad.scoup.web.user.domain.User;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,10 +15,13 @@ import java.util.List;
 @Entity
 public class ConfirmedSchedule extends BaseEntity {
 
+    private static final String DEFAULT_COLOR_CODE = "#00ff0000";
+
     @OneToOne(mappedBy = "confirmedSchedule")
     @Setter
     private Schedule schedule;
 
+    @ColumnDefault("'" + DEFAULT_COLOR_CODE + "'")
     private String colorCode;
 
     private LocalDateTime startDateTime;
