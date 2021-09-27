@@ -72,7 +72,6 @@ class ScheduleCandidateRepositoryTest {
 
             ScheduleCandidate scheduleCandidateOf(LocalDateTime startDateTime, LocalDateTime endDateTime) {
                 return ScheduleCandidate.builder()
-                                        .isConfirmed(false)
                                         .startDateTime(startDateTime)
                                         .endDateTime(endDateTime)
                                         .build();

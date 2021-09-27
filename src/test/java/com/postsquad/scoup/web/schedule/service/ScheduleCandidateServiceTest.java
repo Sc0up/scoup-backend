@@ -75,7 +75,6 @@ class ScheduleCandidateServiceTest {
                                                                    .colorCode("#00ff0000")
                                                                    .scheduleCandidates(Collections.emptyList())
                                                                    .build())
-                                                 .isConfirmed(true)
                                                  .startDateTime(LocalDateTime.of(2021, 9, 8, 0, 0))
                                                  .endDateTime(LocalDateTime.of(2021, 9, 9, 0, 0))
                                                  .build(),
@@ -87,7 +86,6 @@ class ScheduleCandidateServiceTest {
                                                                    .colorCode("#00ff0000")
                                                                    .scheduleCandidates(Collections.emptyList())
                                                                    .build())
-                                                 .isConfirmed(true)
                                                  .startDateTime(LocalDateTime.of(2021, 9, 8, 0, 0))
                                                  .endDateTime(LocalDateTime.of(2021, 9, 9, 0, 0))
                                                  .build(),
@@ -99,7 +97,6 @@ class ScheduleCandidateServiceTest {
                                                                    .colorCode("#00ff0000")
                                                                    .scheduleCandidates(Collections.emptyList())
                                                                    .build())
-                                                 .isConfirmed(true)
                                                  .startDateTime(LocalDateTime.of(2021, 9, 9, 0, 0))
                                                  .endDateTime(LocalDateTime.of(2021, 9, 10, 0, 0))
                                                  .build()

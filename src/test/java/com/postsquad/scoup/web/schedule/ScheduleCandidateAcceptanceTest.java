@@ -109,7 +109,6 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
 
             ScheduleCandidate scheduleCandidate1() {
                 return ScheduleCandidate.builder()
-                                        .isConfirmed(false)
                                         .startDateTime(LocalDateTime.parse("2021-09-01T12:00"))
                                         .endDateTime(LocalDateTime.parse("2021-09-01T15:00"))
                                         .build();

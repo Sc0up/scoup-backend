@@ -40,17 +40,18 @@ public class Schedule extends BaseEntity {
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private final List<ScheduleCandidate> scheduleCandidates = new ArrayList<>();
 
-    protected Schedule(Group group, String title, String description, LocalDateTime dueDateTime, ConfirmedSchedule confirmedSchedule) {
+    protected Schedule(Group group, String title, String description, LocalDateTime dueDateTime, String colorCode, ConfirmedSchedule confirmedSchedule) {
         this.group = group;
         this.title = title;
         this.description = description;
         this.dueDateTime = dueDateTime;
+        this.colorCode = colorCode;
         this.confirmedSchedule = confirmedSchedule;
     }
 
     @Builder
-    public static Schedule of(Group group, String title, String description, LocalDateTime dueDateTime, ConfirmedSchedule confirmedSchedule, @Singular List<ScheduleCandidate> scheduleCandidates) {
-        Schedule schedule = new Schedule(group, title, description, dueDateTime, confirmedSchedule);
+    public static Schedule of(Group group, String title, String description, LocalDateTime dueDateTime, String colorCode, ConfirmedSchedule confirmedSchedule, @Singular List<ScheduleCandidate> scheduleCandidates) {
+        Schedule schedule = new Schedule(group, title, description, dueDateTime, colorCode, confirmedSchedule);
         schedule.addScheduleCandidates(scheduleCandidates);
         return schedule;
     }

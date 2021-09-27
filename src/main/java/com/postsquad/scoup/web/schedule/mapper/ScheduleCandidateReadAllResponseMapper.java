@@ -13,7 +13,6 @@ public interface ScheduleCandidateReadAllResponseMapper {
     ScheduleCandidateReadAllResponseMapper INSTANCE = Mappers.getMapper(ScheduleCandidateReadAllResponseMapper.class);
 
     @Mappings({
-            @Mapping(target = "isConfirmed", source = "confirmed"),
             @Mapping(target = "scheduleId", source = "schedule.id"),
             @Mapping(target = "scheduleTitle", source = "schedule.title"),
             @Mapping(target = "scheduleDescription", source = "schedule.description"),
