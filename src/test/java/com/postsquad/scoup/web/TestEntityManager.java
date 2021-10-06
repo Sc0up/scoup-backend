@@ -17,7 +17,7 @@ public class TestEntityManager {
         entityManager.persist(entity);
     }
 
-    public <T> T findById(Class<T> entityClass, Long id) {
+    public <T> T find(Class<T> entityClass, Long id) {
         return entityManager.find(entityClass, id);
     }
 }
