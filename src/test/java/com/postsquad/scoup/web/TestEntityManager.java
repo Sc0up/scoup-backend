@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.function.Consumer;
 
 @Service
 @Transactional
@@ -19,5 +20,10 @@ public class TestEntityManager {
 
     public <T> T find(Class<T> entityClass, Long id) {
         return entityManager.find(entityClass, id);
+    }
+
+    public <T> void findAndConsume(Class<T> entityClass, Long id, Consumer<T> consumer) {
+        T t = entityManager.find(entityClass, id);
+        consumer.accept(t);
     }
 }
