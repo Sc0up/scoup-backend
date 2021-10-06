@@ -59,18 +59,20 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                       .log().all()
                       .statusCode(HttpStatus.CREATED.value());
-
-        Group actualGroup = testEntityManager.find(Group.class, actualResponse.body().as(Long.class));
-        then(actualGroup)
-                .as("그룹 생성: %s", description)
-                .usingRecursiveComparison()
-                .ignoringFields(ignoringFieldsForResponseWithId)
-                .ignoringFields("owner")
-                .isEqualTo(expectedGroup);
-        then(actualGroup.getOwner())
-                .usingRecursiveComparison()
-                .ignoringFields(ignoringFieldsForResponseWithId)
-                .isEqualTo(expectedGroup.getOwner());
+        testEntityManager.findAndConsume(Group.class, actualResponse.body().as(Long.class),
+                                         actualGroup -> {
+                                             then(actualGroup)
+                                                     .as("그룹 생성: %s", description)
+                                                     .usingRecursiveComparison()
+                                                     .ignoringFields(ignoringFieldsForResponseWithId)
+                                                     .ignoringFields("owner")
+                                                     .isEqualTo(expectedGroup);
+                                             then(actualGroup.getOwner())
+                                                     .usingRecursiveComparison()
+                                                     .ignoringFields(ignoringFieldsForResponseWithId)
+                                                     .isEqualTo(expectedGroup.getOwner());
+                                         }
+        );
     }
 
     @ParameterizedTest
@@ -161,11 +163,13 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                       .log().all()
                       .statusCode(HttpStatus.OK.value());
-        then(testEntityManager.find(Group.class, actualResponse.as(Long.class)))
-                .as("그룹 수정: %s", description)
-                .usingRecursiveComparison()
-                .ignoringFields(ignoringFieldsForResponseWithId)
-                .ignoringFields("owner")
-                .isEqualTo(expectedGroup);
+        testEntityManager.findAndConsume(Group.class, actualResponse.as(Long.class),
+                                         actualGroup -> then(actualGroup)
+                                                 .as("그룹 수정: %s", description)
+                                                 .usingRecursiveComparison()
+                                                 .ignoringFields(ignoringFieldsForResponseWithId)
+                                                 .ignoringFields("owner")
+                                                 .isEqualTo(expectedGroup)
+        );
     }
 }

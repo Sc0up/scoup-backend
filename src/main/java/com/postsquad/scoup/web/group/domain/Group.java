@@ -36,8 +36,7 @@ public class Group extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User owner;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private final List<Schedule> schedules = new ArrayList<>();
 
     protected Group(String name, String description, User owner) {
