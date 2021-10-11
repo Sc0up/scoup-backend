@@ -34,7 +34,6 @@ public class FindConfirmedSchedulesByGroupIdProvider implements ArgumentsProvide
                                                            .title("schedule title")
                                                            .description("schedule description")
                                                            .build())
-                                         .colorCode("#00ff0000")
                                          .startDateTime(LocalDateTime.of(2021, 9, 25, 9, 0))
                                          .endDateTime(LocalDateTime.of(2021, 9, 25, 11, 0))
                                          .build(),
@@ -47,7 +46,6 @@ public class FindConfirmedSchedulesByGroupIdProvider implements ArgumentsProvide
                                                                        .build())
                                                            .description("schedule description")
                                                            .build())
-                                         .colorCode("#00ff0000")
                                          .startDateTime(LocalDateTime.of(2021, 9, 25, 9, 0))
                                          .endDateTime(LocalDateTime.of(2021, 9, 25, 11, 0))
                                          .build()

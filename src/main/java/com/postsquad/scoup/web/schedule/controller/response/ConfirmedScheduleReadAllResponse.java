@@ -18,7 +18,5 @@ public class ConfirmedScheduleReadAllResponse extends ScheduleBaseResponse {
 
     private LocalDateTime endDateTime;
 
-    private String colorCode;
-
     private List<ConfirmedParticipantResponse> confirmedParticipants;
 }

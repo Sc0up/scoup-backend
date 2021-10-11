@@ -20,7 +20,6 @@ public class ConfirmedScheduleReadAllProvider implements ArgumentsProvider {
                         "성공",
                         1L,
                         ConfirmedScheduleReadAllResponses.from(List.of(ConfirmedScheduleReadAllResponse.builder()
-                                                                                                       .colorCode("#CAB8FF")
                                                                                                        .startDateTime(LocalDateTime.of(2021, 9, 25, 9, 0))
                                                                                                        .endDateTime(LocalDateTime.of(2021, 9, 25, 11, 0))
                                                                                                        .title("schedule title")

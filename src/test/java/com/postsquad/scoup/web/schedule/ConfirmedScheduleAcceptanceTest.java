@@ -53,7 +53,6 @@ class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
         group.addSchedule(schedule);
 
         ConfirmedSchedule confirmedSchedule = ConfirmedSchedule.builder()
-                                                               .colorCode("#CAB8FF")
                                                                .startDateTime(LocalDateTime.of(2021, 9, 25, 9, 0))
                                                                .endDateTime(LocalDateTime.of(2021, 9, 25, 11, 0))
                                                                .confirmedParticipants(List.of(testUser))
