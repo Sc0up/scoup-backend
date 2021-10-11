@@ -63,7 +63,6 @@ public class Group extends BaseEntity {
     }
 
     public void addSchedule(Schedule schedule) {
-        System.out.println(schedule.getTitle());
         this.schedules.add(schedule);
         if (schedule.getGroup() != this) {
             schedule.setGroup(this);
