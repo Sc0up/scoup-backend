@@ -57,7 +57,7 @@ class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
                                                                .endDateTime(LocalDateTime.of(2021, 9, 25, 11, 0))
                                                                .confirmedParticipants(List.of(testUser))
                                                                .build();
-        schedule.setConfirmedSchedule(confirmedSchedule);
+        schedule.confirmSchedule(confirmedSchedule);
         testEntityManager.persist(group);
         String path = "/api/groups/{groupId}/confirmed-schedules";
 

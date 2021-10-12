@@ -67,7 +67,7 @@ public class Schedule extends BaseEntity {
         this.scheduleCandidates.addAll(scheduleCandidates);
     }
 
-    public void setConfirmedSchedule(ConfirmedSchedule confirmedSchedule) {
+    public void confirmSchedule(ConfirmedSchedule confirmedSchedule) {
         this.confirmedSchedule = confirmedSchedule;
         confirmedSchedule.setSchedule(this);
     }

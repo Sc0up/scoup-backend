@@ -40,7 +40,7 @@ class ConfirmedScheduleRepositoryTest {
         Group group = entityManager.find(Group.class, 2L);
         Schedule schedule = givenConfirmedSchedule.getSchedule();
         schedule.setGroup(group);
-        schedule.setConfirmedSchedule(givenConfirmedSchedule);
+        schedule.confirmSchedule(givenConfirmedSchedule);
         entityManager.persist(schedule);
 
         ConfirmedSchedule confirmedSchedule = confirmedScheduleRepository.save(givenConfirmedSchedule);
