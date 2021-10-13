@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.schedule.service;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateReadRequest;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponse;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponses;
+import com.postsquad.scoup.web.schedule.domain.ConfirmedSchedule;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
 import com.postsquad.scoup.web.schedule.domain.ScheduleCandidate;
 import com.postsquad.scoup.web.schedule.repository.ScheduleCandidateRepository;
@@ -75,7 +76,6 @@ class ScheduleCandidateServiceTest {
                                                                    .colorCode("#00ff0000")
                                                                    .scheduleCandidates(Collections.emptyList())
                                                                    .build())
-                                                 .isConfirmed(true)
                                                  .startDateTime(LocalDateTime.of(2021, 9, 8, 0, 0))
                                                  .endDateTime(LocalDateTime.of(2021, 9, 9, 0, 0))
                                                  .build(),
@@ -87,7 +87,6 @@ class ScheduleCandidateServiceTest {
                                                                    .colorCode("#00ff0000")
                                                                    .scheduleCandidates(Collections.emptyList())
                                                                    .build())
-                                                 .isConfirmed(true)
                                                  .startDateTime(LocalDateTime.of(2021, 9, 8, 0, 0))
                                                  .endDateTime(LocalDateTime.of(2021, 9, 9, 0, 0))
                                                  .build(),
@@ -99,7 +98,6 @@ class ScheduleCandidateServiceTest {
                                                                    .colorCode("#00ff0000")
                                                                    .scheduleCandidates(Collections.emptyList())
                                                                    .build())
-                                                 .isConfirmed(true)
                                                  .startDateTime(LocalDateTime.of(2021, 9, 9, 0, 0))
                                                  .endDateTime(LocalDateTime.of(2021, 9, 10, 0, 0))
                                                  .build()
@@ -111,7 +109,7 @@ class ScheduleCandidateServiceTest {
                                                 ScheduleCandidateReadAllResponse.builder()
                                                                                 .startDateTime(LocalDateTime.of(2021, 9, 8, 0, 0))
                                                                                 .endDateTime(LocalDateTime.of(2021, 9, 9, 0, 0))
-                                                                                .isConfirmed(true)
+                                                                                .isConfirmed(false)
                                                                                 .scheduleTitle("title")
                                                                                 .scheduleDescription("description")
                                                                                 .colorCode("#00ff0000")
@@ -119,7 +117,7 @@ class ScheduleCandidateServiceTest {
                                                 ScheduleCandidateReadAllResponse.builder()
                                                                                 .startDateTime(LocalDateTime.of(2021, 9, 8, 0, 0))
                                                                                 .endDateTime(LocalDateTime.of(2021, 9, 9, 0, 0))
-                                                                                .isConfirmed(true)
+                                                                                .isConfirmed(false)
                                                                                 .scheduleTitle("title")
                                                                                 .scheduleDescription("description")
                                                                                 .colorCode("#00ff0000")
@@ -130,7 +128,7 @@ class ScheduleCandidateServiceTest {
                                                 ScheduleCandidateReadAllResponse.builder()
                                                                                 .startDateTime(LocalDateTime.of(2021, 9, 9, 0, 0))
                                                                                 .endDateTime(LocalDateTime.of(2021, 9, 10, 0, 0))
-                                                                                .isConfirmed(true)
+                                                                                .isConfirmed(false)
                                                                                 .scheduleTitle("title")
                                                                                 .scheduleDescription("description")
                                                                                 .colorCode("#00ff0000")

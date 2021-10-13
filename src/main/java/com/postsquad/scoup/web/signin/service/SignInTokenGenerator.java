@@ -19,8 +19,7 @@ public class SignInTokenGenerator {
 
     @Value("${jwt.secret.mac}")
     private String jwtSecret;
-
-
+    
     public String accessToken(long userId) {
         return signInToken(userId, LocalDateTime.now().plusMinutes(30));
     }

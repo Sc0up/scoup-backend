@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web.schedule.mapper;
 
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponse;
+import com.postsquad.scoup.web.schedule.domain.ConfirmedSchedule;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
 import com.postsquad.scoup.web.schedule.domain.ScheduleCandidate;
 import org.assertj.core.api.BDDAssertions;
@@ -33,11 +34,14 @@ class ScheduleCandidateReadAllResponseMapperTest {
                                          .schedule(Schedule.builder()
                                                            .title("title")
                                                            .description("description")
+                                                           .confirmedSchedule(ConfirmedSchedule.builder()
+                                                                                               .startDateTime(LocalDateTime.of(2021, 9, 25, 9, 0))
+                                                                                               .endDateTime(LocalDateTime.of(2021, 9, 25, 11, 0))
+                                                                                               .build())
                                                            .dueDateTime(LocalDateTime.of(2021, 9, 8, 0, 0))
                                                            .colorCode("#00ff0000")
                                                            .scheduleCandidates(Collections.emptyList())
                                                            .build())
-                                         .isConfirmed(true)
                                          .startDateTime(LocalDateTime.of(2021, 9, 8, 0, 0))
                                          .endDateTime(LocalDateTime.of(2021, 9, 8, 0, 0))
                                          .build(),

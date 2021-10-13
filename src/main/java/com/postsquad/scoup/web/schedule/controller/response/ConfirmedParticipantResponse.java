@@ -11,5 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class ConfirmedParticipantResponse {
 
-    private String name;
+    private String nickname;
+
+    private String username;
 }
