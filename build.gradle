@@ -36,8 +36,8 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'io.rest-assured:rest-assured'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
     testImplementation 'com.google.guava:guava:16+'
     implementation 'com.nimbusds:nimbus-jose-jwt'
 
@@ -68,11 +68,26 @@ test {
     useJUnitPlatform()
 }
 
+
 asciidoctor {
     inputs.dir snippetsDir
     dependsOn test
 }
 
+task copyAsciidoctor(type: Copy) {
+    dependsOn asciidoctor
+    from "${asciidoctor.outputDir}/html5"
+    into "${sourceSets.main.output.resourcesDir}/static/docs"
+}
+
 jar {
     enabled = false
+}
+
+build {
+    dependsOn copyAsciidoctor
+}
+
+bootRun {
+    dependsOn copyAsciidoctor
 }
