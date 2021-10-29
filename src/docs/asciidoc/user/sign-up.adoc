@@ -29,3 +29,17 @@ include::{snippets}/user_acceptance_test/social_sign_up/response-fields.adoc[]
 ==== error
 
 include::../error-response.adoc[]
+
+=== example
+
+==== `201 Created`
+
+===== 이메일 회원가입
+
+include::{snippets}/user_acceptance_test/email_sign_up/http-request.adoc[]
+include::{snippets}/user_acceptance_test/email_sign_up/http-response.adoc[]
+
+===== 소셜 회원가입
+
+include::{snippets}/user_acceptance_test/social_sign_up/http-request.adoc[]
+include::{snippets}/user_acceptance_test/social_sign_up/http-response.adoc[]
