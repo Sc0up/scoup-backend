@@ -9,21 +9,20 @@ include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/request
 
 === response
 
-.success body
+==== success
 include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/response-fields.adoc[]
 
-.error body
+==== error
 include::../error-response.adoc[]
 
 === example
 
-==== success
+==== `200 OK`
 
 include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/http-request.adoc[]
 include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/http-response.adoc[]
 
-==== error
-
+==== `400 Bad Request`
 .이메일 is null
 include::{snippets}/sign_in_acceptance_test/validate_sign_in_request/email_is_null/http-request.adoc[]
 include::{snippets}/sign_in_acceptance_test/validate_sign_in_request/email_is_null/http-response.adoc[]
