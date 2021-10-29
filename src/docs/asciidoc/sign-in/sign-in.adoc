@@ -1,6 +1,6 @@
 == 로그인
 
-`POST /sign-in`
+`POST /api/sign-in`
 
 === request
 
