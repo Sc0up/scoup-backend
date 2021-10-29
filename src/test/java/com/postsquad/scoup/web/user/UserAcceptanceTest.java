@@ -21,12 +21,69 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.restassured3.RestDocumentationFilter;
+import org.springframework.restdocs.snippet.Snippet;
 
 import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 class UserAcceptanceTest extends AcceptanceTestBase {
+
+    private static final Snippet EMAIL_SIGN_UP_REQUEST_FIELDS = requestFields(
+            fieldWithPath("oauth_type")
+                    .type(JsonFieldType.STRING)
+                    .description("OAuth 종류 (NONE으로 입력)"),
+            fieldWithPath("social_service_id")
+                    .type(JsonFieldType.STRING)
+                    .description("소셜 서비스 id (\"\" 입력)"),
+            fieldWithPath("nickname")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 별명(unique)"),
+            fieldWithPath("username")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 이름"),
+            fieldWithPath("email")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 email"),
+            fieldWithPath("password")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 password"),
+            fieldWithPath("avatar_url")
+                    .type(JsonFieldType.STRING)
+                    .description("(optional) 아바타 이미지 url")
+                    .optional()
+    );
+
+    private static final Snippet SOCIAL_SIGN_UP_REQUEST_FIELDS = requestFields(
+            fieldWithPath("oauth_type")
+                    .type(JsonFieldType.STRING)
+                    .description("OAuth 종류 (GITHUB, KAKAO, GOOGLE)"),
+            fieldWithPath("social_service_id")
+                    .type(JsonFieldType.STRING)
+                    .description("소셜 서비스 id"),
+            fieldWithPath("nickname")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 별명(unique)"),
+            fieldWithPath("username")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 이름"),
+            fieldWithPath("email")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 email"),
+            fieldWithPath("password")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 password"),
+            fieldWithPath("avatar_url")
+                    .type(JsonFieldType.STRING)
+                    .description("(optional) 아바타 이미지 url")
+                    .optional()
+    );
+
     @Autowired
     UserRepository userRepository;
 
@@ -45,20 +102,38 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ArgumentsSource(EmailSignUpProvider.class)
     @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다")
     void emailSignUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
-        signUp(description, givenSignUpRequest, expectedUser);
+        signUp(
+                description,
+                givenSignUpRequest,
+                expectedUser,
+                document(
+                        DEFAULT_RESTDOCS_PATH,
+                        EMAIL_SIGN_UP_REQUEST_FIELDS,
+                        DEFAULT_POST_RESPONSE_FIELDS
+                )
+        );
     }
 
     @ParameterizedTest
     @ArgumentsSource(SocialSignUpProvider.class)
     @DisplayName("신규 사용자는 소셜 서비스를 통해 회원가입을 할 수 있다")
     void socialSignUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
-        signUp(description, givenSignUpRequest, expectedUser);
+        signUp(
+                description,
+                givenSignUpRequest,
+                expectedUser,
+                document(
+                        DEFAULT_RESTDOCS_PATH,
+                        SOCIAL_SIGN_UP_REQUEST_FIELDS,
+                        DEFAULT_POST_RESPONSE_FIELDS
+                )
+        );
     }
 
-    private void signUp(String description, SignUpRequest givenSocialSignUpRequest, User expectedUser) {
+    private void signUp(String description, SignUpRequest givenSocialSignUpRequest, User expectedUser, RestDocumentationFilter document) {
         // given
         String path = "/api/users";
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
@@ -67,6 +142,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document)
                                               .log().all(true)
                                               .post();
 

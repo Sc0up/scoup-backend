@@ -9,4 +9,8 @@
 // TODO: 헤더정보도 만들기
 // TODO: 공통 에러 폼 추가 알아보기
 
+// 로그인
 include::sign-in/sign-in.adoc[]
+
+// 회원가입
+include::user/sign-up.adoc[]

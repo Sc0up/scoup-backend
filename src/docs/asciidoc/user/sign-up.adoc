@@ -1,0 +1,31 @@
+== 회원가입
+
+`POST /api/users`
+
+=== request
+
+==== 이메일 회원가입
+
+.body
+include::{snippets}/user_acceptance_test/email_sign_up/request-fields.adoc[]
+
+==== 소셜 회원가입
+
+.body
+include::{snippets}/user_acceptance_test/social_sign_up/request-fields.adoc[]
+
+=== response
+
+==== success
+
+===== 이메일 회원가입
+
+include::{snippets}/user_acceptance_test/email_sign_up/response-fields.adoc[]
+
+===== 소셜 회원가입
+
+include::{snippets}/user_acceptance_test/social_sign_up/response-fields.adoc[]
+
+==== error
+
+include::../error-response.adoc[]
