@@ -1,0 +1,12 @@
+// FIXME: 빌드 시 위치 못 잡는 에러 발생하여 변수 정의하여 임시 해결. 원인 파악되지 않음
+// 발생에러 : asciidoctor: WARNING: dropping line containing reference to missing attribute: snippets
+//:snippets: ../../../../build/generated-snippets
+
+= SCOUP API
+:toc: left
+:toclevels: 4
+
+// TODO: 헤더정보도 만들기
+// TODO: 공통 에러 폼 추가 알아보기
+
+include::sign-in/sign-in.adoc[]

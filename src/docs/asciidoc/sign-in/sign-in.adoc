@@ -1,0 +1,37 @@
+== 회원가입
+
+`POST /sign-in`
+
+=== request
+
+.body
+include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/request-fields.adoc[]
+
+=== response
+
+.success body
+include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/response-fields.adoc[]
+
+.error body
+include::../error-response.adoc[]
+
+=== example
+
+==== success
+
+include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/http-request.adoc[]
+include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/http-response.adoc[]
+
+==== error
+
+.이메일 is null
+include::{snippets}/sign_in_acceptance_test/validate_sign_in_request/email_is_null/http-request.adoc[]
+include::{snippets}/sign_in_acceptance_test/validate_sign_in_request/email_is_null/http-response.adoc[]
+
+.패스워드 is null
+include::{snippets}/sign_in_acceptance_test/validate_sign_in_request/password_is_null/http-request.adoc[]
+include::{snippets}/sign_in_acceptance_test/validate_sign_in_request/password_is_null/http-response.adoc[]
+
+.존재하지 않는 이메일
+include::{snippets}/sign_in_acceptance_test/sign_in_with_not_existing_user/http-request.adoc[]
+include::{snippets}/sign_in_acceptance_test/sign_in_with_not_existing_user/http-response.adoc[]

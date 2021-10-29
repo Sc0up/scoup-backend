@@ -15,7 +15,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,6 +22,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.snippet.Snippet;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -31,8 +32,36 @@ import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 class SignInAcceptanceTest extends AcceptanceTestBase {
+
+    private static final Snippet SIGN_IN_REQUEST_FIELDS = requestFields(
+            fieldWithPath("email")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 email"),
+            fieldWithPath("password")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 password")
+    );
+
+    private static final Snippet SIGN_IN_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("access_token")
+                    .type(JsonFieldType.STRING)
+                    .description("로그인 유지를 위한 액세스 토큰"),
+            fieldWithPath("nickname")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 nickname"),
+            fieldWithPath("email")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 email"),
+            fieldWithPath("avatar_url")
+                    .type(JsonFieldType.STRING)
+                    .description("(optional) 아바타 이미지 url")
+                    .optional()
+    );
 
     @Value("${jwt.secret.mac}")
     String jwtSecret;
@@ -54,7 +83,8 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
 
     private RequestSpecification signInRequest(SignInRequest signInRequest) {
         String path = "/api/sign-in";
-        return RestAssured.given()
+
+        return RestAssured.given(this.spec)
                           .baseUri(BASE_URL)
                           .port(port)
                           .basePath(path)
@@ -77,7 +107,13 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
-                                              .log().all(true)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      preprocessRequest(prettyPrint()),
+                                                      preprocessResponse(prettyPrint()),
+                                                      SIGN_IN_REQUEST_FIELDS,
+                                                      SIGN_IN_RESPONSE_FIELDS
+                                              )).log().all(true)
                                               .post();
         // then
         actualResponse.then()
@@ -214,6 +250,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("이메일 계정으로 로그인 한다 - request validation")
     void validateSignInRequest(
             String description,
+            String restDocsPath,
             SignUpRequest givenSignUpRequest,
             SignInRequest givenSignInRequest,
             ErrorResponse expectedErrorResponse
@@ -225,6 +262,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
         // when
         Response actualResponse = givenRequest.when()
                                               .header("Accept-Language", "en-US")
+                                              .filter(document(DEFAULT_RESTDOCS_PATH + restDocsPath, ERROR_RESPONSE_FIELDS))
                                               .log().all(true)
                                               .post();
         // then
@@ -243,6 +281,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
         return Stream.of(
                 Arguments.of(
                         "이메일 없음",
+                        "email_is_null",
                         SignUpRequest.builder()
                                      .oAuthType(OAuthType.NONE)
                                      .socialServiceId("")
@@ -261,6 +300,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                                      .build()
                 ), Arguments.of(
                         "비밀번호 없음",
+                        "password_is_null",
                         SignUpRequest.builder()
                                      .oAuthType(OAuthType.NONE)
                                      .socialServiceId("")
@@ -290,6 +330,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(DEFAULT_RESTDOCS_PATH, ERROR_RESPONSE_FIELDS))
                                               .log().all(true)
                                               .post();
         // then
