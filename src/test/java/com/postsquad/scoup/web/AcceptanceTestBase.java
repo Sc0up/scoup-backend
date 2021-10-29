@@ -22,6 +22,7 @@ import org.springframework.restdocs.snippet.Snippet;
 
 import java.util.List;
 
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
@@ -72,8 +73,11 @@ public class AcceptanceTestBase {
     @BeforeEach
     void setUpRestDocs(RestDocumentationContextProvider restDocumentation) {
         this.spec = new RequestSpecBuilder()
-                .addFilter(documentationConfiguration(restDocumentation))
-                .build();
+                .addFilter(
+                        documentationConfiguration(restDocumentation).operationPreprocessors()
+                                                                     .withRequestDefaults(prettyPrint())
+                                                                     .withResponseDefaults(prettyPrint())
+                ).build();
     }
 
     @Autowired

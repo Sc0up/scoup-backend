@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
@@ -111,8 +110,6 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
         Response actualResponse = givenRequest.when()
                                               .filter(document(
                                                       DEFAULT_RESTDOCS_PATH,
-                                                      preprocessRequest(prettyPrint()),
-                                                      preprocessResponse(prettyPrint()),
                                                       SIGN_IN_REQUEST_FIELDS,
                                                       SIGN_IN_RESPONSE_FIELDS
                                               )).log().all(true)
