@@ -70,6 +70,7 @@ test {
 
 
 asciidoctor {
+    attributes 'snippets': snippetsDir
     inputs.dir snippetsDir
     dependsOn test
 }
