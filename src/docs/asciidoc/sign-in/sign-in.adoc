@@ -10,9 +10,11 @@ include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/request
 === response
 
 ==== success
+
 include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/response-fields.adoc[]
 
 ==== error
+
 include::../error-response.adoc[]
 
 === example
@@ -23,6 +25,7 @@ include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/http-re
 include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/http-response.adoc[]
 
 ==== `400 Bad Request`
+
 .이메일 is null
 include::{snippets}/sign_in_acceptance_test/validate_sign_in_request/email_is_null/http-request.adoc[]
 include::{snippets}/sign_in_acceptance_test/validate_sign_in_request/email_is_null/http-response.adoc[]
