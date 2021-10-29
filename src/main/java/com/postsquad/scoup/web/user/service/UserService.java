@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.user.service;
 
+import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
@@ -15,7 +16,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public long signUp(SignUpRequest signUpRequest) {
+    public DefaultPostResponse signUp(SignUpRequest signUpRequest) {
         User user = UserMapper.INSTANCE.map(signUpRequest);
 
         if (user.isOAuthUser() && userRepository.existsByOAuthUser(user.getFirstRegisteredOAuthUser())) {
@@ -30,7 +31,9 @@ public class UserService {
             throw new NicknameAlreadyExistsException(user);
         }
 
-        return userRepository.save(user).getId();
+        return DefaultPostResponse.builder()
+                                  .id(userRepository.save(user).getId())
+                                  .build();
     }
 
     public EmailValidationResponse validateEmail(String email) {

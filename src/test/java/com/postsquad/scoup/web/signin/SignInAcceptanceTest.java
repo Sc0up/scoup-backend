@@ -6,6 +6,7 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.SignedJWT;
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.auth.OAuthType;
+import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import com.postsquad.scoup.web.signin.controller.response.SignInResponse;
@@ -78,7 +79,8 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                           .contentType(ContentType.JSON)
                           .body(signUpRequest)
                           .post()
-                          .as(int.class);
+                          .as(DefaultPostResponse.class)
+                          .getId();
     }
 
     private RequestSpecification signInRequest(SignInRequest signInRequest) {

@@ -2,6 +2,7 @@ package com.postsquad.scoup.web.group;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
+import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
@@ -59,7 +60,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                       .log().all()
                       .statusCode(HttpStatus.CREATED.value());
-        testEntityManager.findAndConsume(Group.class, actualResponse.body().as(Long.class),
+        testEntityManager.findAndConsume(Group.class, actualResponse.body().as(DefaultPostResponse.class).getId(),
                                          actualGroup -> {
                                              then(actualGroup)
                                                      .as("그룹 생성: %s", description)

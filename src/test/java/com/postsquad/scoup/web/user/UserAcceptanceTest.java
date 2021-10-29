@@ -2,6 +2,7 @@ package com.postsquad.scoup.web.user;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.auth.OAuthType;
+import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
@@ -14,7 +15,8 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,6 @@ import java.util.List;
 import static org.assertj.core.api.BDDAssertions.then;
 
 class UserAcceptanceTest extends AcceptanceTestBase {
-
     @Autowired
     UserRepository userRepository;
 
@@ -72,7 +73,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         // then
         actualResponse.then()
                       .statusCode(HttpStatus.CREATED.value());
-        then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
+        then(userRepository.findById(actualResponse.body().as(DefaultPostResponse.class).getId()).orElse(null))
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
                 .ignoringFields(ignoringFieldsForResponseWithId)

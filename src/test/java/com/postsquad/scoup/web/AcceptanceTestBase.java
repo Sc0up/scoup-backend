@@ -49,6 +49,12 @@ public class AcceptanceTestBase {
                     .description("에러 상세 메세지")
     );
 
+    protected static final Snippet DEFAULT_POST_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("id")
+                    .type(JsonFieldType.NUMBER)
+                    .description("id")
+    );
+
     @LocalServerPort
     protected int port;
 
