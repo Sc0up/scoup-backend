@@ -95,6 +95,16 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                     .description("이메일 중복 여부")
     );
 
+    private static final Snippet NICKNAME_VALIDATION_REQUEST_PARAMS = requestParameters(
+            parameterWithName("nickname").description("검증 닉네임")
+    );
+
+    private static final Snippet NICKNAME_VALIDATION_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("existing_nickname")
+                    .type(JsonFieldType.BOOLEAN)
+                    .description("닉네임 중복 여부")
+    );
+
     @Autowired
     UserRepository userRepository;
 
@@ -319,7 +329,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     void validateNickname(String description, String givenNickname, NicknameValidationResponse expectedNicknameValidationResponse) {
         // given
         String path = "/api/users/validate/nickname";
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
@@ -327,6 +337,11 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      NICKNAME_VALIDATION_REQUEST_PARAMS,
+                                                      NICKNAME_VALIDATION_RESPONSE_FIELDS
+                                              ))
                                               .log().all()
                                               .get()
                                               .andReturn();

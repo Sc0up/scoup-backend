@@ -22,3 +22,6 @@ include::user/sign-up.adoc[]
 
 // 이메일 중복확인
 include::user/email-validation.adoc[]
+
+// 닉네임 중복확인
+include::user/nickname-validation.adoc[]
