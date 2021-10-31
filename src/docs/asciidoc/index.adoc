@@ -1,6 +1,9 @@
+:operation-http-request-title: Example request
+:operation-http-response-title: Example response
+
 = SCOUP API
 :toc: left
-:toclevels: 4
+:toclevels: 2
 
 // TODO: 헤더정보도 만들기
 // TODO: 공통 에러 폼 추가 알아보기

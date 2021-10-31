@@ -1,39 +1,25 @@
 == 로그인
 
-`POST /api/sign-in`
+=== `POST /api/sign-in`
 
-=== request
+=== `200 OK`
 
-.body
-include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/request-fields.adoc[]
+operation::sign_in_acceptance_test/sign_in_verify_response_body[snippets='request-fields,http-request,http-response']
 
-=== response
+=== `400 Bad Request`
 
-==== success
-
-include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/response-fields.adoc[]
-
-==== error
+==== response fields
 
 include::../error-response.adoc[]
 
-=== example
+===== 이메일 is null
 
-==== `200 OK`
+operation::sign_in_acceptance_test/validate_sign_in_request/email_is_null[snippets='http-request,http-response']
 
-include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/http-request.adoc[]
-include::{snippets}/sign_in_acceptance_test/sign_in_verify_response_body/http-response.adoc[]
+===== 패스워드 is null
 
-==== `400 Bad Request`
+operation::sign_in_acceptance_test/validate_sign_in_request/password_is_null[snippets='http-request,http-response']
 
-.이메일 is null
-include::{snippets}/sign_in_acceptance_test/validate_sign_in_request/email_is_null/http-request.adoc[]
-include::{snippets}/sign_in_acceptance_test/validate_sign_in_request/email_is_null/http-response.adoc[]
+===== 존재하지 않는 이메일
 
-.패스워드 is null
-include::{snippets}/sign_in_acceptance_test/validate_sign_in_request/password_is_null/http-request.adoc[]
-include::{snippets}/sign_in_acceptance_test/validate_sign_in_request/password_is_null/http-response.adoc[]
-
-.존재하지 않는 이메일
-include::{snippets}/sign_in_acceptance_test/sign_in_with_not_existing_user/http-request.adoc[]
-include::{snippets}/sign_in_acceptance_test/sign_in_with_not_existing_user/http-response.adoc[]
+operation::sign_in_acceptance_test/sign_in_with_not_existing_user[snippets='http-request,http-response']

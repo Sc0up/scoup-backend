@@ -1,45 +1,17 @@
 == 회원가입
 
-`POST /api/users`
+=== `POST /api/users`
 
-=== request
+=== `201 Created`
 
 ==== 이메일 회원가입
 
-.body
-include::{snippets}/user_acceptance_test/email_sign_up/request-fields.adoc[]
+operation::user_acceptance_test/email_sign_up[snippets='request-fields,http-request,http-response']
 
 ==== 소셜 회원가입
 
-.body
-include::{snippets}/user_acceptance_test/social_sign_up/request-fields.adoc[]
-
-=== response
-
-==== success
-
-===== 이메일 회원가입
-
-include::{snippets}/user_acceptance_test/email_sign_up/response-fields.adoc[]
-
-===== 소셜 회원가입
-
-include::{snippets}/user_acceptance_test/social_sign_up/response-fields.adoc[]
+operation::user_acceptance_test/social_sign_up[snippets='request-fields,http-request,http-response']
 
 ==== error
 
 include::../error-response.adoc[]
-
-=== example
-
-==== `201 Created`
-
-===== 이메일 회원가입
-
-include::{snippets}/user_acceptance_test/email_sign_up/http-request.adoc[]
-include::{snippets}/user_acceptance_test/email_sign_up/http-response.adoc[]
-
-===== 소셜 회원가입
-
-include::{snippets}/user_acceptance_test/social_sign_up/http-request.adoc[]
-include::{snippets}/user_acceptance_test/social_sign_up/http-response.adoc[]
