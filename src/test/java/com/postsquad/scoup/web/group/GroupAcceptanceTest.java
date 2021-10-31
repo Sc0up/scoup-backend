@@ -144,11 +144,12 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         // given
         Group group = Group.builder().name("name").description("").owner(testUser).schedules(new ArrayList<>()).build();
         testEntityManager.persist(group);
-        String path = "/api/groups/";
+        String path = "/api/groups/{groupId}";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
-                                                       .basePath(path + givenGroupId)
+                                                       .basePath(path)
+                                                       .pathParam("groupId", givenGroupId)
                                                        .contentType(ContentType.JSON)
                                                        .header("Accept-Language", "en-US")
                                                        .header("Authorization", TEST_TOKEN)
