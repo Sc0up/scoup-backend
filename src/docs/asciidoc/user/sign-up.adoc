@@ -12,6 +12,12 @@ operation::user_acceptance_test/email_sign_up[snippets='request-fields,http-requ
 
 operation::user_acceptance_test/social_sign_up[snippets='request-fields,http-request,http-response']
 
-==== error
+=== `400 Bad Request`
 
-include::../error-response.adoc[]
+==== 이미 존재하는 회원(이메일)
+
+operation::user_acceptance_test/sign_up_via_email_when_user_already_exists[snippets='http-request,http-response']
+
+==== 이미 존재하는 회원(소셜)
+
+operation::user_acceptance_test/sign_up_via_social_when_user_already_exists[snippets='http-request,http-response']

@@ -181,7 +181,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     private void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
         // given
         String path = "/api/users";
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
@@ -190,6 +190,11 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      SOCIAL_SIGN_UP_REQUEST_FIELDS,
+                                                      ERROR_RESPONSE_FIELDS
+                                              ))
                                               .log().all(true)
                                               .post();
 
