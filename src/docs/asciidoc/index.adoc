@@ -19,3 +19,6 @@ include::sign-in/sign-in.adoc[]
 
 // 회원가입
 include::user/sign-up.adoc[]
+
+// 이메일 중복확인
+include::user/email-validation.adoc[]

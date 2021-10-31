@@ -28,8 +28,9 @@ import org.springframework.restdocs.snippet.Snippet;
 import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 class UserAcceptanceTest extends AcceptanceTestBase {
@@ -82,6 +83,16 @@ class UserAcceptanceTest extends AcceptanceTestBase {
                     .type(JsonFieldType.STRING)
                     .description("(optional) 아바타 이미지 url")
                     .optional()
+    );
+
+    private static final Snippet EMAIL_VALIDATION_REQUEST_PARAMS = requestParameters(
+            parameterWithName("email").description("검증 이메일")
+    );
+
+    private static final Snippet EMAIL_VALIDATION_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("existing_email")
+                    .type(JsonFieldType.BOOLEAN)
+                    .description("이메일 중복 여부")
     );
 
     @Autowired
@@ -245,7 +256,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     void validateEmail(String description, String givenEmail, EmailValidationResponse expectedEmailValidationResponse) {
         // given
         String path = "/api/users/validate/email";
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
@@ -253,6 +264,11 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      EMAIL_VALIDATION_REQUEST_PARAMS,
+                                                      EMAIL_VALIDATION_RESPONSE_FIELDS
+                                              ))
                                               .log().all()
                                               .get()
                                               .andReturn();
