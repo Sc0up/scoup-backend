@@ -249,7 +249,6 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("이메일 계정으로 로그인 한다 - request validation")
     void validateSignInRequest(
             String description,
-            String restDocsPath,
             SignUpRequest givenSignUpRequest,
             SignInRequest givenSignInRequest,
             ErrorResponse expectedErrorResponse
@@ -261,7 +260,6 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
         // when
         Response actualResponse = givenRequest.when()
                                               .header("Accept-Language", "en-US")
-                                              .filter(document(DEFAULT_RESTDOCS_PATH + restDocsPath, ERROR_RESPONSE_FIELDS))
                                               .log().all(true)
                                               .post();
         // then
@@ -280,7 +278,6 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
         return Stream.of(
                 Arguments.of(
                         "이메일 없음",
-                        "email_is_null",
                         SignUpRequest.builder()
                                      .oAuthType(OAuthType.NONE)
                                      .socialServiceId("")
@@ -299,7 +296,6 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                                      .build()
                 ), Arguments.of(
                         "비밀번호 없음",
-                        "password_is_null",
                         SignUpRequest.builder()
                                      .oAuthType(OAuthType.NONE)
                                      .socialServiceId("")
