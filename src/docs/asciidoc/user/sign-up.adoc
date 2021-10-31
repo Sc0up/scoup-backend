@@ -6,11 +6,11 @@
 
 ==== 이메일 회원가입
 
-operation::user_acceptance_test/email_sign_up[snippets='request-fields,http-request,http-response']
+operation::user_acceptance_test/email_sign_up[snippets='request-fields,response-fields,http-request,http-response']
 
 ==== 소셜 회원가입
 
-operation::user_acceptance_test/social_sign_up[snippets='request-fields,http-request,http-response']
+operation::user_acceptance_test/social_sign_up[snippets='request-fields,response-fields,http-request,http-response']
 
 === `400 Bad Request`
 

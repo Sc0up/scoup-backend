@@ -4,7 +4,7 @@
 
 === `200 OK`
 
-operation::sign_in_acceptance_test/sign_in_verify_response_body[snippets='request-fields,http-request,http-response']
+operation::sign_in_acceptance_test/sign_in_verify_response_body[snippets='request-fields,response-fields,http-request,http-response']
 
 === `400 Bad Request`
 
