@@ -5,3 +5,9 @@
 === `200 OK`
 
 operation::group_acceptance_test/create_group[snippets='request-fields,response-fields,http-request,http-response']
+
+=== `400 Bad Request`
+
+==== 이미 존재하는 그룹명
+
+operation::group_acceptance_test/create_group[snippets='http-request,http-response']

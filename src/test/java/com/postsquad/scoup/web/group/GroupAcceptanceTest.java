@@ -102,7 +102,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         // given
         testEntityManager.persist(Group.builder().name("name").description("").build());
         String path = "/api/groups";
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
@@ -113,6 +113,11 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_CREATION_REQUEST_FIELDS,
+                                                      ERROR_RESPONSE_FIELDS
+                                              ))
                                               .log().all()
                                               .post();
 
