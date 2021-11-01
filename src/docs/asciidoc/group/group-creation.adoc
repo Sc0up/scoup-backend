@@ -1,0 +1,7 @@
+== 그룹 생성
+
+=== `POST /api/groups`
+
+=== `200 OK`
+
+operation::group_acceptance_test/create_group[snippets='request-fields,response-fields,http-request,http-response']

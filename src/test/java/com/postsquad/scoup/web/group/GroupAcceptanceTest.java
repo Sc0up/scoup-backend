@@ -21,12 +21,26 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.snippet.Snippet;
 
 import java.util.ArrayList;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 public class GroupAcceptanceTest extends AcceptanceTestBase {
+
+    private static final Snippet GROUP_CREATION_REQUEST_FIELDS = requestFields(
+            fieldWithPath("name")
+                    .type(JsonFieldType.STRING)
+                    .description("그룹 명"),
+            fieldWithPath("description")
+                    .type(JsonFieldType.STRING)
+                    .description("그룹 설명")
+    );
 
     @Autowired
     TestEntityManager testEntityManager;
@@ -42,7 +56,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
     void createGroup(String description, GroupCreationRequest givenGroupCreationRequest, Group expectedGroup) {
         // given
         String path = "/api/groups";
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
@@ -53,6 +67,11 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_CREATION_REQUEST_FIELDS,
+                                                      DEFAULT_POST_RESPONSE_FIELDS
+                                              ))
                                               .log().all()
                                               .post();
 
