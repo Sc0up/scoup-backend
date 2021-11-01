@@ -25,3 +25,6 @@ include::user/email-validation.adoc[]
 
 // 닉네임 중복확인
 include::user/nickname-validation.adoc[]
+
+// 그룹 생성
+include::group/group-creation.adoc[]
