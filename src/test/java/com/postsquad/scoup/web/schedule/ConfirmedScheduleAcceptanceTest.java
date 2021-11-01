@@ -16,6 +16,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.snippet.Snippet;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,8 +25,46 @@ import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
+
+    private static final Snippet CONFIRMED_SCHEDULE_READ_ALL_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID")
+    );
+
+    private static final Snippet CONFIRMED_SCHEDULE_READ_ALL_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("confirmed_schedules[]")
+                    .type(JsonFieldType.ARRAY)
+                    .description("확정된 스케줄 목록"),
+            fieldWithPath("confirmed_schedules[].title")
+                    .type(JsonFieldType.STRING)
+                    .description("확정된 스케줄 시작 제목"),
+            fieldWithPath("confirmed_schedules[].description")
+                    .type(JsonFieldType.STRING)
+                    .description("확정된 스케줄 시작 설명")
+                    .optional(),
+            fieldWithPath("confirmed_schedules[].start_date_time")
+                    .type(JsonFieldType.STRING)
+                    .description("확정된 스케줄 시작 시간"),
+            fieldWithPath("confirmed_schedules[].end_date_time")
+                    .type(JsonFieldType.STRING)
+                    .description("확정된 스케줄 종료 시간"),
+            fieldWithPath("confirmed_schedules[].confirmed_participants[]")
+                    .type(JsonFieldType.ARRAY)
+                    .description("확정된 스케줄의 참가자 목록"),
+            fieldWithPath("confirmed_schedules[].confirmed_participants[].nickname")
+                    .type(JsonFieldType.STRING)
+                    .description("확정된 스케줄의 참가자 닉네임"),
+            fieldWithPath("confirmed_schedules[].confirmed_participants[].username")
+                    .type(JsonFieldType.STRING)
+                    .description("확정된 스케줄의 참가자 이름")
+    );
 
     @Autowired
     TestEntityManager testEntityManager;
@@ -59,12 +99,12 @@ class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
                                                                .build();
         schedule.confirmSchedule(confirmedSchedule);
         testEntityManager.persist(group);
-        String path = "/api/groups/{groupId}/confirmed-schedules";
+        String path = "/groups/{groupId}/confirmed-schedules";
 
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
-                                                       .basePath(path)
+                                                       .basePath("/api")
                                                        .pathParam("groupId", givenGroupId)
                                                        .contentType(ContentType.JSON)
                                                        .header(AUTHORIZATION, TEST_TOKEN);
@@ -72,8 +112,13 @@ class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
         // when
         Response actualResponse = givenRequest.when()
                                               .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      CONFIRMED_SCHEDULE_READ_ALL_PATH_PARAMETERS,
+                                                      CONFIRMED_SCHEDULE_READ_ALL_RESPONSE_FIELDS
+                                              ))
                                               .log().all()
-                                              .get();
+                                              .get(path);
 
         // then
         actualResponse.then()
