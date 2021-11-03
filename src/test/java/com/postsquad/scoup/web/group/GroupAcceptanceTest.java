@@ -39,6 +39,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
             fieldWithPathAndConstraints("description", GroupCreationRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("그룹 설명")
+                    .optional()
     );
 
     @Autowired
