@@ -36,50 +36,50 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 class UserAcceptanceTest extends AcceptanceTestBase {
 
     private static final Snippet EMAIL_SIGN_UP_REQUEST_FIELDS = requestFields(
-            fieldWithPath("oauth_type")
+            fieldWithPathAndConstraints("oauth_type", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("OAuth 종류 (NONE으로 입력)"),
-            fieldWithPath("social_service_id")
+            fieldWithPathAndConstraints("social_service_id", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("소셜 서비스 id (\"\" 입력)"),
-            fieldWithPath("nickname")
+            fieldWithPathAndConstraints("nickname", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("사용자 별명(unique)"),
-            fieldWithPath("username")
+            fieldWithPathAndConstraints("username", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("사용자 이름"),
-            fieldWithPath("email")
+            fieldWithPathAndConstraints("email", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("사용자 email"),
-            fieldWithPath("password")
+            fieldWithPathAndConstraints("password", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("사용자 password"),
-            fieldWithPath("avatar_url")
+            fieldWithPathAndConstraints("avatar_url", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
-                    .description("(optional) 아바타 이미지 url")
+                    .description("아바타 이미지 url")
                     .optional()
     );
 
     private static final Snippet SOCIAL_SIGN_UP_REQUEST_FIELDS = requestFields(
-            fieldWithPath("oauth_type")
+            fieldWithPathAndConstraints("oauth_type", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("OAuth 종류 (GITHUB, KAKAO, GOOGLE)"),
-            fieldWithPath("social_service_id")
+            fieldWithPathAndConstraints("social_service_id", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("소셜 서비스 id"),
-            fieldWithPath("nickname")
+            fieldWithPathAndConstraints("nickname", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("사용자 별명(unique)"),
-            fieldWithPath("username")
+            fieldWithPathAndConstraints("username", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("사용자 이름"),
-            fieldWithPath("email")
+            fieldWithPathAndConstraints("email", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("사용자 email"),
-            fieldWithPath("password")
+            fieldWithPathAndConstraints("password", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("사용자 password"),
-            fieldWithPath("avatar_url")
+            fieldWithPathAndConstraints("avatar_url", SignUpRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("(optional) 아바타 이미지 url")
                     .optional()

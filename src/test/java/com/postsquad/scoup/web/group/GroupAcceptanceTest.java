@@ -27,17 +27,16 @@ import org.springframework.restdocs.snippet.Snippet;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 public class GroupAcceptanceTest extends AcceptanceTestBase {
 
     private static final Snippet GROUP_CREATION_REQUEST_FIELDS = requestFields(
-            fieldWithPath("name")
+            fieldWithPathAndConstraints("name", GroupCreationRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("그룹 명"),
-            fieldWithPath("description")
+            fieldWithPathAndConstraints("description", GroupCreationRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("그룹 설명")
     );

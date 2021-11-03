@@ -39,10 +39,10 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 class SignInAcceptanceTest extends AcceptanceTestBase {
 
     private static final Snippet SIGN_IN_REQUEST_FIELDS = requestFields(
-            fieldWithPath("email")
+            fieldWithPathAndConstraints("email", SignInRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("사용자 email"),
-            fieldWithPath("password")
+            fieldWithPathAndConstraints("password", SignInRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("사용자 password")
     );
