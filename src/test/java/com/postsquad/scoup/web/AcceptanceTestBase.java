@@ -17,7 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.constraints.ConstraintDescriptions;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.snippet.Attributes.Attribute;
 import org.springframework.restdocs.snippet.Snippet;
 
 import java.util.List;
@@ -26,6 +29,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.snippet.Attributes.key;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(RestDocumentationExtension.class)
@@ -111,5 +115,15 @@ public class AcceptanceTestBase {
 
         RestAssured.config = RestAssuredConfig.config()
                                               .objectMapperConfig(jackson2ObjectMapperConfig);
+    }
+
+    protected static FieldDescriptor fieldWithPathAndConstraints(String path, Class<?> clazz) {
+        FieldDescriptor fieldWithPath = fieldWithPath(path);
+
+        ConstraintDescriptions constraintDescriptions = new ConstraintDescriptions(clazz);
+        Attribute constraints = key("constraints").value(constraintDescriptions.descriptionsForProperty(path));
+        FieldDescriptor fieldWithPathAndConstraints = fieldWithPath.attributes(constraints);
+
+        return fieldWithPathAndConstraints;
     }
 }
