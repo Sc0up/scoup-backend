@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.CaseFormat;
 import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.user.domain.OAuthUser;
 import com.postsquad.scoup.web.user.domain.User;
@@ -121,7 +122,8 @@ public class AcceptanceTestBase {
         FieldDescriptor fieldWithPath = fieldWithPath(path);
 
         ConstraintDescriptions constraintDescriptions = new ConstraintDescriptions(clazz);
-        Attribute constraints = key("constraints").value(constraintDescriptions.descriptionsForProperty(path));
+        String camelCasePath = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, path);
+        Attribute constraints = key("constraints").value(constraintDescriptions.descriptionsForProperty(camelCasePath));
         FieldDescriptor fieldWithPathAndConstraints = fieldWithPath.attributes(constraints);
 
         return fieldWithPathAndConstraints;
