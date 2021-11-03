@@ -73,10 +73,10 @@ public class AcceptanceTestBase {
     @BeforeEach
     void setUpRestDocs(RestDocumentationContextProvider restDocumentation) {
         this.spec = new RequestSpecBuilder()
-                .addFilter(
-                        documentationConfiguration(restDocumentation).operationPreprocessors()
-                                                                     .withRequestDefaults(prettyPrint())
-                                                                     .withResponseDefaults(prettyPrint())
+                .addFilter(documentationConfiguration(restDocumentation)
+                                   .operationPreprocessors()
+                                   .withRequestDefaults(prettyPrint())
+                                   .withResponseDefaults(prettyPrint())
                 ).build();
     }
 
@@ -87,13 +87,13 @@ public class AcceptanceTestBase {
     protected static final String TEST_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjcyNDk4ODAwfQ.DXojMeUGIq77XWvQK0luZtZhsi-c6s9qjiiu9vHhkbg";
 
     protected User testUser = User.builder()
-                                .nickname("nickname")
-                                .email("email@email.com")
-                                .password("password")
-                                .avatarUrl("url")
-                                .username("username")
-                                .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "")))
-                                .build();
+                                  .nickname("nickname")
+                                  .email("email@email.com")
+                                  .password("password")
+                                  .avatarUrl("url")
+                                  .username("username")
+                                  .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "")))
+                                  .build();
 
     protected String[] ignoringFieldsForResponseWithId = new String[]{"createdDateTime", "modifiedDateTime", "id"};
 
