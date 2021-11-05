@@ -1,6 +1,6 @@
 == 스케줄 후보 전체 조회
 
-=== `POST /api/groups/{groupId}/schedule-candidates`
+=== `GET /api/groups/{groupId}/schedule-candidates`
 
 === `200 OK`
 
