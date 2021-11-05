@@ -1,7 +1,6 @@
 package com.postsquad.scoup.web.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postsquad.scoup.web.common.ObjectMapperUtils;
 import com.postsquad.scoup.web.signin.controller.SignInInterceptor;
 import com.postsquad.scoup.web.user.UserArgumentResolver;
 import io.netty.resolver.DefaultAddressResolverGroup;
@@ -13,7 +12,6 @@ import org.springframework.hateoas.client.LinkDiscoverers;
 import org.springframework.hateoas.mediatype.collectionjson.CollectionJsonLinkDiscoverer;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.plugin.core.SimplePluginRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
@@ -34,9 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final SignInInterceptor signInInterceptor;
 
-    private final ObjectMapperUtils objectMapperUtils;
-
-    private final MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter;
+    private final RequestParameterArgumentResolver requestParameterArgumentResolver;
 
     @Bean
     public HttpClient httpClient() {
@@ -61,7 +57,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new UserArgumentResolver());
-        resolvers.add(new RequestParameterArgumentResolver(objectMapperUtils, List.of(mappingJackson2HttpMessageConverter)));
+        resolvers.add(requestParameterArgumentResolver);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.postsquad.scoup.web.common.ObjectMapperUtils;
 import org.springframework.core.Conventions;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.WebDataBinder;
@@ -25,11 +26,12 @@ import java.util.List;
  * - HTTP 메세지가 아닌 argument만 변환하고 있는데, 추후 헤더 설정 등에서 막힐경우 확인 필요.<br/>
  * - 생성자에 Advice를 넣어주지 않고 있는데 해당 부분에서 오류발생 시 수정 필요.<br/>
  */
+@Component
 public class RequestParameterArgumentResolver extends RequestResponseBodyMethodProcessor {
 
     private ObjectMapperUtils objectMapperUtils;
 
-    public RequestParameterArgumentResolver(ObjectMapperUtils objectMapperUtils, List<HttpMessageConverter<?>> converters) {
+    public RequestParameterArgumentResolver(List<HttpMessageConverter<?>> converters, ObjectMapperUtils objectMapperUtils) {
         super(converters);
         this.objectMapperUtils = objectMapperUtils;
     }
