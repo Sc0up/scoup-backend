@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -51,6 +52,11 @@ public class Schedule extends BaseEntity {
 
     @Builder
     public static Schedule of(Group group, String title, String description, LocalDateTime dueDateTime, String colorCode, ConfirmedSchedule confirmedSchedule, @Singular List<ScheduleCandidate> scheduleCandidates) {
+
+        if (Objects.isNull(colorCode)) {
+            colorCode = DEFAULT_COLOR_CODE;
+        }
+
         Schedule schedule = new Schedule(group, title, description, dueDateTime, colorCode, confirmedSchedule);
         schedule.addScheduleCandidates(scheduleCandidates);
         return schedule;

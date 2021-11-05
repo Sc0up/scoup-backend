@@ -34,9 +34,8 @@ public class GroupController {
     }
 
     @PutMapping("/{groupId}")
-    @ResponseStatus(HttpStatus.OK)
-    // FIXME: 204로 변경되어야함.
-    public Long update(@PathVariable Long groupId, @RequestBody @Valid GroupModificationRequest groupModificationRequest, @LoggedInUser User user) {
-        return groupService.update(groupId, groupModificationRequest, user);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable Long groupId, @RequestBody @Valid GroupModificationRequest groupModificationRequest, @LoggedInUser User user) {
+        groupService.update(groupId, groupModificationRequest, user);
     }
 }

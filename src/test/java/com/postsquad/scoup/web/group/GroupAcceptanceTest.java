@@ -169,11 +169,12 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         // given
         Group group = Group.builder().name("name").description("").owner(testUser).schedules(new ArrayList<>()).build();
         testEntityManager.persist(group);
-        String path = "/api/groups/";
+        String path = "/api/groups/{groupId}";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
-                                                       .basePath(path + givenGroupId)
+                                                       .basePath(path)
+                                                       .pathParam("groupId", givenGroupId)
                                                        .contentType(ContentType.JSON)
                                                        .header("Accept-Language", "en-US")
                                                        .header("Authorization", TEST_TOKEN)
@@ -187,8 +188,8 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         // then
         actualResponse.then()
                       .log().all()
-                      .statusCode(HttpStatus.OK.value());
-        testEntityManager.findAndConsume(Group.class, actualResponse.as(Long.class),
+                      .statusCode(HttpStatus.NO_CONTENT.value());
+        testEntityManager.findAndConsume(Group.class, givenGroupId,
                                          actualGroup -> then(actualGroup)
                                                  .as("그룹 수정: %s", description)
                                                  .usingRecursiveComparison()

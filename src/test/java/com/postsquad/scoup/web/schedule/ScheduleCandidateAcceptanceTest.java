@@ -195,6 +195,7 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
                                                                                 .endDateTime(readAllTestData.scheduleCandidate1().getEndDateTime())
                                                                                 .isConfirmed(false)
                                                                                 .scheduleTitle("title")
+                                                                                .colorCode("#00ff0000")
                                                                                 .build()
                                         ))
                         )
