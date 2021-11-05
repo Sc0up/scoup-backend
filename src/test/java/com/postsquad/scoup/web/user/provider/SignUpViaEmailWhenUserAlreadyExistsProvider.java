@@ -18,7 +18,7 @@ public class SignUpViaEmailWhenUserAlreadyExistsProvider implements ArgumentsPro
                 Arguments.of(
                         "실패 - 이미 가입한 이메일(email@email)",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .username("username")
                                      .nickname("nickname")
@@ -33,7 +33,7 @@ public class SignUpViaEmailWhenUserAlreadyExistsProvider implements ArgumentsPro
                 ), Arguments.of(
                         "실패 - 이미 가입한 닉네임(nickname)",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .username("username")
                                      .nickname("existing")

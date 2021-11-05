@@ -131,7 +131,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "성공",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
@@ -224,7 +224,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "성공",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
@@ -279,7 +279,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "이메일 없음",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
@@ -297,7 +297,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "비밀번호 없음",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")

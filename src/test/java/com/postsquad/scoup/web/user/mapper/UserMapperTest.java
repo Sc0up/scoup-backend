@@ -31,7 +31,7 @@ class UserMapperTest {
         return Stream.of(
                 Arguments.arguments(
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
@@ -48,7 +48,7 @@ class UserMapperTest {
                 ),
                 Arguments.arguments(
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.GITHUB)
+                                     .oauthType(OAuthType.GITHUB)
                                      .socialServiceId("1234567")
                                      .nickname("nickname")
                                      .username("username")
