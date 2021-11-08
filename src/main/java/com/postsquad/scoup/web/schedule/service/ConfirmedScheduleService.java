@@ -17,7 +17,7 @@ public class ConfirmedScheduleService {
     private final ConfirmedScheduleRepository confirmedScheduleRepository;
 
     public ConfirmedScheduleReadAllResponses readAll(Long groupId) {
-        List<ConfirmedScheduleReadAllResponse> confirmedSchedules = confirmedScheduleRepository.findConfirmedSchedulesBySchedule_Group_Id(groupId)
+        List<ConfirmedScheduleReadAllResponse> confirmedSchedules = confirmedScheduleRepository.findConfirmedSchedulesByGroupId(groupId)
                                                                                                .stream()
                                                                                                .map(ConfirmedScheduleReadAllResponseMapper.INSTANCE::map)
                                                                                                .collect(Collectors.toList());

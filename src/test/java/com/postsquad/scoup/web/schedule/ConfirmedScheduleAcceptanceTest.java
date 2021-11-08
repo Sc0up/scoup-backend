@@ -2,11 +2,14 @@ package com.postsquad.scoup.web.schedule;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
+import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleReadAllResponses;
 import com.postsquad.scoup.web.schedule.domain.ConfirmedSchedule;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
 import com.postsquad.scoup.web.schedule.provider.ConfirmedScheduleReadAllProvider;
+import com.postsquad.scoup.web.user.domain.OAuthUser;
+import com.postsquad.scoup.web.user.domain.User;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -29,6 +32,15 @@ class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
     @Autowired
     TestEntityManager testEntityManager;
 
+    protected User testUser2 = User.builder()
+                                  .nickname("nickname2")
+                                  .email("email2@email.com")
+                                  .password("password2")
+                                  .avatarUrl("url2")
+                                  .username("username2")
+                                  .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "")))
+                                  .build();
+
     @ParameterizedTest
     @ArgumentsSource(ConfirmedScheduleReadAllProvider.class)
     @DisplayName("확정된 일정을 조회할 수 있다")
@@ -36,6 +48,7 @@ class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
                                    ConfirmedScheduleReadAllResponses expectedConfirmedScheduleReadAllResponses) {
         // given
         testEntityManager.persist(testUser);
+        testEntityManager.persist(testUser2);
 
         Group group = Group.builder()
                            .name("name")
@@ -55,7 +68,7 @@ class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
         ConfirmedSchedule confirmedSchedule = ConfirmedSchedule.builder()
                                                                .startDateTime(LocalDateTime.of(2021, 9, 25, 9, 0))
                                                                .endDateTime(LocalDateTime.of(2021, 9, 25, 11, 0))
-                                                               .confirmedParticipants(List.of(testUser))
+                                                               .confirmedParticipants(List.of(testUser, testUser2))
                                                                .build();
         schedule.confirmSchedule(confirmedSchedule);
         testEntityManager.persist(group);

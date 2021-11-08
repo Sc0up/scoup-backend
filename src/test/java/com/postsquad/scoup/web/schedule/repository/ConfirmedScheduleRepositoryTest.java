@@ -47,7 +47,7 @@ class ConfirmedScheduleRepositoryTest {
         Long groupId = confirmedSchedule.getSchedule().getGroup().getId();
 
         // when
-        List<ConfirmedSchedule> actualConfirmedSchedules = confirmedScheduleRepository.findConfirmedSchedulesBySchedule_Group_Id(groupId);
+        List<ConfirmedSchedule> actualConfirmedSchedules = confirmedScheduleRepository.findConfirmedSchedulesByGroupId(groupId);
 
         // then
         then(actualConfirmedSchedules.get(0))
