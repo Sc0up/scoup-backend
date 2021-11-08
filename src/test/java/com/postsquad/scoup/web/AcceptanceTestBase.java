@@ -36,6 +36,9 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 @ExtendWith(RestDocumentationExtension.class)
 public class AcceptanceTestBase {
 
+    // temporary token with sub(userId) = 1, exp = 2023-01-01T00:00:00.000(Korean Standard Time)
+    protected static final String TEST_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjcyNDk4ODAwfQ.DXojMeUGIq77XWvQK0luZtZhsi-c6s9qjiiu9vHhkbg";
+
     protected static final String BASE_URL = "http://localhost";
 
     protected static final String DEFAULT_RESTDOCS_PATH = "{class_name}/{method_name}/";
@@ -67,29 +70,10 @@ public class AcceptanceTestBase {
     @Autowired
     private DatabaseCleanup databaseCleanup;
 
-    protected RequestSpecification spec;
-
-
-    @BeforeEach
-    void cleanUpDatabase() {
-        databaseCleanup.execute();
-    }
-
-    @BeforeEach
-    void setUpRestDocs(RestDocumentationContextProvider restDocumentation) {
-        this.spec = new RequestSpecBuilder()
-                .addFilter(documentationConfiguration(restDocumentation)
-                                   .operationPreprocessors()
-                                   .withRequestDefaults(prettyPrint())
-                                   .withResponseDefaults(prettyPrint())
-                ).build();
-    }
-
     @Autowired
     protected ObjectMapper objectMapper;
 
-    // temporary token with sub(userId) = 1, exp = 2023-01-01T00:00:00.000(Korean Standard Time)
-    protected static final String TEST_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjcyNDk4ODAwfQ.DXojMeUGIq77XWvQK0luZtZhsi-c6s9qjiiu9vHhkbg";
+    protected RequestSpecification spec;
 
     protected User testUser = User.builder()
                                   .nickname("nickname")
@@ -110,12 +94,19 @@ public class AcceptanceTestBase {
         setUpRestAssured();
     }
 
-    private void setUpRestAssured() {
-        Jackson2Mapper jackson2Mapper = new Jackson2Mapper((type, charset) -> objectMapper);
-        ObjectMapperConfig jackson2ObjectMapperConfig = new ObjectMapperConfig(jackson2Mapper);
+    @BeforeEach
+    void cleanUpDatabase() {
+        databaseCleanup.execute();
+    }
 
-        RestAssured.config = RestAssuredConfig.config()
-                                              .objectMapperConfig(jackson2ObjectMapperConfig);
+    @BeforeEach
+    void setUpRestDocs(RestDocumentationContextProvider restDocumentation) {
+        this.spec = new RequestSpecBuilder()
+                .addFilter(documentationConfiguration(restDocumentation)
+                                   .operationPreprocessors()
+                                   .withRequestDefaults(prettyPrint())
+                                   .withResponseDefaults(prettyPrint())
+                ).build();
     }
 
     protected static FieldDescriptor fieldWithPathAndConstraints(String path, Class<?> clazz) {
@@ -127,5 +118,13 @@ public class AcceptanceTestBase {
         FieldDescriptor fieldWithPathAndConstraints = fieldWithPath.attributes(constraints);
 
         return fieldWithPathAndConstraints;
+    }
+
+    private void setUpRestAssured() {
+        Jackson2Mapper jackson2Mapper = new Jackson2Mapper((type, charset) -> objectMapper);
+        ObjectMapperConfig jackson2ObjectMapperConfig = new ObjectMapperConfig(jackson2Mapper);
+
+        RestAssured.config = RestAssuredConfig.config()
+                                              .objectMapperConfig(jackson2ObjectMapperConfig);
     }
 }
