@@ -80,13 +80,14 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
 
 
         // TODO: 그룹 연결 후에는 그룹도 넣어줘야함.
-        String path = "/api/groups/1/schedule-candidates";
+        String path = "/api/groups/{groupId}/schedule-candidates";
         RequestSpecification givenRequest = RestAssured.given()
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
                                                        .contentType(ContentType.JSON)
                                                        .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", group.getId())
                                                        .queryParam("start_date", givenScheduleCandidateReadRequest.getStartDate().toString())
                                                        .queryParam("end_date", givenScheduleCandidateReadRequest.getEndDate().toString());
 
