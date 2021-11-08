@@ -1,7 +1,9 @@
 package com.postsquad.scoup.web.schedule;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.TestEntityManager;
 import com.postsquad.scoup.web.auth.OAuthType;
+import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateReadRequest;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponse;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponses;
@@ -33,7 +35,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
 
     @Autowired
-    ScheduleCandidateDatabaseHelper scheduleCandidateDatabaseHelper;
+    TestEntityManager testEntityManager;
 
     @Autowired
     UserRepository userRepository;
@@ -63,7 +65,19 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
             ScheduleCandidateReadAllResponses expectedScheduleCandidateReadAllResponses
     ) {
         // given
-        scheduleCandidateDatabaseHelper.setSchedules(givenSchedules);
+        Group group = Group.builder()
+                           .name("group")
+                           .build();
+        group.addSchedules(givenSchedules);
+        for (Schedule schedule : givenSchedules) {
+            schedule.setGroup(group);
+            for (ScheduleCandidate scheduleCandidate : schedule.getScheduleCandidates()) {
+                scheduleCandidate.setSchedule(schedule);
+            }
+        }
+
+        testEntityManager.persist(group);
+
 
         // TODO: 그룹 연결 후에는 그룹도 넣어줘야함.
         String path = "/api/groups/1/schedule-candidates";
