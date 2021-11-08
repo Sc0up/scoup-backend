@@ -63,11 +63,11 @@ dependencies {
     implementation group: 'org.springframework.plugin', name: 'spring-plugin-core', version: '1.2.0.RELEASE'
 
     /* Querydsl */
-    implementation group: 'com.querydsl', name: 'querydsl-apt', version: '4.4.0'
-    implementation group: 'com.querydsl', name: 'querydsl-jpa', version: '4.4.0'
-    annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', classifier:'jpa', version: '4.4.0'
-    annotationProcessor group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: '1.3.5'
-    annotationProcessor group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '2.2.3'
+    implementation 'com.querydsl:querydsl-apt'
+    implementation 'com.querydsl:querydsl-jpa'
+    annotationProcessor 'com.querydsl:querydsl-apt:jpa'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 }
 
 test {
