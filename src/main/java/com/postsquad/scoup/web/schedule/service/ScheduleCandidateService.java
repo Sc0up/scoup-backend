@@ -21,6 +21,7 @@ public class ScheduleCandidateService {
 
     public ScheduleCandidateReadAllResponses readAll(long groupId, ScheduleCandidateReadRequest givenScheduleCandidateReadRequest) {
         List<ScheduleCandidate> scheduleCandidates = scheduleCandidateRepository.findAllByDateTimeIncluding(
+                groupId,
                 givenScheduleCandidateReadRequest.getStartDate().atStartOfDay(),
                 givenScheduleCandidateReadRequest.getEndDate().atStartOfDay()
         );
