@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface ConfirmedScheduleRepository extends JpaRepository<ConfirmedSchedule, Long> {
 
-    @Query("select cs from ConfirmedSchedule cs" +
-           " join fetch cs.schedule s" +
-           " where cs.schedule.group.id = :id"
+    @Query("SELECT cs FROM ConfirmedSchedule cs" +
+           " JOIN FETCH cs.schedule s" +
+           " WHERE cs.schedule.group.id = :id"
     )
     List<ConfirmedSchedule> findConfirmedSchedulesByGroupId(@Param("id") Long id);
 }
