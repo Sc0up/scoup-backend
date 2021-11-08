@@ -90,7 +90,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     );
 
     private static final Snippet EMAIL_VALIDATION_RESPONSE_FIELDS = responseFields(
-            fieldWithPath("existing_email")
+            fieldWithPath("is_existing_email")
                     .type(JsonFieldType.BOOLEAN)
                     .description("이메일 중복 여부")
     );
@@ -100,7 +100,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     );
 
     private static final Snippet NICKNAME_VALIDATION_RESPONSE_FIELDS = responseFields(
-            fieldWithPath("existing_nickname")
+            fieldWithPath("is_existing_nickname")
                     .type(JsonFieldType.BOOLEAN)
                     .description("닉네임 중복 여부")
     );

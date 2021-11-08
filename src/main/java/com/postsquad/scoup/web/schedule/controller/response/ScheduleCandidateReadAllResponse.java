@@ -1,6 +1,5 @@
 package com.postsquad.scoup.web.schedule.controller.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +19,8 @@ public class ScheduleCandidateReadAllResponse {
 
     private LocalDateTime endDateTime;
 
-    private boolean isConfirmed;
+    @Builder.Default
+    private Boolean isConfirmed = false;
 
     private long scheduleId;
 
@@ -29,9 +29,4 @@ public class ScheduleCandidateReadAllResponse {
     private String scheduleDescription;
 
     private String colorCode;
-
-    @JsonProperty("is_confirmed")
-    public boolean isConfirmed() {
-        return isConfirmed;
-    }
 }
