@@ -1,0 +1,7 @@
+== 이메일 중복 확인
+
+=== `GET /api/validate/email`
+
+=== `200 OK`
+
+operation::user_acceptance_test/validate_email[snippets='request-parameters,response-fields,http-request,http-response']

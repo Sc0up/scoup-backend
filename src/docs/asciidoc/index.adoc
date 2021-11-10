@@ -1,0 +1,39 @@
+:operation-http-request-title: Example request
+:operation-http-response-title: Example response
+
+= SCOUP API
+:toc: left
+:toclevels: 2
+
+// TODO: 헤더정보도 만들기
+// TODO: 공통 에러 폼 추가 알아보기
+
+== 공통
+
+=== Error response fields
+
+include::error-response.adoc[]
+
+// 로그인
+include::sign-in/sign-in.adoc[]
+
+// 회원가입
+include::user/sign-up.adoc[]
+
+// 이메일 중복확인
+include::user/email-validation.adoc[]
+
+// 닉네임 중복확인
+include::user/nickname-validation.adoc[]
+
+// 그룹 생성
+include::group/group-creation.adoc[]
+
+// 그룹 수정
+include::group/group-modification.adoc[]
+
+// 스케줄 후보 전체 조회
+include::schedule/schedule-candidate-read-all.adoc[]
+
+// 확정된 스케줄 전체 조회
+include::schedule/confirmed-schedule-read-all.adoc[]

@@ -19,7 +19,7 @@ public class EmailSignUpProvider implements ArgumentsProvider {
                 Arguments.of(
                         "성공",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")

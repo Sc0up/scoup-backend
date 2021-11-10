@@ -1,0 +1,7 @@
+== 스케줄 후보 전체 조회
+
+=== `GET /api/groups/{groupId}/schedule-candidates`
+
+=== `200 OK`
+
+operation::schedule_candidate_acceptance_test/read_all[snippets='path-parameters,request-parameters,response-fields,http-request,http-response']

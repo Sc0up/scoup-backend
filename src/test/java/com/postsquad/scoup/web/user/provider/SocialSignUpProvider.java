@@ -19,7 +19,7 @@ public class SocialSignUpProvider implements ArgumentsProvider {
                 Arguments.of(
                         "성공",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.GITHUB)
+                                     .oauthType(OAuthType.GITHUB)
                                      .socialServiceId("1234567")
                                      .nickname("nickname")
                                      .username("username")

@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.group.controller;
 
+import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
@@ -22,7 +23,7 @@ public class GroupController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long create(@RequestBody @Valid GroupCreationRequest groupCreationRequest, @LoggedInUser User user) {
+    public DefaultPostResponse create(@RequestBody @Valid GroupCreationRequest groupCreationRequest, @LoggedInUser User user) {
         return groupService.create(groupCreationRequest, user);
     }
 

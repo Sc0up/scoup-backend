@@ -19,7 +19,8 @@ public class ScheduleCandidateReadAllResponse {
 
     private LocalDateTime endDateTime;
 
-    private boolean isConfirmed;
+    @Builder.Default
+    private Boolean isConfirmed = false;
 
     private long scheduleId;
 

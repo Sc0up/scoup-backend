@@ -6,6 +6,7 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.SignedJWT;
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.auth.OAuthType;
+import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import com.postsquad.scoup.web.signin.controller.response.SignInResponse;
@@ -15,7 +16,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,6 +23,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.snippet.Snippet;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -31,8 +33,35 @@ import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 class SignInAcceptanceTest extends AcceptanceTestBase {
+
+    private static final Snippet SIGN_IN_REQUEST_FIELDS = requestFields(
+            fieldWithPathAndConstraints("email", SignInRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 email"),
+            fieldWithPathAndConstraints("password", SignInRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 password")
+    );
+
+    private static final Snippet SIGN_IN_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("access_token")
+                    .type(JsonFieldType.STRING)
+                    .description("로그인 유지를 위한 액세스 토큰"),
+            fieldWithPath("nickname")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 nickname"),
+            fieldWithPath("email")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 email"),
+            fieldWithPath("avatar_url")
+                    .type(JsonFieldType.STRING)
+                    .description("(optional) 아바타 이미지 url")
+                    .optional()
+    );
 
     @Value("${jwt.secret.mac}")
     String jwtSecret;
@@ -49,12 +78,14 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                           .contentType(ContentType.JSON)
                           .body(signUpRequest)
                           .post()
-                          .as(int.class);
+                          .as(DefaultPostResponse.class)
+                          .getId();
     }
 
     private RequestSpecification signInRequest(SignInRequest signInRequest) {
         String path = "/api/sign-in";
-        return RestAssured.given()
+
+        return RestAssured.given(this.spec)
                           .baseUri(BASE_URL)
                           .port(port)
                           .basePath(path)
@@ -77,7 +108,11 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
-                                              .log().all(true)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      SIGN_IN_REQUEST_FIELDS,
+                                                      SIGN_IN_RESPONSE_FIELDS
+                                              )).log().all(true)
                                               .post();
         // then
         actualResponse.then()
@@ -96,7 +131,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "성공",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
@@ -189,7 +224,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "성공",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
@@ -244,7 +279,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 Arguments.of(
                         "이메일 없음",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
@@ -262,7 +297,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
                 ), Arguments.of(
                         "비밀번호 없음",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
@@ -290,6 +325,7 @@ class SignInAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(DEFAULT_RESTDOCS_PATH, ERROR_RESPONSE_FIELDS))
                                               .log().all(true)
                                               .post();
         // then

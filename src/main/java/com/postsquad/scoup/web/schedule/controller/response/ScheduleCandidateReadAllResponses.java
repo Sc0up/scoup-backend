@@ -14,6 +14,6 @@ import java.util.Map;
 @Data
 public class ScheduleCandidateReadAllResponses {
 
-    @JsonProperty("scheduleCandidates")
+    @JsonProperty("schedule_candidates")
     private Map<LocalDate, List<ScheduleCandidateReadAllResponse>> scheduleCandidateResponses;
 }

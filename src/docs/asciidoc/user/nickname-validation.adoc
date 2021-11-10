@@ -1,0 +1,7 @@
+== 닉네임 중복 확인
+
+=== `GET /api/validate/nickname`
+
+=== `200 OK`
+
+operation::user_acceptance_test/validate_nickname[snippets='request-parameters,response-fields,http-request,http-response']

@@ -18,7 +18,7 @@ public class SignUpWithValidationProvider implements ArgumentsProvider {
                 Arguments.of(
                         "실패 - nickname 없음",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .username("username")
                                      .email("email@email")
@@ -32,7 +32,7 @@ public class SignUpWithValidationProvider implements ArgumentsProvider {
                 ), Arguments.of(
                         "실패 - username 없음",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .email("email@email")
@@ -46,7 +46,7 @@ public class SignUpWithValidationProvider implements ArgumentsProvider {
                 ), Arguments.of(
                         "실패 - email 없음",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
@@ -60,7 +60,7 @@ public class SignUpWithValidationProvider implements ArgumentsProvider {
                 ), Arguments.of(
                         "실패 - password 없음",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
@@ -74,7 +74,7 @@ public class SignUpWithValidationProvider implements ArgumentsProvider {
                 ), Arguments.of(
                         "실패 - email 형식 다름",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .nickname("nickname")
                                      .username("username")
@@ -89,7 +89,7 @@ public class SignUpWithValidationProvider implements ArgumentsProvider {
                 ), Arguments.of(
                         "실패 - 모두 없음",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.NONE)
+                                     .oauthType(OAuthType.NONE)
                                      .socialServiceId("")
                                      .build(),
                         ErrorResponse.builder()

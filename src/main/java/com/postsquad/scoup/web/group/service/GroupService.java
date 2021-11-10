@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.group.service;
 
+import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
 import com.postsquad.scoup.web.group.domain.Group;
@@ -18,7 +19,7 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
 
-    public Long create(GroupCreationRequest groupCreationRequest, User user) {
+    public DefaultPostResponse create(GroupCreationRequest groupCreationRequest, User user) {
 
         if (groupRepository.existsByName(groupCreationRequest.getName())) {
             throw new GroupNameAlreadyExistException(groupCreationRequest.getName());
@@ -26,7 +27,7 @@ public class GroupService {
 
         Group group = GroupMapper.INSTANCE.map(groupCreationRequest, user);
 
-        return groupRepository.save(group).getId();
+        return DefaultPostResponse.builder().id(groupRepository.save(group).getId()).build();
     }
 
     public Long update(Long groupId, GroupModificationRequest groupModificationRequest, User user) {

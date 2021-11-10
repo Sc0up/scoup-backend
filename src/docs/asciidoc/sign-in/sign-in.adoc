@@ -1,0 +1,13 @@
+== 로그인
+
+=== `POST /api/sign-in`
+
+=== `200 OK`
+
+operation::sign_in_acceptance_test/sign_in_verify_response_body[snippets='request-fields,response-fields,http-request,http-response']
+
+=== `400 Bad Request`
+
+==== 존재하지 않는 이메일
+
+operation::sign_in_acceptance_test/sign_in_with_not_existing_user[snippets='http-request,http-response']
