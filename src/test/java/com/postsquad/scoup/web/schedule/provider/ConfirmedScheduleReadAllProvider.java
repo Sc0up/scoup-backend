@@ -28,7 +28,13 @@ public class ConfirmedScheduleReadAllProvider implements ArgumentsProvider {
                                                                                                                ConfirmedParticipantResponse.builder()
                                                                                                                                            .nickname("nickname")
                                                                                                                                            .username("username")
-                                                                                                                                           .build()))
+                                                                                                                                           .build(),
+                                                                                                               ConfirmedParticipantResponse.builder()
+                                                                                                                                           .nickname("nickname2")
+                                                                                                                                           .username("username2")
+                                                                                                                                           .build())
+
+                                                                                                       )
                                                                                                        .build()))
                 )
         );
