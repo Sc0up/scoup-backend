@@ -40,9 +40,9 @@ public class WebConfig implements WebMvcConfigurer {
             "/docs/**"
     };
 
-    private final RequestParameterArgumentResolver requestParameterArgumentResolver;
-
     private final SignInInterceptor signInInterceptor;
+
+    private final RequestParameterArgumentResolver requestParameterArgumentResolver;
 
     @Bean
     public HttpClient httpClient() {
