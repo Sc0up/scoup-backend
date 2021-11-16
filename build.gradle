@@ -79,12 +79,12 @@ test {
 }
 
 asciidoctor {
+    mustRunAfter tasks.withType(Test)
     inputs.dir snippetsDir
-    dependsOn test
 }
 
-task copyAsciidoctor(type: Copy) {
-    dependsOn asciidoctor
+task copyRestDocs(type: Copy) {
+    mustRunAfter asciidoctor
     from "${asciidoctor.outputDir}/html5"
     into "${sourceSets.main.output.resourcesDir}/static/docs"
 }
@@ -94,9 +94,9 @@ jar {
 }
 
 build {
-    dependsOn copyAsciidoctor
+    dependsOn asciidoctor, copyRestDocs
 }
 
 bootRun {
-    dependsOn copyAsciidoctor
+    dependsOn test, asciidoctor, copyRestDocs
 }
