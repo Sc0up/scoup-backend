@@ -4,7 +4,7 @@ import com.postsquad.scoup.web.auth.controller.request.TokenRequestWithGrantType
 import com.postsquad.scoup.web.auth.controller.response.TokenResponse;
 import com.postsquad.scoup.web.auth.controller.response.KakaoUserResponse;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
-import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponseMapper;
+import com.postsquad.scoup.web.auth.mapper.SocialAuthenticationResponseMapper;
 import com.postsquad.scoup.web.auth.exception.TokenNotFoundException;
 import com.postsquad.scoup.web.auth.exception.OAuthRequestNotValidException;
 import com.postsquad.scoup.web.auth.exception.OAuthUserNotFoundException;

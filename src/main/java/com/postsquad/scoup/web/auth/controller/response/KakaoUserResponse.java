@@ -10,14 +10,14 @@ public class KakaoUserResponse {
     private KakaoAccount kakaoAccount;
 
     @Getter
-    static class KakaoAccount {
+    public static class KakaoAccount {
 
         private String email;
 
         private Profile profile;
 
         @Getter
-        static class Profile {
+        public static class Profile {
 
             private String profileImageUrl;
             

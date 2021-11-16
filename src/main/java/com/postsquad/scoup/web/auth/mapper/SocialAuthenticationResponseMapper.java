@@ -1,6 +1,10 @@
-package com.postsquad.scoup.web.auth.controller.response;
+package com.postsquad.scoup.web.auth.mapper;
 
 import com.postsquad.scoup.web.auth.OAuthType;
+import com.postsquad.scoup.web.auth.controller.response.GitHubUserResponse;
+import com.postsquad.scoup.web.auth.controller.response.GoogleUserResponse;
+import com.postsquad.scoup.web.auth.controller.response.KakaoUserResponse;
+import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
