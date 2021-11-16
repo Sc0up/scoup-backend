@@ -4,6 +4,7 @@ import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
+import com.postsquad.scoup.web.user.controller.request.EmailValidationRequest;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
@@ -86,7 +87,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     );
 
     private static final Snippet EMAIL_VALIDATION_REQUEST_PARAMS = requestParameters(
-            parameterWithName("email").description("검증 이메일")
+            parameterWithNameAndConstraints("email", EmailValidationRequest.class)
+                    .description("검증 이메일")
     );
 
     private static final Snippet EMAIL_VALIDATION_RESPONSE_FIELDS = responseFields(
