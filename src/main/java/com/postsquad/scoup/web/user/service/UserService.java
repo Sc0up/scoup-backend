@@ -2,6 +2,7 @@ package com.postsquad.scoup.web.user.service;
 
 import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.user.controller.request.EmailValidationRequest;
+import com.postsquad.scoup.web.user.controller.request.NicknameValidationRequest;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
@@ -44,8 +45,8 @@ public class UserService {
         return EmailValidationResponse.valueOf(false);
     }
 
-    public NicknameValidationResponse validateNickname(String nickname) {
-        if (userRepository.findByNickname(nickname).isPresent()) {
+    public NicknameValidationResponse validateNickname(NicknameValidationRequest nicknameValidationRequest) {
+        if (userRepository.findByNickname(nicknameValidationRequest.getNickname()).isPresent()) {
             return NicknameValidationResponse.valueOf(true);
         }
         return NicknameValidationResponse.valueOf(false);

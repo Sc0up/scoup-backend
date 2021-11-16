@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.user.controller;
 import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.EmailValidationRequest;
+import com.postsquad.scoup.web.user.controller.request.NicknameValidationRequest;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
@@ -10,14 +11,11 @@ import com.postsquad.scoup.web.user.service.SignUpFailedException;
 import com.postsquad.scoup.web.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 
 @RequiredArgsConstructor
-@Validated
 @RequestMapping("/users")
 @RestController
 public class UserController {
@@ -43,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/validate/nickname")
-    public NicknameValidationResponse validateNickname(@RequestParam @NotEmpty String nickname) {
-        return userService.validateNickname(nickname);
+    public NicknameValidationResponse validateNickname(@Valid NicknameValidationRequest nicknameValidationRequest) {
+        return userService.validateNickname(nicknameValidationRequest);
     }
 }
