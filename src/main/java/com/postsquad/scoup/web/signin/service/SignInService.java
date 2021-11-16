@@ -28,6 +28,6 @@ public class SignInService {
         String accessToken = signInTokenGenerator.accessToken(user.getId());
         String refreshToken = signInTokenGenerator.refreshToken(user.getId());
 
-        return SignInResponseMapper.INSTANCE.userToSignInResponse(user, accessToken, refreshToken);
+        return SignInResponseMapper.INSTANCE.map(user, accessToken, refreshToken);
     }
 }

@@ -51,6 +51,6 @@ public class KakaoOAuth extends OAuth {
                                                        .bodyToMono(KakaoUserResponse.class)
                                                        .blockOptional()
                                                        .orElseThrow(() -> new OAuthException(new OAuthUserNotFoundException()));
-        return SocialAuthenticationResponseMapper.INSTANCE.kakaoUserResponseToSocialAuthenticationResponse(kakaoUserResponse, type);
+        return SocialAuthenticationResponseMapper.INSTANCE.map(kakaoUserResponse, type);
     }
 }

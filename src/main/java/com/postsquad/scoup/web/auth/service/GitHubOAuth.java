@@ -57,6 +57,6 @@ public class GitHubOAuth extends OAuth {
                                                          .bodyToMono(GitHubUserResponse.class)
                                                          .blockOptional()
                                                          .orElseThrow(() -> new OAuthException(new OAuthUserNotFoundException()));
-        return SocialAuthenticationResponseMapper.INSTANCE.gitHubUserResponseToSocialAuthenticationResponse(gitHubUserResponse, type);
+        return SocialAuthenticationResponseMapper.INSTANCE.map(gitHubUserResponse, type);
     }
 }

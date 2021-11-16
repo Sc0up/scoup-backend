@@ -60,6 +60,6 @@ public class GoogleOAuth extends OAuth {
         }
 
         GoogleUserResponse googleUserResponse = new GoogleUserResponse(sub, name, email, picture);
-        return SocialAuthenticationResponseMapper.INSTANCE.googleUserResponseToSocialAuthenticationResponse(googleUserResponse, type);
+        return SocialAuthenticationResponseMapper.INSTANCE.map(googleUserResponse, type);
     }
 }

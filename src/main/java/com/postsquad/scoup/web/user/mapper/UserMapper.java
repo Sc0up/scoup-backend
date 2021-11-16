@@ -16,7 +16,7 @@ public interface UserMapper {
     User map(SignUpRequest signUpRequest);
 
     @AfterMapping
-    default void addOAuthInfo(@MappingTarget User.UserBuilder userBuilder, SignUpRequest signUpRequest) {
+    default void map(@MappingTarget User.UserBuilder userBuilder, SignUpRequest signUpRequest) {
         userBuilder.oAuthUsers(List.of(OAuthUser.of(signUpRequest.getOauthType(), signUpRequest.getSocialServiceId())));
     }
 }
