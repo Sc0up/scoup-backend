@@ -101,8 +101,8 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
                         "gho_fehklwekjdojfwofjwfowg",
                         ErrorResponse.builder()
                                      .statusCode(HttpStatus.BAD_REQUEST.value())
-                                     .message("Failed to get user data from the resource server.")
-                                     .errors(List.of("OAuth request fails validation."))
+                                     .message("Failed to get user data from the resource server")
+                                     .errors(List.of("OAuth request fails validation"))
                                      .build()
                 )
         );
