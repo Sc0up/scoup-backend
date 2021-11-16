@@ -89,7 +89,7 @@ task testForDeploy(type: Test) {
         }
     }
 
-    jvmArgs.add('Dspring.profiles.active=deploy-test')
+    systemProperty 'spring.profiles.active', 'deploy-test'
     outputs.dir snippetsDir
     useJUnitPlatform()
 }
