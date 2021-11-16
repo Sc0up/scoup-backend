@@ -54,7 +54,7 @@ dependencies {
     /* Lombok */
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor  'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     /* Swagger */
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
