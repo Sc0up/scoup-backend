@@ -1,4 +1,4 @@
-package com.postsquad.scoup.web.user.controller;
+package com.postsquad.scoup.web.user.controller.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
