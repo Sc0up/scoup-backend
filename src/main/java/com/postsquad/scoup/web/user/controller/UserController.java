@@ -38,8 +38,8 @@ public class UserController {
     }
 
     @GetMapping("/validate/email")
-    public EmailValidationResponse validateEmail(@RequestParam @NotEmpty @Email String email) {
-        return userService.validateEmail(email);
+    public EmailValidationResponse validateEmail(@Valid EmailValidationRequest emailValidationRequest) {
+        return userService.validateEmail(emailValidationRequest);
     }
 
     @GetMapping("/validate/nickname")

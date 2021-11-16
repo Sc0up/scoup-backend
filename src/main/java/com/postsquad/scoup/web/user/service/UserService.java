@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web.user.service;
 
 import com.postsquad.scoup.web.common.DefaultPostResponse;
+import com.postsquad.scoup.web.user.controller.EmailValidationRequest;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
@@ -36,8 +37,8 @@ public class UserService {
                                   .build();
     }
 
-    public EmailValidationResponse validateEmail(String email) {
-        if (userRepository.findByEmail(email).isPresent()) {
+    public EmailValidationResponse validateEmail(EmailValidationRequest emailValidationRequest) {
+        if (userRepository.findByEmail(emailValidationRequest.getEmail()).isPresent()) {
             return EmailValidationResponse.valueOf(true);
         }
         return EmailValidationResponse.valueOf(false);
