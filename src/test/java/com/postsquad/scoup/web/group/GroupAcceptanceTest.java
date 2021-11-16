@@ -2,6 +2,7 @@ package com.postsquad.scoup.web.group;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
+import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
@@ -20,12 +21,43 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.snippet.Snippet;
 
 import java.util.ArrayList;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 public class GroupAcceptanceTest extends AcceptanceTestBase {
+
+    private static final Snippet GROUP_CREATION_REQUEST_FIELDS = requestFields(
+            fieldWithPathAndConstraints("name", GroupCreationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("그룹 명"),
+            fieldWithPathAndConstraints("description", GroupCreationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("그룹 설명")
+                    .optional()
+    );
+
+    private static final Snippet GROUP_MODIFICATION_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID")
+    );
+
+    private static final Snippet GROUP_MODIFICATION_REQUEST_FIELDS = requestFields(
+            fieldWithPathAndConstraints("name", GroupCreationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("그룹 명"),
+            fieldWithPathAndConstraints("description", GroupCreationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("그룹 설명")
+                    .optional()
+    );
 
     @Autowired
     TestEntityManager testEntityManager;
@@ -41,7 +73,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
     void createGroup(String description, GroupCreationRequest givenGroupCreationRequest, Group expectedGroup) {
         // given
         String path = "/api/groups";
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
@@ -52,6 +84,11 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_CREATION_REQUEST_FIELDS,
+                                                      DEFAULT_POST_RESPONSE_FIELDS
+                                              ))
                                               .log().all()
                                               .post();
 
@@ -59,7 +96,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                       .log().all()
                       .statusCode(HttpStatus.CREATED.value());
-        testEntityManager.findAndConsume(Group.class, actualResponse.body().as(Long.class),
+        testEntityManager.findAndConsume(Group.class, actualResponse.body().as(DefaultPostResponse.class).getId(),
                                          actualGroup -> {
                                              then(actualGroup)
                                                      .as("그룹 생성: %s", description)
@@ -82,7 +119,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         // given
         testEntityManager.persist(Group.builder().name("name").description("").build());
         String path = "/api/groups";
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
@@ -93,6 +130,11 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_CREATION_REQUEST_FIELDS,
+                                                      ERROR_RESPONSE_FIELDS
+                                              ))
                                               .log().all()
                                               .post();
 
@@ -144,11 +186,11 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         // given
         Group group = Group.builder().name("name").description("").owner(testUser).schedules(new ArrayList<>()).build();
         testEntityManager.persist(group);
-        String path = "/api/groups/{groupId}";
-        RequestSpecification givenRequest = RestAssured.given()
+        String path = "/groups/{groupId}";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
-                                                       .basePath(path)
+                                                       .basePath("/api")
                                                        .pathParam("groupId", givenGroupId)
                                                        .contentType(ContentType.JSON)
                                                        .header("Accept-Language", "en-US")
@@ -157,8 +199,13 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_MODIFICATION_PATH_PARAMETERS,
+                                                      GROUP_MODIFICATION_REQUEST_FIELDS
+                                              ))
                                               .log().all()
-                                              .put();
+                                              .put(path);
 
         // then
         actualResponse.then()

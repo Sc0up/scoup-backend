@@ -22,6 +22,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.snippet.Snippet;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,8 +33,60 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
+
+    private static final Snippet SCHEDULE_CANDIDATE_READ_ALL_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID")
+    );
+
+    private static final Snippet SCHEDULE_CANDIDATE_READ_ALL_REQUEST_FIELDS = requestParameters(
+            parameterWithName("start_date")
+                    .description("스케줄 후보 조회 범위 시작점"),
+            parameterWithName("end_date")
+                    .description("스케줄 후보 조회 범위 종료시점")
+    );
+
+    private static final Snippet SCHEDULE_CANDIDATE_READ_ALL_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("schedule_candidates")
+                    .type(JsonFieldType.OBJECT)
+                    .description("스케줄 후보 목록"),
+            fieldWithPath("schedule_candidates.*[]")
+                    .type(JsonFieldType.ARRAY)
+                    .description("스케줄 후보 날짜"),
+            fieldWithPath("schedule_candidates.*[].id")
+                    .type(JsonFieldType.NUMBER)
+                    .description("스케줄 후보 id"),
+            fieldWithPath("schedule_candidates.*[].start_date_time")
+                    .type(JsonFieldType.STRING)
+                    .description("스케줄 후보 시작 시간"),
+            fieldWithPath("schedule_candidates.*[].end_date_time")
+                    .type(JsonFieldType.STRING)
+                    .description("스케줄 후보 종료 시간"),
+            fieldWithPath("schedule_candidates.*[].is_confirmed")
+                    .type(JsonFieldType.BOOLEAN)
+                    .description("스케줄 후보 확정 여부"),
+            fieldWithPath("schedule_candidates.*[].schedule_id")
+                    .type(JsonFieldType.NUMBER)
+                    .description("스케줄 id"),
+            fieldWithPath("schedule_candidates.*[].schedule_title")
+                    .type(JsonFieldType.STRING)
+                    .description("스케줄 제목"),
+            fieldWithPath("schedule_candidates.*[].schedule_description")
+                    .type(JsonFieldType.STRING)
+                    .description("(optional)스케줄 설명")
+                    .optional(),
+            fieldWithPath("schedule_candidates.*[].color_code")
+                    .type(JsonFieldType.STRING)
+                    .description("색상 코드")
+                    // TODO: #197 반영 시 optional 제거해야함
+                    .optional()
+    );
 
     @Autowired
     TestEntityManager testEntityManager;
@@ -79,23 +133,29 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
         testEntityManager.persist(group);
 
 
-        // TODO: 그룹 연결 후에는 그룹도 넣어줘야함.
-        String path = "/api/groups/{groupId}/schedule-candidates";
-        RequestSpecification givenRequest = RestAssured.given()
+        String path = "/groups/{groupId}/schedule-candidates";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
-                                                       .basePath(path)
+                                                       .basePath("/api")
                                                        .contentType(ContentType.JSON)
                                                        .header("Authorization", TEST_TOKEN)
                                                        .pathParam("groupId", group.getId())
+                                                       .pathParam("groupId", 1)
                                                        .queryParam("start_date", givenScheduleCandidateReadRequest.getStartDate().toString())
                                                        .queryParam("end_date", givenScheduleCandidateReadRequest.getEndDate().toString());
 
         // when
         Response actualResponse = givenRequest.when()
                                               .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      SCHEDULE_CANDIDATE_READ_ALL_PATH_PARAMETERS,
+                                                      SCHEDULE_CANDIDATE_READ_ALL_REQUEST_FIELDS,
+                                                      SCHEDULE_CANDIDATE_READ_ALL_RESPONSE_FIELDS
+                                              ))
                                               .log().all()
-                                              .get();
+                                              .get(path);
 
         // then
         actualResponse.then()

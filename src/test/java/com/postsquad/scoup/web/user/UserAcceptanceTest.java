@@ -2,6 +2,7 @@ package com.postsquad.scoup.web.user;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.auth.OAuthType;
+import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
@@ -14,17 +15,95 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.restassured3.RestDocumentationFilter;
+import org.springframework.restdocs.snippet.Snippet;
 
 import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 class UserAcceptanceTest extends AcceptanceTestBase {
+
+    private static final Snippet EMAIL_SIGN_UP_REQUEST_FIELDS = requestFields(
+            fieldWithPathAndConstraints("oauth_type", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("OAuth 종류 (NONE으로 입력)"),
+            fieldWithPathAndConstraints("social_service_id", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("소셜 서비스 id (\"\" 입력)"),
+            fieldWithPathAndConstraints("nickname", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 별명(unique)"),
+            fieldWithPathAndConstraints("username", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 이름"),
+            fieldWithPathAndConstraints("email", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 email"),
+            fieldWithPathAndConstraints("password", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 password"),
+            fieldWithPathAndConstraints("avatar_url", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("아바타 이미지 url")
+                    .optional()
+    );
+
+    private static final Snippet SOCIAL_SIGN_UP_REQUEST_FIELDS = requestFields(
+            fieldWithPathAndConstraints("oauth_type", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("OAuth 종류 (GITHUB, KAKAO, GOOGLE)"),
+            fieldWithPathAndConstraints("social_service_id", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("소셜 서비스 id"),
+            fieldWithPathAndConstraints("nickname", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 별명(unique)"),
+            fieldWithPathAndConstraints("username", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 이름"),
+            fieldWithPathAndConstraints("email", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 email"),
+            fieldWithPathAndConstraints("password", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 password"),
+            fieldWithPathAndConstraints("avatar_url", SignUpRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("(optional) 아바타 이미지 url")
+                    .optional()
+    );
+
+    private static final Snippet EMAIL_VALIDATION_REQUEST_PARAMS = requestParameters(
+            parameterWithName("email").description("검증 이메일")
+    );
+
+    private static final Snippet EMAIL_VALIDATION_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("is_existing_email")
+                    .type(JsonFieldType.BOOLEAN)
+                    .description("이메일 중복 여부")
+    );
+
+    private static final Snippet NICKNAME_VALIDATION_REQUEST_PARAMS = requestParameters(
+            parameterWithName("nickname").description("검증 닉네임")
+    );
+
+    private static final Snippet NICKNAME_VALIDATION_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("is_existing_nickname")
+                    .type(JsonFieldType.BOOLEAN)
+                    .description("닉네임 중복 여부")
+    );
 
     @Autowired
     UserRepository userRepository;
@@ -44,20 +123,38 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @ArgumentsSource(EmailSignUpProvider.class)
     @DisplayName("신규 사용자는 이메일을 통해 회원가입을 할 수 있다")
     void emailSignUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
-        signUp(description, givenSignUpRequest, expectedUser);
+        signUp(
+                description,
+                givenSignUpRequest,
+                expectedUser,
+                document(
+                        DEFAULT_RESTDOCS_PATH,
+                        EMAIL_SIGN_UP_REQUEST_FIELDS,
+                        DEFAULT_POST_RESPONSE_FIELDS
+                )
+        );
     }
 
     @ParameterizedTest
     @ArgumentsSource(SocialSignUpProvider.class)
     @DisplayName("신규 사용자는 소셜 서비스를 통해 회원가입을 할 수 있다")
     void socialSignUp(String description, SignUpRequest givenSignUpRequest, User expectedUser) {
-        signUp(description, givenSignUpRequest, expectedUser);
+        signUp(
+                description,
+                givenSignUpRequest,
+                expectedUser,
+                document(
+                        DEFAULT_RESTDOCS_PATH,
+                        SOCIAL_SIGN_UP_REQUEST_FIELDS,
+                        DEFAULT_POST_RESPONSE_FIELDS
+                )
+        );
     }
 
-    private void signUp(String description, SignUpRequest givenSocialSignUpRequest, User expectedUser) {
+    private void signUp(String description, SignUpRequest givenSocialSignUpRequest, User expectedUser, RestDocumentationFilter document) {
         // given
         String path = "/api/users";
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
@@ -66,13 +163,14 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document)
                                               .log().all(true)
                                               .post();
 
         // then
         actualResponse.then()
                       .statusCode(HttpStatus.CREATED.value());
-        then(userRepository.findById(actualResponse.body().as(long.class)).orElse(null))
+        then(userRepository.findById(actualResponse.body().as(DefaultPostResponse.class).getId()).orElse(null))
                 .as("회원가입 결과 : %s", description)
                 .usingRecursiveComparison()
                 .ignoringFields(ignoringFieldsForResponseWithId)
@@ -104,7 +202,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     private void signUpWhenUserAlreadyExists(String description, SignUpRequest givenSignUpRequestAlreadyExists, ErrorResponse expectedResponse) {
         // given
         String path = "/api/users";
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
@@ -113,6 +211,11 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      SOCIAL_SIGN_UP_REQUEST_FIELDS,
+                                                      ERROR_RESPONSE_FIELDS
+                                              ))
                                               .log().all(true)
                                               .post();
 
@@ -163,7 +266,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     void validateEmail(String description, String givenEmail, EmailValidationResponse expectedEmailValidationResponse) {
         // given
         String path = "/api/users/validate/email";
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
@@ -171,6 +274,11 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      EMAIL_VALIDATION_REQUEST_PARAMS,
+                                                      EMAIL_VALIDATION_RESPONSE_FIELDS
+                                              ))
                                               .log().all()
                                               .get()
                                               .andReturn();
@@ -221,7 +329,7 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     void validateNickname(String description, String givenNickname, NicknameValidationResponse expectedNicknameValidationResponse) {
         // given
         String path = "/api/users/validate/nickname";
-        RequestSpecification givenRequest = RestAssured.given()
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
                                                        .baseUri(BASE_URL)
                                                        .port(port)
                                                        .basePath(path)
@@ -229,6 +337,11 @@ class UserAcceptanceTest extends AcceptanceTestBase {
 
         // when
         Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      NICKNAME_VALIDATION_REQUEST_PARAMS,
+                                                      NICKNAME_VALIDATION_RESPONSE_FIELDS
+                                              ))
                                               .log().all()
                                               .get()
                                               .andReturn();

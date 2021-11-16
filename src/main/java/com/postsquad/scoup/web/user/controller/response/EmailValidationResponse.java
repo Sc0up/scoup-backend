@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class EmailValidationResponse {
 
-    private boolean existingEmail;
+    private Boolean isExistingEmail = false;
 
-    public static EmailValidationResponse valueOf(boolean existingEmail) {
-        return new EmailValidationResponse(existingEmail);
+    public static EmailValidationResponse valueOf(boolean isExistingEmail) {
+        return new EmailValidationResponse(isExistingEmail);
     }
 }

@@ -1,0 +1,20 @@
+|===
+|Path|Type|Description
+
+|`+timestamp+`
+|`+String+`
+|에러 발생 날짜
+
+|`+message+`
+|`+String+`
+|에러 메세지
+
+|`+status_code+`
+|`+Number+`
+|상태 코드
+
+|`+errors+`
+|`+Array+`
+|에러 상세 메세지
+
+|===

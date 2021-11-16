@@ -2,7 +2,6 @@ package com.postsquad.scoup.web.user.controller.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -10,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class NicknameValidationResponse {
 
-    private boolean existingNickname;
+    private Boolean isExistingNickname = false;
 
-    public static NicknameValidationResponse valueOf(boolean existingNickname) {
-        return new NicknameValidationResponse(existingNickname);
+    public static NicknameValidationResponse valueOf(boolean isExistingNickname) {
+        return new NicknameValidationResponse(isExistingNickname);
     }
 }

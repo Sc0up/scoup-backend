@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 public class SignUpRequest {
 
     @NotNull
-    private OAuthType oAuthType;
+    private OAuthType oauthType;
 
     @NotNull
     private String socialServiceId;

@@ -17,7 +17,7 @@ public class SignUpViaSocialWhenUserAlreadyExistsProvider implements ArgumentsPr
                 Arguments.of(
                         "실패 - 이미 가입한 소셜 서비스",
                         SignUpRequest.builder()
-                                     .oAuthType(OAuthType.GITHUB)
+                                     .oauthType(OAuthType.GITHUB)
                                      .socialServiceId("1234567")
                                      .username("username")
                                      .nickname("nickname2")

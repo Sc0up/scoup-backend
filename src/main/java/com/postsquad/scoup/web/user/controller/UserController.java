@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.user.controller;
 
+import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
@@ -26,7 +27,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     // FIXME: https://github.com/Sc0up/scoup-backend/issues/18 논의 결과에 따라 수정 필요
-    public long signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
+    public DefaultPostResponse signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
         return userService.signUp(signUpRequest);
     }
 

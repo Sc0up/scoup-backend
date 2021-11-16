@@ -28,11 +28,21 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final String[] SIGNIN_PATH_TO_EXCLUDE = {"/sign-in/**", "/users/**", "/oauth/**", "/h2-console/**", "/swagger-ui.html", "/v2/api-docs", "/swagger-resources/**", "/webjars/**"};
-
-    private final RequestParameterArgumentResolver requestParameterArgumentResolver;
+    private final String[] SIGNIN_PATH_TO_EXCLUDE = {
+            "/sign-in/**",
+            "/users/**",
+            "/oauth/**",
+            "/h2-console/**",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/docs/**"
+    };
 
     private final SignInInterceptor signInInterceptor;
+
+    private final RequestParameterArgumentResolver requestParameterArgumentResolver;
 
     @Bean
     public HttpClient httpClient() {

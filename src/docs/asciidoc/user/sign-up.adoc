@@ -1,0 +1,23 @@
+== 회원가입
+
+=== `POST /api/users`
+
+=== `201 Created`
+
+==== 이메일 회원가입
+
+operation::user_acceptance_test/email_sign_up[snippets='request-fields,response-fields,http-request,http-response']
+
+==== 소셜 회원가입
+
+operation::user_acceptance_test/social_sign_up[snippets='request-fields,response-fields,http-request,http-response']
+
+=== `400 Bad Request`
+
+==== 이미 존재하는 회원(이메일)
+
+operation::user_acceptance_test/sign_up_via_email_when_user_already_exists[snippets='http-request,http-response']
+
+==== 이미 존재하는 회원(소셜)
+
+operation::user_acceptance_test/sign_up_via_social_when_user_already_exists[snippets='http-request,http-response']

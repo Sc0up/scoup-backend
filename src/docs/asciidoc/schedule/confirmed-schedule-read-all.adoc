@@ -1,0 +1,7 @@
+== 확정 스케줄 전체 조회
+
+=== `GET /groups/{groupId}/confirmed-schedules`
+
+=== `200 OK`
+
+operation::confirmed_schedule_acceptance_test/read_all_confirmed_schedules[snippets='path-parameters,response-fields,http-request,http-response']
