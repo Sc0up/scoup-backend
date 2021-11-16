@@ -69,7 +69,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
 
     @ParameterizedTest
     @ArgumentsSource(CreateGroupProvider.class)
-    @DisplayName("사용자가 새로운 그룹을 생성할 수 있다.")
+    @DisplayName("사용자가 새로운 그룹을 생성할 수 있다")
     void createGroup(String description, GroupCreationRequest givenGroupCreationRequest, Group expectedGroup) {
         // given
         String path = "/api/groups";
@@ -114,7 +114,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
 
     @ParameterizedTest
     @ArgumentsSource(CreateGroupWithExistingNameProvider.class)
-    @DisplayName("중복된 그룹 이름이 있으면 그룹 생성을 할 수 없다.")
+    @DisplayName("중복된 그룹 이름이 있으면 그룹 생성을 할 수 없다")
     void createGroupWithExistingName(String description, GroupCreationRequest givenGroupCreationRequest, ErrorResponse expectedResponse) {
         // given
         testEntityManager.persist(Group.builder().name("name").description("").build());

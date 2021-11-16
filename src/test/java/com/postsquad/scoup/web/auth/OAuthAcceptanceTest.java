@@ -25,7 +25,7 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
     @Value("${github.access.token}")
     private String accessToken;
 
-    @DisplayName("소셜 서비스에 가입된 사용자의 정보를 불러올 수 있다.")
+    @DisplayName("소셜 서비스에 가입된 사용자의 정보를 불러올 수 있다")
     @ParameterizedTest
     @MethodSource("readUserDataProvider")
     void readUserData(String description, SocialAuthenticationResponse expectedSocialAuthenticationResponse) {
