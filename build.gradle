@@ -109,10 +109,18 @@ jar {
     enabled = false
 }
 
+bootJar {
+    mustRunAfter asciidoctor, copyRestDocs
+}
+
 build {
     dependsOn asciidoctor, copyRestDocs
 }
 
 bootRun {
     dependsOn test, asciidoctor, copyRestDocs
+}
+
+task stage {
+    dependsOn testForDeploy, asciidoctor, copyRestDocs, bootJar
 }
