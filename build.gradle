@@ -78,6 +78,22 @@ test {
     useJUnitPlatform()
 }
 
+task testForDeploy(type: Test) {
+    doFirst {
+        if (System.getenv("JASYPT_ENCRYPTOR_PASSWORD") == null) {
+            throw new IllegalStateException("JASYPT_ENCRYPTOR_PASSWORD is Null")
+        }
+
+        if (System.getenv("JWT_SECRET_MAC") == null) {
+            throw new IllegalStateException("JWT_SECRET_MAC is Null")
+        }
+    }
+
+    jvmArgs.add('Dspring.profiles.active=deploy-test')
+    outputs.dir snippetsDir
+    useJUnitPlatform()
+}
+
 asciidoctor {
     mustRunAfter tasks.withType(Test)
     inputs.dir snippetsDir
