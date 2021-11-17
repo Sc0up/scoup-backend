@@ -1,7 +1,9 @@
 package com.postsquad.scoup.web.schedule;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.TestEntityManager;
 import com.postsquad.scoup.web.auth.OAuthType;
+import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateReadRequest;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponse;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponses;
@@ -87,7 +89,7 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
     );
 
     @Autowired
-    ScheduleCandidateDatabaseHelper scheduleCandidateDatabaseHelper;
+    TestEntityManager testEntityManager;
 
     @Autowired
     UserRepository userRepository;
@@ -117,7 +119,19 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
             ScheduleCandidateReadAllResponses expectedScheduleCandidateReadAllResponses
     ) {
         // given
-        scheduleCandidateDatabaseHelper.setSchedules(givenSchedules);
+        Group group = Group.builder()
+                           .name("group")
+                           .build();
+        group.addSchedules(givenSchedules);
+        for (Schedule schedule : givenSchedules) {
+            schedule.setGroup(group);
+            for (ScheduleCandidate scheduleCandidate : schedule.getScheduleCandidates()) {
+                scheduleCandidate.setSchedule(schedule);
+            }
+        }
+
+        testEntityManager.persist(group);
+
 
         String path = "/groups/{groupId}/schedule-candidates";
         RequestSpecification givenRequest = RestAssured.given(this.spec)
@@ -126,7 +140,7 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
                                                        .basePath("/api")
                                                        .contentType(ContentType.JSON)
                                                        .header("Authorization", TEST_TOKEN)
-                                                       // TODO: 그룹 연결 후에 변수화 해야함
+                                                       .pathParam("groupId", group.getId())
                                                        .pathParam("groupId", 1)
                                                        .queryParam("start_date", givenScheduleCandidateReadRequest.getStartDate().toString())
                                                        .queryParam("end_date", givenScheduleCandidateReadRequest.getEndDate().toString());

@@ -3,7 +3,6 @@ package com.postsquad.scoup.web.schedule.service;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateReadRequest;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponse;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponses;
-import com.postsquad.scoup.web.schedule.domain.ConfirmedSchedule;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
 import com.postsquad.scoup.web.schedule.domain.ScheduleCandidate;
 import com.postsquad.scoup.web.schedule.repository.ScheduleCandidateRepository;
@@ -46,13 +45,15 @@ class ScheduleCandidateServiceTest {
     ) {
 
         // given
+        long groupId = 1L;
         BDDMockito.given(scheduleCandidateRepository.findAllByDateTimeIncluding(
+                groupId,
                 givenScheduleCandidateReadRequest.getStartDate().atStartOfDay(),
                 givenScheduleCandidateReadRequest.getEndDate().atStartOfDay()
         )).willReturn(givenScheduleCandidate);
 
         // when
-        ScheduleCandidateReadAllResponses actualScheduleCandidateResponses = scheduleCandidateService.readAll(1L, givenScheduleCandidateReadRequest);
+        ScheduleCandidateReadAllResponses actualScheduleCandidateResponses = scheduleCandidateService.readAll(groupId, givenScheduleCandidateReadRequest);
 
         // then
         then(actualScheduleCandidateResponses)

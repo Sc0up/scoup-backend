@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.schedule.repository;
 
+import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
 import com.postsquad.scoup.web.schedule.domain.ScheduleCandidate;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,12 +40,18 @@ class ScheduleCandidateRepositoryTest {
             List<ScheduleCandidate> expectedScheduleCandidates
     ) {
         // given
+        Group group = Group.builder()
+                           .name("group")
+                           .build();
+        entityManager.persist(group);
+
         for (Schedule each : givenSchedules) {
+            each.setGroup(group);
             entityManager.persist(each);
         }
 
         // when
-        List<ScheduleCandidate> actualScheduleCandidates = scheduleCandidateRepository.findAllByDateTimeIncluding(givenStartDate.atStartOfDay(), givenEndDate.atStartOfDay());
+        List<ScheduleCandidate> actualScheduleCandidates = scheduleCandidateRepository.findAllByDateTimeIncluding(group.getId(), givenStartDate.atStartOfDay(), givenEndDate.atStartOfDay());
 
         // then
         then(actualScheduleCandidates)
