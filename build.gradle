@@ -54,7 +54,7 @@ dependencies {
     /* Lombok */
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor  'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     /* Swagger */
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
@@ -78,13 +78,29 @@ test {
     useJUnitPlatform()
 }
 
-asciidoctor {
-    inputs.dir snippetsDir
-    dependsOn test
+task testForDeploy(type: Test) {
+    doFirst {
+        if (System.getenv("JASYPT_ENCRYPTOR_PASSWORD") == null) {
+            throw new IllegalStateException("JASYPT_ENCRYPTOR_PASSWORD is Null")
+        }
+
+        if (System.getenv("JWT_SECRET_MAC") == null) {
+            throw new IllegalStateException("JWT_SECRET_MAC is Null")
+        }
+    }
+
+    systemProperty 'spring.profiles.active', 'deploy-test'
+    outputs.dir snippetsDir
+    useJUnitPlatform()
 }
 
-task copyAsciidoctor(type: Copy) {
-    dependsOn asciidoctor
+asciidoctor {
+    mustRunAfter tasks.withType(Test)
+    inputs.dir snippetsDir
+}
+
+task copyRestDocs(type: Copy) {
+    mustRunAfter asciidoctor
     from "${asciidoctor.outputDir}/html5"
     into "${sourceSets.main.output.resourcesDir}/static/docs"
 }
@@ -93,10 +109,18 @@ jar {
     enabled = false
 }
 
+bootJar {
+    mustRunAfter asciidoctor, copyRestDocs
+}
+
 build {
-    dependsOn copyAsciidoctor
+    dependsOn asciidoctor, copyRestDocs
 }
 
 bootRun {
-    dependsOn copyAsciidoctor
+    dependsOn test, asciidoctor, copyRestDocs
+}
+
+task stage {
+    dependsOn testForDeploy, asciidoctor, copyRestDocs, bootJar
 }
