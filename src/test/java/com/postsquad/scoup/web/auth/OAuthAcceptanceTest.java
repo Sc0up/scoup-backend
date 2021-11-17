@@ -25,7 +25,7 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
     @Value("${github.access.token}")
     private String accessToken;
 
-    @DisplayName("소셜 서비스에 가입된 사용자의 정보를 불러올 수 있다.")
+    @DisplayName("소셜 서비스에 가입된 사용자의 정보를 불러올 수 있다")
     @ParameterizedTest
     @MethodSource("readUserDataProvider")
     void readUserData(String description, SocialAuthenticationResponse expectedSocialAuthenticationResponse) {
@@ -101,8 +101,8 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
                         "gho_fehklwekjdojfwofjwfowg",
                         ErrorResponse.builder()
                                      .statusCode(HttpStatus.BAD_REQUEST.value())
-                                     .message("Failed to get user data from the resource server.")
-                                     .errors(List.of("OAuth request fails validation."))
+                                     .message("Failed to get user data from the resource server")
+                                     .errors(List.of("OAuth request fails validation"))
                                      .build()
                 )
         );
