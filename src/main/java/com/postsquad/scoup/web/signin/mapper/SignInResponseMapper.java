@@ -10,5 +10,5 @@ public interface SignInResponseMapper {
 
     SignInResponseMapper INSTANCE = Mappers.getMapper(SignInResponseMapper.class);
 
-    SignInResponse userToSignInResponse(User user, String accessToken, String refreshToken);
+    SignInResponse map(User user, String accessToken, String refreshToken);
 }

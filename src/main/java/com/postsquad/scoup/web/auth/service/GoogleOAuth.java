@@ -5,7 +5,7 @@ import com.postsquad.scoup.web.auth.controller.request.TokenRequestWithGrantType
 import com.postsquad.scoup.web.auth.controller.response.GoogleUserResponse;
 import com.postsquad.scoup.web.auth.controller.response.TokenResponse;
 import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponse;
-import com.postsquad.scoup.web.auth.controller.response.SocialAuthenticationResponseMapper;
+import com.postsquad.scoup.web.auth.mapper.SocialAuthenticationResponseMapper;
 import com.postsquad.scoup.web.auth.exception.TokenNotFoundException;
 import com.postsquad.scoup.web.auth.exception.OAuthRequestNotValidException;
 import com.postsquad.scoup.web.auth.exception.OAuthException;
@@ -60,6 +60,6 @@ public class GoogleOAuth extends OAuth {
         }
 
         GoogleUserResponse googleUserResponse = new GoogleUserResponse(sub, name, email, picture);
-        return SocialAuthenticationResponseMapper.INSTANCE.googleUserResponseToSocialAuthenticationResponse(googleUserResponse, type);
+        return SocialAuthenticationResponseMapper.INSTANCE.map(googleUserResponse, type);
     }
 }
