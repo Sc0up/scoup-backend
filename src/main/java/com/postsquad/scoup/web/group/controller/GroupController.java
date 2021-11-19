@@ -38,4 +38,10 @@ public class GroupController {
     public void update(@PathVariable Long groupId, @RequestBody @Valid GroupModificationRequest groupModificationRequest, @LoggedInUser User user) {
         groupService.update(groupId, groupModificationRequest, user);
     }
+
+    @DeleteMapping("/{groupId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long groupId) {
+        // TODO: 삭제 서비스, 사용자 인증
+    }
 }

@@ -7,10 +7,7 @@ import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
 import com.postsquad.scoup.web.group.domain.Group;
-import com.postsquad.scoup.web.group.provider.CreateGroupProvider;
-import com.postsquad.scoup.web.group.provider.CreateGroupWithExistingNameProvider;
-import com.postsquad.scoup.web.group.provider.ModifyGroupProvider;
-import com.postsquad.scoup.web.group.provider.ValidateGroupCreationRequestProvider;
+import com.postsquad.scoup.web.group.provider.*;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -57,6 +54,11 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                     .type(JsonFieldType.STRING)
                     .description("그룹 설명")
                     .optional()
+    );
+
+    private static final Snippet GROUP_DELETION_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID")
     );
 
     @Autowired
@@ -219,5 +221,37 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                                                  .ignoringFields("owner")
                                                  .isEqualTo(expectedGroup)
         );
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(DeleteGroupProvider.class)
+    @DisplayName("사용자가 그룹을 삭제 할 수 있다")
+    void deleteGroup(String description, Group givenGroup) {
+        testEntityManager.persist(givenGroup);
+
+        String path = "/groups/{groupId}";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .pathParam("groupId", givenGroup.getId())
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Accept-Language", "en-US")
+                                                       .header("Authorization", TEST_TOKEN);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_DELETION_PATH_PARAMETERS
+                                              ))
+                                              .log().all()
+                                              .delete(path);
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.NO_CONTENT.value());
+        // TODO: DB에 해당 그룹 존재하지 않는 것 확인
     }
 }
