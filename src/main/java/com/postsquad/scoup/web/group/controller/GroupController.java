@@ -4,6 +4,7 @@ import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
+import com.postsquad.scoup.web.group.controller.response.GroupReadOneResponse;
 import com.postsquad.scoup.web.group.exception.GroupCreationFailedException;
 import com.postsquad.scoup.web.group.service.GroupService;
 import com.postsquad.scoup.web.user.LoggedInUser;
@@ -20,6 +21,18 @@ import javax.validation.Valid;
 public class GroupController {
 
     private final GroupService groupService;
+
+    @GetMapping("/{groupId}")
+    public GroupReadOneResponse readOne(@PathVariable long groupId) {
+        // TODO: GroupService.readOne
+        return GroupReadOneResponse.builder()
+                                   .id(1L)
+                                   .image("image")
+                                   .name("name")
+                                   .description("description")
+                                   .build();
+    }
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

@@ -6,6 +6,7 @@ import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
+import com.postsquad.scoup.web.group.controller.response.GroupReadOneResponse;
 import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.group.provider.*;
 import io.restassured.RestAssured;
@@ -14,6 +15,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +26,32 @@ import org.springframework.restdocs.snippet.Snippet;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 public class GroupAcceptanceTest extends AcceptanceTestBase {
+
+    private static final Snippet GROUP_READ_ONE_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID")
+    );
+
+    private static final Snippet GROUP_READ_ONE_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("id")
+                    .type(JsonFieldType.NUMBER)
+                    .description("id"),
+            fieldWithPath("name")
+                    .type(JsonFieldType.STRING)
+                    .description("이름"),
+            fieldWithPath("description")
+                    .type(JsonFieldType.STRING)
+                    .description("설명"),
+            fieldWithPath("image")
+                    .type(JsonFieldType.STRING)
+                    .description("이미지")
+    );
 
     private static final Snippet GROUP_CREATION_REQUEST_FIELDS = requestFields(
             fieldWithPathAndConstraints("name", GroupCreationRequest.class)
@@ -67,6 +89,53 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
     @BeforeEach
     void setUp() {
         testEntityManager.persist(testUser);
+    }
+
+    @Test
+    @DisplayName("선택한 그룹 정보를 조회할 수 있다.(이미 지나간 일정은 보이면 안 됨)")
+    void readOne() {
+        // given
+        Group givenGroup = Group.builder()
+                                .name("name")
+                                .description("description")
+                                // TODO: .image("image")
+                                .build();
+        testEntityManager.persist(givenGroup);
+        GroupReadOneResponse expectedGroupReadOneResponse = GroupReadOneResponse.builder()
+                                                                                .id(1L)
+                                                                                .image("image")
+                                                                                .name("name")
+                                                                                .description("description")
+                                                                                .build();
+        String path = "/groups/{groupId}";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Accept-Language", "en-US")
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", givenGroup.getId());
+
+        //when
+        Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_READ_ONE_PATH_PARAMETERS,
+                                                      GROUP_READ_ONE_RESPONSE_FIELDS
+                                              ))
+                                              .log().all()
+                                              .get(path);
+
+        //then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
+        then(actualResponse.as(GroupReadOneResponse.class))
+                // TODO: Add description
+                .usingRecursiveComparison()
+                .ignoringFields(ignoringFieldsForResponseWithId)
+                .isEqualTo(expectedGroupReadOneResponse);
     }
 
     @ParameterizedTest
