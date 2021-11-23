@@ -7,6 +7,7 @@ import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
 import com.postsquad.scoup.web.group.controller.response.GroupReadOneResponse;
+import com.postsquad.scoup.web.group.controller.response.GroupValidationResponse;
 import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.group.provider.*;
 import io.restassured.RestAssured;
@@ -27,8 +28,7 @@ import java.util.ArrayList;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 public class GroupAcceptanceTest extends AcceptanceTestBase {
@@ -81,6 +81,17 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
     private static final Snippet GROUP_DELETION_PATH_PARAMETERS = pathParameters(
             parameterWithName("groupId")
                     .description("그룹 ID")
+    );
+
+    private static final Snippet GROUP_NAME_VALIDATION_REQUEST_FIELDS = requestParameters(
+            parameterWithName("group_name")
+                    .description("중복 체크할 그룹 명")
+    );
+
+    private static final Snippet GROUP_NAME_VALIDATION_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("is_existing_name")
+                    .type(JsonFieldType.BOOLEAN)
+                    .description("그룹 명 중복 여부")
     );
 
     @Autowired
@@ -322,5 +333,49 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                       .log().all()
                       .statusCode(HttpStatus.NO_CONTENT.value());
         // TODO: DB에 해당 그룹 존재하지 않는 것 확인
+    }
+
+    @Test
+    @DisplayName("이미 가입된 그룹 이름을 입력할 경우 그룹 이름이 중복되었다는 메시지가 반환된다.")
+    void validateGroupName() {
+        // given
+        Group givenGroup = Group.builder()
+                                .name("name")
+                                .description("description")
+                                // TODO: .image("image")
+                                .build();
+        testEntityManager.persist(givenGroup);
+        GroupValidationResponse expectedGroupValidationResponse = GroupValidationResponse.builder()
+                                                                                         .isExistingName(true)
+                                                                                         .build();
+        String path = "/groups/validate/group-name";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Accept-Language", "en-US")
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .queryParam("group_name", givenGroup.getName());
+
+        //when
+        Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_NAME_VALIDATION_REQUEST_FIELDS,
+                                                      GROUP_NAME_VALIDATION_RESPONSE_FIELDS
+                                              ))
+                                              .log().all()
+                                              .get(path);
+
+        //then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
+        then(actualResponse.as(GroupValidationResponse.class))
+                // TODO: Add description
+                .usingRecursiveComparison()
+                .ignoringFields(ignoringFieldsForResponseWithId)
+                .isEqualTo(expectedGroupValidationResponse);
     }
 }
