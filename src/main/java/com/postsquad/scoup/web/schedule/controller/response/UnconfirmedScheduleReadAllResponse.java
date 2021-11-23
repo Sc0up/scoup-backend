@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 @Data
-public class UnconfirmedScheduleResponse extends ScheduleBaseResponse {
-
+public class UnconfirmedScheduleReadAllResponse extends ScheduleBaseResponse {
     private List<ScheduleCandidateResponse> scheduleCandidates;
 }

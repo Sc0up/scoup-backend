@@ -37,3 +37,6 @@ include::schedule/schedule-candidate-read-all.adoc[]
 
 // 확정된 스케줄 전체 조회
 include::schedule/confirmed-schedule-read-all.adoc[]
+
+// 미확정 스케줄 전체 조회
+include::schedule/unconfirmed-schedule-read-all.adoc[]

@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @Builder
 @Data
-public class UnconfirmedScheduleResponses {
+public class UnconfirmedScheduleReadAllResponses {
 
-    private List<UnconfirmedScheduleResponse> unconfirmedSchedules;
+    private List<UnconfirmedScheduleReadAllResponse> unconfirmedSchedules;
 }
