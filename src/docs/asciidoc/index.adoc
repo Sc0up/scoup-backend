@@ -41,6 +41,9 @@ include::group/group-member-read-all.adoc[]
 // 그룹 멤버 추가
 include::group/group-member-creation.adoc[]
 
+// 그룹 멤버 역할 수정
+include::group/group-member-modification-role.adoc[]
+
 // 그룹 멤버 삭제
 include::group/group-member-deletion.adoc[]
 

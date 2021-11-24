@@ -2,6 +2,7 @@ package com.postsquad.scoup.web.group.controller;
 
 import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupMemberCreationRequest;
+import com.postsquad.scoup.web.group.controller.request.GroupMemberRoleModificationRequest;
 import com.postsquad.scoup.web.group.controller.response.GroupMemberReadAllResponse;
 import com.postsquad.scoup.web.group.controller.response.GroupMemberReadAllResponses;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,11 @@ public class GroupMemberController {
         return DefaultPostResponse.builder()
                                   .id(1L)
                                   .build();
+    }
+
+    @PatchMapping("/groups/{groupId}/members/{memberId}/role")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void modifyRole(@PathVariable long groupId, @PathVariable long memberId, @RequestBody GroupMemberRoleModificationRequest groupMemberRoleModificationRequest) {
     }
 
     @DeleteMapping("/groups/{groupId}/members/{memberId}")

@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.group;
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
 import com.postsquad.scoup.web.group.controller.request.GroupMemberCreationRequest;
+import com.postsquad.scoup.web.group.controller.request.GroupMemberRoleModificationRequest;
 import com.postsquad.scoup.web.group.controller.response.GroupMemberReadAllResponse;
 import com.postsquad.scoup.web.group.controller.response.GroupMemberReadAllResponses;
 import io.restassured.RestAssured;
@@ -58,6 +59,19 @@ public class GroupMemberAcceptanceTest extends AcceptanceTestBase {
             fieldWithPathAndConstraints("email", GroupMemberCreationRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("이메일")
+    );
+
+    private static final Snippet GROUP_MEMBER_ROLE_MODIFICATION_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID"),
+            parameterWithName("memberId")
+                    .description("그룹 멤버 ID")
+    );
+
+    private static final Snippet GROUP_MEMBER_ROLE_MODIFICATION_REQUEST_FIELDS = requestFields(
+            fieldWithPathAndConstraints("role", GroupMemberCreationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("그룹 멤버 역할")
     );
 
     private static final Snippet GROUP_MEMBER_DELETION_PATH_PARAMETERS = pathParameters(
@@ -146,6 +160,43 @@ public class GroupMemberAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                       .log().all()
                       .statusCode(HttpStatus.CREATED.value());
+
+        // TODO: id로 조회하여 검증
+    }
+
+    @Test
+    void modifyRole() {
+        // given
+        testEntityManager.persist(testUser);
+        GroupMemberRoleModificationRequest givenGroupMemberRoleModificationRequest = GroupMemberRoleModificationRequest.builder()
+                                                                                                                       .role("role")
+                                                                                                                       .build();
+        String path = "/groups/{groupId}/members/{memberId}/role";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Accept-Language", "en-US")
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", 1L)
+                                                       .pathParam("memberId", 1L)
+                                                       .body(givenGroupMemberRoleModificationRequest);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_MEMBER_ROLE_MODIFICATION_PATH_PARAMETERS,
+                                                      GROUP_MEMBER_ROLE_MODIFICATION_REQUEST_FIELDS
+                                              ))
+                                              .log().all()
+                                              .patch(path);
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.NO_CONTENT.value());
 
         // TODO: id로 조회하여 검증
     }
