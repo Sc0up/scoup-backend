@@ -1,0 +1,7 @@
+== 확정 스케줄 기간 전체 조회
+
+=== `GET /groups/{groupId}/existing-schedules`
+
+=== `200 OK`
+
+operation::confirmed_schedule_acceptance_test/read_confirmed_schedule_periods[snippets='path-parameters,request-parameters,response-fields,http-request,http-response']
