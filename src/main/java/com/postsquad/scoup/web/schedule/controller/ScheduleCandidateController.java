@@ -25,4 +25,9 @@ public class ScheduleCandidateController {
     public DefaultPostResponse create(@PathVariable long groupId, @PathVariable long scheduleId, @RequestBody ScheduleCandidateCreationRequest scheduleCandidateCreationRequest) {
         return DefaultPostResponse.builder().id(1L).build();
     }
+
+    @DeleteMapping("/groups/{groupId}/schedules/{scheduleId}/candidates/{candidateId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable long groupId, @PathVariable long scheduleId, @PathVariable long candidateId) {
+    }
 }

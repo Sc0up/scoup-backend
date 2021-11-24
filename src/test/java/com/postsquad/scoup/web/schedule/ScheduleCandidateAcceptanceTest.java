@@ -105,6 +105,15 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
                     .description("스케줄 종료 날짜")
     );
 
+    private static final Snippet SCHEDULE_CANDIDATE_DELETION_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID"),
+            parameterWithName("scheduleId")
+                    .description("스케줄 ID"),
+            parameterWithName("candidateId")
+                    .description("스케줄 후보 ID")
+    );
+
     @Autowired
     TestEntityManager testEntityManager;
 
@@ -269,6 +278,38 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
         actualResponse.then()
                       .log().all()
                       .statusCode(HttpStatus.CREATED.value());
+
+        // TODO: id로 조회하여 검증
+    }
+
+    @Test
+    void delete() {
+        // given
+        String path = "/groups/{groupId}/schedules/{scheduleId}/candidates/{candidateId}";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", 1L)
+                                                       .pathParam("scheduleId", 1L)
+                                                       .pathParam("candidateId", 1L);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      SCHEDULE_CANDIDATE_DELETION_PATH_PARAMETERS
+                                              ))
+                                              .log().all()
+                                              .delete(path);
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.NO_CONTENT.value());
 
         // TODO: id로 조회하여 검증
     }

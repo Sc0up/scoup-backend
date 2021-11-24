@@ -1,0 +1,7 @@
+== 스케줄 후보 삭제
+
+=== `DELETE /groups/{groupId}/schedules/{scheduleId}/candidates/{candidateId}`
+
+=== `204 No Content`
+
+operation::schedule_candidate_acceptance_test/delete[snippets='path-parameters,http-request,http-response']
