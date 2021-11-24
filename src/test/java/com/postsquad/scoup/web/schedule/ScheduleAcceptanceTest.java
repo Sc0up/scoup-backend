@@ -163,6 +163,13 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                     .description("확정할 일정 후보 id")
     );
 
+    private static final Snippet SCHEDULE_DELETION_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID"),
+            parameterWithName("scheduleId")
+                    .description("일정 ID")
+    );
+
     @Autowired
     TestEntityManager testEntityManager;
 
@@ -324,6 +331,37 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                       .log().all()
                       .statusCode(HttpStatus.NO_CONTENT.value());
 
+        // TODO: id로 db 조회하여 검증
+    }
+
+    @Test
+    void delete() {
+        //given
+        testEntityManager.persist(testUser);
+        String path = "/groups/{groupId}/schedules/{scheduleId}";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", 1L)
+                                                       .pathParam("scheduleId", 1L);
+
+        //when
+        Response actualResponse = givenRequest.when()
+                                              .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      SCHEDULE_DELETION_PATH_PARAMETERS
+                                              ))
+                                              .log().all()
+                                              .delete(path);
+
+        //then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.NO_CONTENT.value());
         // TODO: id로 db 조회하여 검증
     }
 

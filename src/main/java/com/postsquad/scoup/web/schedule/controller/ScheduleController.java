@@ -67,6 +67,11 @@ public class ScheduleController {
     public void update(@PathVariable long groupId, @PathVariable long scheduleId, @RequestBody ScheduleModificationRequest scheduleModificationRequest) {
     }
 
+    @DeleteMapping("/groups/{groupId}/schedules/{scheduleId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable long groupId, @PathVariable long scheduleId) {
+    }
+
     @PatchMapping("/groups/{groupId}/schedules/{scheduleId}/confirm")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void confirmSchedule(@PathVariable long groupId, @PathVariable long scheduleId, @RequestBody ScheduleConfirmationRequest scheduleConfirmationRequest) {

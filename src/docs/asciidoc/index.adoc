@@ -41,6 +41,9 @@ include::schedule/schedule-creation.adoc[]
 // 스케줄 수정
 include::schedule/schedule-update.adoc[]
 
+// 스케줄 삭제
+include::schedule/schedule-delete.adoc[]
+
 // 스케줄 확정
 include::schedule/schedule-confirmation.adoc[]
 
