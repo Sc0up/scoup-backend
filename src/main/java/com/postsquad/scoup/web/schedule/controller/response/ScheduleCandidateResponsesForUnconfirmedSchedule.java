@@ -1,16 +1,14 @@
 package com.postsquad.scoup.web.schedule.controller.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 @Data
-public class UnconfirmedScheduleReadAllResponse extends ScheduleBaseResponse {
+public class ScheduleCandidateResponsesForUnconfirmedSchedule {
+
     private List<ScheduleCandidateResponseForUnconfirmedSchedule> scheduleCandidates;
 }

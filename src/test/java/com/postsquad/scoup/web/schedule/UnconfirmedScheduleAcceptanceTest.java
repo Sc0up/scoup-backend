@@ -4,7 +4,7 @@ import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
 import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedParticipantResponse;
-import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateResponse;
+import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateResponseForUnconfirmedSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.UnconfirmedScheduleReadAllResponse;
 import com.postsquad.scoup.web.schedule.controller.response.UnconfirmedScheduleReadAllResponses;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
@@ -112,18 +112,18 @@ class UnconfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
                                                   .title("schedule title")
                                                   .description("schedule description")
                                                   .scheduleCandidates(List.of(
-                                                          ScheduleCandidateResponse.builder()
-                                                                                   .candidateId(1L)
-                                                                                   .startDateTime(LocalDateTime.of(2021, 9, 21, 0, 0))
-                                                                                   .endDateTime(LocalDateTime.of(2021, 9, 22, 0, 0))
-                                                                                   .dueDateTime(LocalDateTime.of(2021, 9, 23, 0, 0))
-                                                                                   .confirmedParticipants(List.of(
-                                                                                           ConfirmedParticipantResponse.builder()
-                                                                                                                       .nickname("nickname")
-                                                                                                                       .username("username")
-                                                                                                                       .build()
-                                                                                   ))
-                                                                                   .build()
+                                                          ScheduleCandidateResponseForUnconfirmedSchedule.builder()
+                                                                                                         .candidateId(1L)
+                                                                                                         .startDateTime(LocalDateTime.of(2021, 9, 21, 0, 0))
+                                                                                                         .endDateTime(LocalDateTime.of(2021, 9, 22, 0, 0))
+                                                                                                         .dueDateTime(LocalDateTime.of(2021, 9, 23, 0, 0))
+                                                                                                         .confirmedParticipants(List.of(
+                                                                                                                 ConfirmedParticipantResponse.builder()
+                                                                                                                                             .nickname("nickname")
+                                                                                                                                             .username("username")
+                                                                                                                                             .build()
+                                                                                                         ))
+                                                                                                         .build()
                                                   ))
                                                   .build()
         ));
