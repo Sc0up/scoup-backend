@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.group.controller;
 
+import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupMemberCreationRequest;
 import com.postsquad.scoup.web.group.controller.response.GroupMemberReadAllResponse;
 import com.postsquad.scoup.web.group.controller.response.GroupMemberReadAllResponses;
@@ -24,8 +25,11 @@ public class GroupMemberController {
     }
 
     @PostMapping("/groups/{groupId}/members/email")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void create(@PathVariable long groupId, @RequestBody GroupMemberCreationRequest groupMemberCreationRequest) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public DefaultPostResponse create(@PathVariable long groupId, @RequestBody GroupMemberCreationRequest groupMemberCreationRequest) {
+        return DefaultPostResponse.builder()
+                                  .id(1L)
+                                  .build();
     }
 
     @DeleteMapping("/groups/{groupId}/members/{memberId}")

@@ -2,6 +2,6 @@
 
 === `POST /api//groups/{groupId}/members/email`
 
-=== `204 No Content`
+=== `201 Created`
 
-operation::group_member_acceptance_test/create[snippets='path-parameters,request-fields,http-request,http-response']
+operation::group_member_acceptance_test/create[snippets='path-parameters,request-fields,response-fields,http-request,http-response']

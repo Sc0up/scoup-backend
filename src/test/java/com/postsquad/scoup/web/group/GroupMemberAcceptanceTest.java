@@ -136,7 +136,8 @@ public class GroupMemberAcceptanceTest extends AcceptanceTestBase {
                                               .filter(document(
                                                       DEFAULT_RESTDOCS_PATH,
                                                       GROUP_MEMBER_CREATION_PATH_PARAMETERS,
-                                                      GROUP_MEMBER_CREATION_REQUEST_FIELDS
+                                                      GROUP_MEMBER_CREATION_REQUEST_FIELDS,
+                                                      DEFAULT_POST_RESPONSE_FIELDS
                                               ))
                                               .log().all()
                                               .post(path);
@@ -144,7 +145,7 @@ public class GroupMemberAcceptanceTest extends AcceptanceTestBase {
         // then
         actualResponse.then()
                       .log().all()
-                      .statusCode(HttpStatus.NO_CONTENT.value());
+                      .statusCode(HttpStatus.CREATED.value());
 
         // TODO: id로 조회하여 검증
     }
