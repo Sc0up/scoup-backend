@@ -1,12 +1,13 @@
 package com.postsquad.scoup.web.schedule.controller;
 
+import com.postsquad.scoup.web.common.DefaultPostResponse;
+import com.postsquad.scoup.web.schedule.controller.request.ScheduleCreationRequest;
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedParticipantResponse;
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleReadOneResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,5 +50,13 @@ public class ScheduleController {
                                                                                          .build()
                                       ))
                                       .build();
+    }
+
+    @PostMapping("/groups/{groupId}/schedules")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DefaultPostResponse create(@PathVariable long groupId, ScheduleCreationRequest scheduleCreationRequest) {
+        return DefaultPostResponse.builder()
+                                  .id(1L)
+                                  .build();
     }
 }

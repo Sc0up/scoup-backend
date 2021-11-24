@@ -2,7 +2,13 @@ package com.postsquad.scoup.web.schedule;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
-import com.postsquad.scoup.web.schedule.controller.response.*;
+import com.postsquad.scoup.web.common.DefaultPostResponse;
+import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateRegistrationRequest;
+import com.postsquad.scoup.web.schedule.controller.request.ScheduleCreationRequest;
+import com.postsquad.scoup.web.schedule.controller.response.ConfirmedParticipantResponse;
+import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleResponseForReadOneSchedule;
+import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateResponseForReadOneSchedule;
+import com.postsquad.scoup.web.schedule.controller.response.ScheduleReadOneResponse;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -17,8 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -92,6 +97,41 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                     .description("일정 후보 참가자 이름")
     );
 
+    private static final Snippet SCHEDULE_CREATION_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID")
+    );
+
+    private static final Snippet SCHEDULE_CREATION_REQUEST_FIELDS = requestFields(
+            fieldWithPathAndConstraints("title", ScheduleCreationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("일정 제목"),
+            fieldWithPathAndConstraints("description", ScheduleCreationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("일정 설명"),
+            fieldWithPathAndConstraints("poll_due_date_time", ScheduleCreationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("일정 투표 마감 기한"),
+            fieldWithPathAndConstraints("can_poll_multiple", ScheduleCreationRequest.class)
+                    .type(JsonFieldType.BOOLEAN)
+                    .description("투표 복수 선택 가능 여부"),
+            fieldWithPathAndConstraints("is_poll_anonymous", ScheduleCreationRequest.class)
+                    .type(JsonFieldType.BOOLEAN)
+                    .description("익명 투표 여부"),
+            fieldWithPathAndConstraints("is_confirmed_immediately", ScheduleCreationRequest.class)
+                    .type(JsonFieldType.BOOLEAN)
+                    .description("즉시 확정 여부"),
+            fieldWithPathAndConstraints("schedule_candidates[]", ScheduleCreationRequest.class)
+                    .type(JsonFieldType.ARRAY)
+                    .description("일정 후보 목록"),
+            fieldWithPathAndConstraints("schedule_candidates[].start_date_time", ScheduleCreationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("일정 후보 시작 시간"),
+            fieldWithPathAndConstraints("schedule_candidates[].end_date_time", ScheduleCreationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("일정 후보 종료 시간")
+    );
+
     @Autowired
     TestEntityManager testEntityManager;
 
@@ -163,5 +203,57 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                 // TODO: Add description
                 .usingRecursiveComparison()
                 .isEqualTo(expectedScheduleReadOneResponse);
+    }
+
+    @Test
+    void create() {
+        //given
+        testEntityManager.persist(testUser);
+        ScheduleCreationRequest givenScheduleCreationRequest = ScheduleCreationRequest.builder()
+                                                                                      .title("title")
+                                                                                      .description("description")
+                                                                                      .pollDueDateTime(LocalDateTime.of(21, 11, 27, 0, 0))
+                                                                                      .canPollMultiple(true)
+                                                                                      .isPollAnonymous(true)
+                                                                                      .isConfirmedImmediately(true)
+                                                                                      .scheduleCandidates(List.of(
+                                                                                              ScheduleCandidateRegistrationRequest.builder()
+                                                                                                                                  .startDateTime(LocalDateTime.of(21, 11, 25, 0, 0))
+                                                                                                                                  .endDateTime(LocalDateTime.of(21, 11, 26, 0, 0))
+                                                                                                                                  .build()
+                                                                                      ))
+                                                                                      .build();
+
+        String path = "/groups/{groupId}/schedules";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", 1L)
+                                                       .body(givenScheduleCreationRequest);
+        //when
+        Response actualResponse = givenRequest.when()
+                                              .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      SCHEDULE_CREATION_PATH_PARAMETERS,
+                                                      SCHEDULE_CREATION_REQUEST_FIELDS,
+                                                      DEFAULT_POST_RESPONSE_FIELDS
+                                              ))
+                                              .log().all()
+                                              .post(path);
+
+        //then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.CREATED.value());
+
+        then(actualResponse.as(DefaultPostResponse.class))
+                // TODO: Add description
+                .usingRecursiveComparison()
+                // TODO: id로 db 조회하여 확인
+                .isEqualTo(DefaultPostResponse.builder().id(1L).build());
     }
 }
