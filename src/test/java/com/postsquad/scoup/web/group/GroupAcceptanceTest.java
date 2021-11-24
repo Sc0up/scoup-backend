@@ -17,6 +17,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,11 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                     .type(JsonFieldType.STRING)
                     .description("그룹 설명")
                     .optional()
+    );
+
+    private static final Snippet GROUP_LEAVE_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID")
     );
 
     @Autowired
@@ -219,5 +225,35 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                                                  .ignoringFields("owner")
                                                  .isEqualTo(expectedGroup)
         );
+    }
+
+    @Test
+    void leaveGroup() {
+        // given
+        String path = "/groups/{groupId}/leave";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Accept-Language", "en-US")
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", 1L);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_LEAVE_PATH_PARAMETERS
+                                              ))
+                                              .log().all()
+                                              .delete(path);
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.NO_CONTENT.value());
+
+        // TODO: id로 조회하여 검증
     }
 }

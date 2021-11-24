@@ -38,4 +38,9 @@ public class GroupController {
     public void update(@PathVariable Long groupId, @RequestBody @Valid GroupModificationRequest groupModificationRequest, @LoggedInUser User user) {
         groupService.update(groupId, groupModificationRequest, user);
     }
+
+    @DeleteMapping("/{groupId}/leave")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void leaveGroup(@PathVariable long groupId) {
+    }
 }
