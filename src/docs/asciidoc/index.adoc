@@ -46,3 +46,6 @@ include::schedule/confirmed-schedule-read-all.adoc[]
 
 // 스케줄 투표
 include::schedule/schedule-poll.adoc[]
+
+// 스케줄 투표 취소
+include::schedule/schedule-poll-cancellation.adoc[]
