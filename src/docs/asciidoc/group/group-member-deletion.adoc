@@ -1,6 +1,6 @@
 == 그룹 멤버 삭제
 
-=== `DELETE /api//groups/{groupId}/members/{memberId}`
+=== `DELETE /api/groups/{groupId}/members/{memberId}`
 
 === `204 No Content`
 
