@@ -43,3 +43,6 @@ include::schedule/schedule-candidate-deletion.adoc[]
 
 // 확정된 스케줄 전체 조회
 include::schedule/confirmed-schedule-read-all.adoc[]
+
+// 스케줄 투표
+include::schedule/schedule-poll.adoc[]
