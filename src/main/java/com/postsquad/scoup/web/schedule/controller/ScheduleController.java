@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.schedule.controller;
 import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleConfirmationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCreationRequest;
+import com.postsquad.scoup.web.schedule.controller.request.ScheduleModificationRequest;
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedParticipantResponse;
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateResponseForReadOneSchedule;
@@ -59,6 +60,11 @@ public class ScheduleController {
         return DefaultPostResponse.builder()
                                   .id(1L)
                                   .build();
+    }
+
+    @PatchMapping("/groups/{groupId}/schedules/{scheduleId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable long groupId, @PathVariable long scheduleId, @RequestBody ScheduleModificationRequest scheduleModificationRequest) {
     }
 
     @PatchMapping("/groups/{groupId}/schedules/{scheduleId}/confirm")

@@ -6,6 +6,7 @@ import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateRegistrationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleConfirmationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCreationRequest;
+import com.postsquad.scoup.web.schedule.controller.request.ScheduleModificationRequest;
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedParticipantResponse;
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateResponseForReadOneSchedule;
@@ -131,6 +132,22 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
             fieldWithPathAndConstraints("schedule_candidates[].end_date_time", ScheduleCreationRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("일정 후보 종료 시간")
+    );
+
+    private static final Snippet SCHEDULE_UPDATE_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID"),
+            parameterWithName("scheduleId")
+                    .description("일정 ID")
+    );
+
+    private static final Snippet SCHEDULE_UPDATE_REQUEST_FIELDS = requestFields(
+            fieldWithPathAndConstraints("title", ScheduleModificationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("수정할 일정 제목"),
+            fieldWithPathAndConstraints("description", ScheduleModificationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("수정할 일정 설명")
     );
 
     private static final Snippet SCHEDULE_CONFIRMATION_PATH_PARAMETERS = pathParameters(
@@ -269,6 +286,45 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                 .usingRecursiveComparison()
                 // TODO: id로 db 조회하여 확인
                 .isEqualTo(DefaultPostResponse.builder().id(1L).build());
+    }
+
+    @Test
+    void update() {
+        //given
+        testEntityManager.persist(testUser);
+        ScheduleModificationRequest scheduleConfirmationRequest = ScheduleModificationRequest.builder()
+                                                                                             .title("title")
+                                                                                             .description("description")
+                                                                                             .build();
+
+        String path = "/groups/{groupId}/schedules/{scheduleId}";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", 1L)
+                                                       .pathParam("scheduleId", 1L)
+                                                       .body(scheduleConfirmationRequest);
+
+        //when
+        Response actualResponse = givenRequest.when()
+                                              .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      SCHEDULE_UPDATE_PATH_PARAMETERS,
+                                                      SCHEDULE_UPDATE_REQUEST_FIELDS
+                                              ))
+                                              .log().all()
+                                              .patch(path);
+
+        //then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.NO_CONTENT.value());
+
+        // TODO: id로 db 조회하여 검증
     }
 
     @Test

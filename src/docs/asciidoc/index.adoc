@@ -38,6 +38,9 @@ include::schedule/schedule-read-one.adoc[]
 // 스케줄 생성
 include::schedule/schedule-creation.adoc[]
 
+// 스케줄 수정
+include::schedule/schedule-update.adoc[]
+
 // 스케줄 확정
 include::schedule/schedule-confirmation.adoc[]
 
