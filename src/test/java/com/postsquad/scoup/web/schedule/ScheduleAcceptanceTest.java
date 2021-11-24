@@ -4,6 +4,7 @@ import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
 import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateRegistrationRequest;
+import com.postsquad.scoup.web.schedule.controller.request.ScheduleConfirmationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCreationRequest;
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedParticipantResponse;
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleResponseForReadOneSchedule;
@@ -132,6 +133,19 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                     .description("일정 후보 종료 시간")
     );
 
+    private static final Snippet SCHEDULE_CONFIRMATION_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID"),
+            parameterWithName("scheduleId")
+                    .description("일정 ID")
+    );
+
+    private static final Snippet SCHEDULE_CONFIRMATION_REQUEST_FIELDS = requestFields(
+            fieldWithPathAndConstraints("schedule_candidate_id", ScheduleConfirmationRequest.class)
+                    .type(JsonFieldType.NUMBER)
+                    .description("확정할 일정 후보 id")
+    );
+
     @Autowired
     TestEntityManager testEntityManager;
 
@@ -255,5 +269,43 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                 .usingRecursiveComparison()
                 // TODO: id로 db 조회하여 확인
                 .isEqualTo(DefaultPostResponse.builder().id(1L).build());
+    }
+
+    @Test
+    void confirmSchedule() {
+        //given
+        testEntityManager.persist(testUser);
+        ScheduleConfirmationRequest scheduleConfirmationRequest = ScheduleConfirmationRequest.builder()
+                                                                                             .scheduleCandidateId(1L)
+                                                                                             .build();
+
+        String path = "/groups/{groupId}/schedules/{scheduleId}/confirm";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", 1L)
+                                                       .pathParam("scheduleId", 1L)
+                                                       .body(scheduleConfirmationRequest);
+
+        //when
+        Response actualResponse = givenRequest.when()
+                                              .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      SCHEDULE_CONFIRMATION_PATH_PARAMETERS,
+                                                      SCHEDULE_CONFIRMATION_REQUEST_FIELDS
+                                              ))
+                                              .log().all()
+                                              .patch(path);
+
+        //then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.NO_CONTENT.value());
+
+        // TODO: id로 db 조회하여 검증
     }
 }
