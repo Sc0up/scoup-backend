@@ -1,10 +1,10 @@
 package com.postsquad.scoup.web.group.controller;
 
+import com.postsquad.scoup.web.group.controller.request.GroupMemberCreationRequest;
 import com.postsquad.scoup.web.group.controller.response.GroupMemberReadAllResponse;
 import com.postsquad.scoup.web.group.controller.response.GroupMemberReadAllResponses;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +21,10 @@ public class GroupMemberController {
                                           .avatarUrl("avatarUrl")
                                           .build()
         ));
+    }
+
+    @PostMapping("/groups/{groupId}/members/email")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void create(@PathVariable long groupId, @RequestBody GroupMemberCreationRequest groupMemberCreationRequest) {
     }
 }
