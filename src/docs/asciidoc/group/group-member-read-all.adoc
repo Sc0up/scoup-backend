@@ -1,0 +1,7 @@
+== 그룹 멤버 전체 조회
+
+=== `GET /api/groups/{groupId}/members`
+
+=== `200 OK`
+
+operation::group_member_acceptance_test/read_all[snippets='path-parameters,response-fields,http-request,http-response']

@@ -32,6 +32,9 @@ include::group/group-creation.adoc[]
 // 그룹 수정
 include::group/group-modification.adoc[]
 
+// 그룹 멤버 전체 조회
+include::group/group-member-read-all.adoc[]
+
 // 스케줄 후보 전체 조회
 include::schedule/schedule-candidate-read-all.adoc[]
 
