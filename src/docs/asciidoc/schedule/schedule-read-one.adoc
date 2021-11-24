@@ -1,0 +1,7 @@
+== 스케줄 상세 조회
+
+=== `GET /api/groups/{groupId}/schedules/{scheduleId}`
+
+=== `200 OK`
+
+operation::schedule_acceptance_test/read_one[snippets='path-parameters,response-fields,http-request,http-response']
