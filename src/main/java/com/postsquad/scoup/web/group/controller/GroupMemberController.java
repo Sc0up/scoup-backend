@@ -27,4 +27,9 @@ public class GroupMemberController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void create(@PathVariable long groupId, @RequestBody GroupMemberCreationRequest groupMemberCreationRequest) {
     }
+
+    @DeleteMapping("/groups/{groupId}/members/{memberId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable long groupId, @PathVariable long memberId) {
+    }
 }
