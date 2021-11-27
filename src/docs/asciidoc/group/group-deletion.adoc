@@ -1,0 +1,7 @@
+== 그룹 삭제
+
+=== `POST /api/groups/{groupId}`
+
+=== `204 No Content`
+
+operation::group_acceptance_test/delete_group[snippets='path-parameters,http-request,http-response']

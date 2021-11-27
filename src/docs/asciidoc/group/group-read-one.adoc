@@ -1,0 +1,7 @@
+== 그룹 상세 조회
+
+=== `GET /groups/{groupId}`
+
+=== `200 Ok`
+
+operation::group_acceptance_test/read_one[snippets='path-parameters,response-fields,http-request,http-response']
