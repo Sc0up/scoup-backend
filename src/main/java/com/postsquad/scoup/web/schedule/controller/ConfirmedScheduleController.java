@@ -27,8 +27,8 @@ public class ConfirmedScheduleController {
     public List<ConfirmedSchedulePeriodReadAllResponse> readConfirmedSchedulePeriods(@PathVariable Long groupId, ConfirmedSchedulePeriodReadAllRequest confirmedSchedulePeriodReadAllRequest) {
         return List.of(
                 ConfirmedSchedulePeriodReadAllResponse.builder()
-                                                      .start_date_time(LocalDateTime.of(2021, 11, 25, 0, 0))
-                                                      .end_date_time(LocalDateTime.of(2021, 11, 26, 0, 0))
+                                                      .startDateTime(LocalDateTime.of(2021, 11, 25, 0, 0))
+                                                      .endDateTime(LocalDateTime.of(2021, 11, 26, 0, 0))
                                                       .build()
         );
     }
