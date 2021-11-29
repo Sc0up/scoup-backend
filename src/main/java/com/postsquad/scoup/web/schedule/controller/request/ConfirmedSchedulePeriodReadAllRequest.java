@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ConfirmedSchedulePeriodReadAllRequest {
 
-    private LocalDateTime start_date_time;
+    private LocalDateTime startDateTime;
 
-    private LocalDateTime end_date_time;
+    private LocalDateTime endDateTime;
 }
