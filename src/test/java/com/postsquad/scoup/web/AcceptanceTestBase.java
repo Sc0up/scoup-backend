@@ -21,6 +21,7 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.request.ParameterDescriptor;
 import org.springframework.restdocs.snippet.Attributes.Attribute;
 import org.springframework.restdocs.snippet.Snippet;
 
@@ -29,6 +30,7 @@ import java.util.List;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.snippet.Attributes.key;
 
@@ -116,6 +118,17 @@ public class AcceptanceTestBase {
         String camelCasePath = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, path);
         Attribute constraints = key("constraints").value(constraintDescriptions.descriptionsForProperty(camelCasePath));
         FieldDescriptor fieldWithPathAndConstraints = fieldWithPath.attributes(constraints);
+
+        return fieldWithPathAndConstraints;
+    }
+
+    protected static ParameterDescriptor parameterWithNameAndConstraints(String path, Class<?> clazz) {
+        ParameterDescriptor parameterWithName = parameterWithName(path);
+
+        ConstraintDescriptions constraintDescriptions = new ConstraintDescriptions(clazz);
+        String camelCasePath = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, path);
+        Attribute constraints = key("constraints").value(constraintDescriptions.descriptionsForProperty(camelCasePath));
+        ParameterDescriptor fieldWithPathAndConstraints = parameterWithName.attributes(constraints);
 
         return fieldWithPathAndConstraints;
     }

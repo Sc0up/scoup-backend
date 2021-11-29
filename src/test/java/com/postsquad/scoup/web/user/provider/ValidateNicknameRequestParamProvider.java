@@ -19,7 +19,7 @@ public class ValidateNicknameRequestParamProvider implements ArgumentsProvider {
                         ErrorResponse.builder()
                                      .statusCode(HttpStatus.BAD_REQUEST.value())
                                      .message("Method argument not valid.")
-                                     .errors(Collections.singletonList("validateNickname.nickname: must not be empty"))
+                                     .errors(Collections.singletonList("nickname: must not be empty"))
                                      .build()
                 ),
                 Arguments.of(
@@ -28,7 +28,7 @@ public class ValidateNicknameRequestParamProvider implements ArgumentsProvider {
                         ErrorResponse.builder()
                                      .statusCode(HttpStatus.BAD_REQUEST.value())
                                      .message("Method argument not valid.")
-                                     .errors(Collections.singletonList("validateNickname.nickname: must not be empty"))
+                                     .errors(Collections.singletonList("nickname: must not be empty"))
                                      .build()
                 )
         );

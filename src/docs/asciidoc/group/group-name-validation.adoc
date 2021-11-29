@@ -1,0 +1,7 @@
+== 그룹 이름 중복 확인
+
+=== `GET /groups/{groupId}`
+
+=== `200 Ok`
+
+operation::group_acceptance_test/validate_group_name[snippets='request-parameters,response-fields,http-request,http-response']
