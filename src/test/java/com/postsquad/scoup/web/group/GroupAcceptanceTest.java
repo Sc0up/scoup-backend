@@ -94,6 +94,11 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                     .description("그룹 명 중복 여부")
     );
 
+    private static final Snippet GROUP_LEAVE_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID")
+    );
+
     @Autowired
     TestEntityManager testEntityManager;
 
@@ -377,5 +382,35 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                 .usingRecursiveComparison()
                 .ignoringFields(ignoringFieldsForResponseWithId)
                 .isEqualTo(expectedGroupValidationResponse);
+    }
+
+    @Test
+    void leaveGroup() {
+        // given
+        String path = "/groups/{groupId}/leave";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Accept-Language", "en-US")
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", 1L);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_LEAVE_PATH_PARAMETERS
+                                              ))
+                                              .log().all()
+                                              .delete(path);
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.NO_CONTENT.value());
+
+        // TODO: id로 조회하여 검증
     }
 }

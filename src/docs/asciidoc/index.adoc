@@ -38,8 +38,23 @@ include::group/group-modification.adoc[]
 // 그룹 삭제
 include::group/group-deletion.adoc[]
 
+// 그룹 탈퇴
+include::group/group-leave.adoc[]
+
 // 그룹 이름 중복확인
 include::group/group-name-validation.adoc[]
+
+// 그룹 멤버 전체 조회
+include::group/group-member-read-all.adoc[]
+
+// 그룹 멤버 추가
+include::group/group-member-creation.adoc[]
+
+// 그룹 멤버 역할 수정
+include::group/group-member-modification-role.adoc[]
+
+// 그룹 멤버 삭제
+include::group/group-member-deletion.adoc[]
 
 // 스케줄 상세 조회
 include::schedule/schedule-read-one.adoc[]

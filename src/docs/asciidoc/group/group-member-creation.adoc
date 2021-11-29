@@ -1,0 +1,7 @@
+== 그룹 멤버 추가
+
+=== `POST /api//groups/{groupId}/members/email`
+
+=== `201 Created`
+
+operation::group_member_acceptance_test/create[snippets='path-parameters,request-fields,response-fields,http-request,http-response']

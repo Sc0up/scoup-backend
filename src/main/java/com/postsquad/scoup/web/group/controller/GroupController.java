@@ -66,4 +66,9 @@ public class GroupController {
                                       .isExistingName(true)
                                       .build();
     }
+
+    @DeleteMapping("/{groupId}/leave")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void leaveGroup(@PathVariable long groupId) {
+    }
 }
