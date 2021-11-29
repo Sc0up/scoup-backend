@@ -4,6 +4,8 @@ import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
+import com.postsquad.scoup.web.user.controller.request.EmailValidationRequest;
+import com.postsquad.scoup.web.user.controller.request.NicknameValidationRequest;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.controller.response.NicknameValidationResponse;
@@ -29,7 +31,6 @@ import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
@@ -86,7 +87,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     );
 
     private static final Snippet EMAIL_VALIDATION_REQUEST_PARAMS = requestParameters(
-            parameterWithName("email").description("검증 이메일")
+            parameterWithNameAndConstraints("email", EmailValidationRequest.class)
+                    .description("검증 이메일")
     );
 
     private static final Snippet EMAIL_VALIDATION_RESPONSE_FIELDS = responseFields(
@@ -96,7 +98,8 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     );
 
     private static final Snippet NICKNAME_VALIDATION_REQUEST_PARAMS = requestParameters(
-            parameterWithName("nickname").description("검증 닉네임")
+            parameterWithNameAndConstraints("nickname", NicknameValidationRequest.class)
+                    .description("검증 닉네임")
     );
 
     private static final Snippet NICKNAME_VALIDATION_RESPONSE_FIELDS = responseFields(

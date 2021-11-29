@@ -20,7 +20,7 @@ public class ValidateEmailRequestParamProvider implements ArgumentsProvider {
                         ErrorResponse.builder()
                                      .statusCode(HttpStatus.BAD_REQUEST.value())
                                      .message("Method argument not valid.")
-                                     .errors(Collections.singletonList("validateEmail.email: must not be empty"))
+                                     .errors(Collections.singletonList("email: must not be empty"))
                                      .build()
                 ), Arguments.of(
                         "실패: null",
@@ -28,7 +28,7 @@ public class ValidateEmailRequestParamProvider implements ArgumentsProvider {
                         ErrorResponse.builder()
                                      .statusCode(HttpStatus.BAD_REQUEST.value())
                                      .message("Method argument not valid.")
-                                     .errors(Collections.singletonList("validateEmail.email: must not be empty"))
+                                     .errors(Collections.singletonList("email: must not be empty"))
                                      .build()
                 ), Arguments.of(
                         "실패: 이메일 형식",
@@ -36,7 +36,7 @@ public class ValidateEmailRequestParamProvider implements ArgumentsProvider {
                         ErrorResponse.builder()
                                      .statusCode(HttpStatus.BAD_REQUEST.value())
                                      .message("Method argument not valid.")
-                                     .errors(Collections.singletonList("validateEmail.email: must be a well-formed email address"))
+                                     .errors(Collections.singletonList("email: must be a well-formed email address"))
                                      .build()
                 )
         );
