@@ -1,0 +1,7 @@
+== 그룹 멤버 삭제
+
+=== `DELETE /api/groups/{groupId}/members/{memberId}`
+
+=== `204 No Content`
+
+operation::group_member_acceptance_test/delete[snippets='path-parameters,http-request,http-response']
