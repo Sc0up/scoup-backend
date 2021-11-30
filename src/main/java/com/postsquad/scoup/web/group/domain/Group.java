@@ -2,21 +2,12 @@ package com.postsquad.scoup.web.group.domain;
 
 import com.postsquad.scoup.web.common.BaseEntity;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
-import com.postsquad.scoup.web.schedule.domain.ConfirmedSchedule;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
-import com.postsquad.scoup.web.schedule.domain.ScheduleCandidate;
 import com.postsquad.scoup.web.user.domain.User;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -38,6 +29,14 @@ public class Group extends BaseEntity {
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private final List<Schedule> schedules = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "group_member",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private final List<User> members = new ArrayList<>();
 
     protected Group(String name, String description, User owner) {
         this.name = name;
@@ -71,5 +70,10 @@ public class Group extends BaseEntity {
 
     public void addSchedules(List<Schedule> schedules) {
         this.schedules.addAll(schedules);
+    }
+
+    public void addMember(User user) {
+        user.getJoinedGroups().add(this);
+        this.members.add(user);
     }
 }
