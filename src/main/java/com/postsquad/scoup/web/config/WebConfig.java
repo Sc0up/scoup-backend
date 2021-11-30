@@ -23,10 +23,6 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final String[] SIGNIN_PATH_TO_INCLUDE = {
-            "/groups/**"
-    };
-
     private final SignInInterceptor signInInterceptor;
 
     private final RequestParameterArgumentResolver requestParameterArgumentResolver;
@@ -60,6 +56,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(signInInterceptor)
-                .addPathPatterns(SIGNIN_PATH_TO_INCLUDE);
+                .addPathPatterns(signInInterceptor.pathToInclude())
+                .excludePathPatterns(signInInterceptor.pathToExclude());
     }
 }
