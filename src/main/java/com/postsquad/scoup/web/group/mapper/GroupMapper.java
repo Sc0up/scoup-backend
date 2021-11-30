@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web.group.mapper;
 
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
+import com.postsquad.scoup.web.group.controller.response.GroupReadAllResponse;
 import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.user.domain.User;
 import org.mapstruct.Mapper;
@@ -14,4 +15,6 @@ public interface GroupMapper {
 
     @Mapping(target = "owner", source = "owner")
     Group map(GroupCreationRequest groupCreationRequest, User owner);
+
+    GroupReadAllResponse map(Group group);
 }
