@@ -54,6 +54,21 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                     .description("이미지")
     );
 
+    private static final Snippet GROUP_READ_ALL_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("group_read_all_response[]")
+                    .type(JsonFieldType.ARRAY)
+                    .description("그룹 목록"),
+            fieldWithPath("group_read_all_response[].id")
+                    .type(JsonFieldType.NUMBER)
+                    .description("그룹 id"),
+            fieldWithPath("group_read_all_response[].name")
+                    .type(JsonFieldType.STRING)
+                    .description("그룹 이름"),
+            fieldWithPath("group_read_all_response[].description")
+                    .type(JsonFieldType.STRING)
+                    .description("그룹 설명")
+    );
+
     private static final Snippet GROUP_CREATION_REQUEST_FIELDS = requestFields(
             fieldWithPathAndConstraints("name", GroupCreationRequest.class)
                     .type(JsonFieldType.STRING)
@@ -437,6 +452,11 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                                                        .header("Authorization", TEST_TOKEN);
         // when
         Response actualResponse = givenRequest.when()
+                                              .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_READ_ALL_RESPONSE_FIELDS
+                                              ))
                                               .log().all()
                                               .get(path);
 
