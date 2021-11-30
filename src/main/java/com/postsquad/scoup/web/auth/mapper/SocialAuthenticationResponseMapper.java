@@ -16,7 +16,7 @@ public interface SocialAuthenticationResponseMapper {
     SocialAuthenticationResponseMapper INSTANCE = Mappers.getMapper(SocialAuthenticationResponseMapper.class);
 
     @Mappings({
-            @Mapping(target = "oAuthType", source = "type"),
+            @Mapping(target = "oauthType", source = "type"),
             @Mapping(target = "socialServiceId", source = "gitHubUserResponse.id"),
             @Mapping(target = "name", source = "gitHubUserResponse.name"),
             @Mapping(target = "email", source = "gitHubUserResponse.email"),
@@ -25,7 +25,7 @@ public interface SocialAuthenticationResponseMapper {
     SocialAuthenticationResponse map(GitHubUserResponse gitHubUserResponse, OAuthType type);
 
     @Mappings({
-            @Mapping(target = "oAuthType", source = "type"),
+            @Mapping(target = "oauthType", source = "type"),
             @Mapping(target = "socialServiceId", source = "kakaoUserResponse.id"),
             @Mapping(target = "name", source = "kakaoUserResponse.kakaoAccount.profile.nickname"),
             @Mapping(target = "email", source = "kakaoUserResponse.kakaoAccount.email"),
@@ -34,7 +34,7 @@ public interface SocialAuthenticationResponseMapper {
     SocialAuthenticationResponse map(KakaoUserResponse kakaoUserResponse, OAuthType type);
 
     @Mappings({
-            @Mapping(target = "oAuthType", source = "type"),
+            @Mapping(target = "oauthType", source = "type"),
             @Mapping(target = "socialServiceId", source = "googleUserResponse.sub"),
             @Mapping(target = "name", source = "googleUserResponse.name"),
             @Mapping(target = "email", source = "googleUserResponse.email"),
