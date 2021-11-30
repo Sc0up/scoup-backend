@@ -8,6 +8,7 @@ import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
 import com.postsquad.scoup.web.group.controller.response.GroupReadOneResponse;
 import com.postsquad.scoup.web.group.controller.response.GroupValidationResponse;
+import com.postsquad.scoup.web.group.controller.response.GroupReadAllResponses;
 import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.group.provider.*;
 import io.restassured.RestAssured;
@@ -412,5 +413,41 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                       .statusCode(HttpStatus.NO_CONTENT.value());
 
         // TODO: id로 조회하여 검증
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(GroupReadAllProvider.class)
+    @DisplayName("사용자가 가입한 모든 그룹을 조회할 수 있다.")
+    void readGroup(String description, GroupReadAllResponses expectedGroupReadAllResponses) {
+        // given
+        Group group = Group.builder().name("name").description("").owner(testUser).schedules(new ArrayList<>()).build();
+        Group group2 = Group.builder().name("group2").description("group2").owner(testUser).schedules(new ArrayList<>()).build();
+        group.addMember(testUser);
+        group2.addMember(testUser);
+        testEntityManager.persist(group);
+        testEntityManager.persist(group2);
+
+        String path = "/groups";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Accept-Language", "en-US")
+                                                       .header("Authorization", TEST_TOKEN);
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .log().all()
+                                              .get(path);
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
+        then(actualResponse.as(GroupReadAllResponses.class))
+                .as("그룹 조회 : %s", description)
+                .usingRecursiveComparison()
+                .ignoringFields("groupReadAllResponse.id")
+                .isEqualTo(expectedGroupReadAllResponses);
     }
 }
