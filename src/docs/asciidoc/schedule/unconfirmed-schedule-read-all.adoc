@@ -1,0 +1,7 @@
+== 미확정 스케줄 전체 조회
+
+=== `GET /groups/{groupId}/unconfirmed-schedules`
+
+=== `200 OK`
+
+operation::unconfirmed_schedule_acceptance_test/read_all[snippets='path-parameters,response-fields,http-request,http-response']

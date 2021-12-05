@@ -11,10 +11,17 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
 public class SignInInterceptor implements HandlerInterceptor {
+
+    private static final List<String> PATH_TO_INCLUDE = List.of(
+            "/groups/**"
+    );
+
+    private static final List<String> PATH_TO_EXCLUDE = List.of();
 
     private final UserRepository userRepository;
 
@@ -31,5 +38,13 @@ public class SignInInterceptor implements HandlerInterceptor {
         request.setAttribute("user", user);
 
         return true;
+    }
+
+    public List<String> pathToInclude() {
+        return PATH_TO_INCLUDE;
+    }
+
+    public List<String> pathToExclude() {
+        return PATH_TO_EXCLUDE;
     }
 }

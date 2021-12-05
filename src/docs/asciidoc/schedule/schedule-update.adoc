@@ -1,0 +1,7 @@
+== 스케줄 수정
+
+=== `PATCH /api/groups/{groupId}/schedules/{scheduleId}`
+
+=== `204 No Content`
+
+operation::schedule_acceptance_test/update[snippets='path-parameters,request-fields,http-request,http-response']
