@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web.user;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
+import com.postsquad.scoup.web.TestEntityManager;
 import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
@@ -111,6 +112,9 @@ class UserAcceptanceTest extends AcceptanceTestBase {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    TestEntityManager testEntityManager;
+
     @BeforeEach
     void setUp() {
         userRepository.save(User.builder()
@@ -173,11 +177,14 @@ class UserAcceptanceTest extends AcceptanceTestBase {
         // then
         actualResponse.then()
                       .statusCode(HttpStatus.CREATED.value());
-        then(userRepository.findById(actualResponse.body().as(DefaultPostResponse.class).getId()).orElse(null))
-                .as("회원가입 결과 : %s", description)
-                .usingRecursiveComparison()
-                .ignoringFields(ignoringFieldsForResponseWithId)
-                .isEqualTo(expectedUser);
+        testEntityManager.findAndConsume(User.class, actualResponse.body().as(DefaultPostResponse.class).getId(),
+                                         actualUser -> {
+                                             then(actualUser)
+                                                     .as("회원가입 결과 : %s", description)
+                                                     .usingRecursiveComparison()
+                                                     .ignoringFields(ignoringFieldsForResponseWithId)
+                                                     .isEqualTo(expectedUser);
+                                         });
     }
 
     @ParameterizedTest
