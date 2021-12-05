@@ -56,13 +56,13 @@ class OAuthAcceptanceTest extends AcceptanceTestBase {
         return Stream.of(
                 Arguments.of(
                         "성공",
-                        SocialAuthenticationResponse
-                                .builder()
-                                .socialServiceId("68000537")
-                                .name("JiSun Lim")
-                                .email("jisunlim818@gmail.com")
-                                .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
-                                .build()
+                        SocialAuthenticationResponse.builder()
+                                                    .oauthType(OAuthType.GITHUB)
+                                                    .socialServiceId("68000537")
+                                                    .name("JiSun Lim")
+                                                    .email("jisunlim818@gmail.com")
+                                                    .avatarUrl("https://avatars.githubusercontent.com/u/68000537?v=4")
+                                                    .build()
                 )
         );
     }
