@@ -10,9 +10,8 @@ import com.postsquad.scoup.web.group.exception.GroupNotFoundException;
 import com.postsquad.scoup.web.group.mapper.GroupMapper;
 import com.postsquad.scoup.web.group.repository.GroupRepository;
 import com.postsquad.scoup.web.signin.exception.UnauthorizedUserException;
-import com.postsquad.scoup.web.signin.exception.UserNotFoundException;
 import com.postsquad.scoup.web.user.domain.User;
-import com.postsquad.scoup.web.user.repository.UserRepository;
+import com.postsquad.scoup.web.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 public class GroupService {
 
     private final GroupRepository groupRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     public DefaultPostResponse create(GroupCreationRequest groupCreationRequest, User user) {
 
@@ -31,7 +30,9 @@ public class GroupService {
             throw new GroupNameAlreadyExistException(groupCreationRequest.getName());
         }
 
-        Group group = GroupMapper.INSTANCE.map(groupCreationRequest, user);
+        User owner = userService.findById(user.getId());
+        Group group = GroupMapper.INSTANCE.map(groupCreationRequest, owner);
+        group.addMember(owner);
 
         return DefaultPostResponse.builder().id(groupRepository.save(group).getId()).build();
     }
@@ -50,7 +51,7 @@ public class GroupService {
     }
 
     public GroupReadAllResponses readAllByUser(User user) {
-        User loggedInUser = userRepository.findById(user.getId()).orElseThrow(() -> new UserNotFoundException(user.getId()));
+        User loggedInUser = userService.findById(user.getId());
         return GroupReadAllResponses
                 .builder()
                 .groupReadAllResponse(
