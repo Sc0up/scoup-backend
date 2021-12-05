@@ -73,7 +73,9 @@ public class Group extends BaseEntity {
     }
 
     public void addMember(User user) {
-        user.getJoinedGroups().add(this);
         this.members.add(user);
+        if (!user.getJoinedGroups().contains(this)) {
+            user.getJoinedGroups().add(this);
+        }
     }
 }
