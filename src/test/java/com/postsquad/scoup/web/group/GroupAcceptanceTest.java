@@ -205,11 +205,12 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                                                      .as("그룹 생성: %s", description)
                                                      .usingRecursiveComparison()
                                                      .ignoringFields(ignoringFieldsForResponseWithId)
-                                                     .ignoringFields("owner")
+                                                     .ignoringFields("owner", "members")
                                                      .isEqualTo(expectedGroup);
                                              then(actualGroup.getOwner())
                                                      .usingRecursiveComparison()
                                                      .ignoringFields(ignoringFieldsForResponseWithId)
+                                                     .ignoringFields("joinedGroups")
                                                      .isEqualTo(expectedGroup.getOwner());
                                          }
         );
@@ -288,6 +289,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
     void modifyGroup(String description, Long givenGroupId, GroupModificationRequest givenGroupModificationRequest, Group expectedGroup) {
         // given
         Group group = Group.builder().name("name").description("").owner(testUser).schedules(new ArrayList<>()).build();
+        group.addMember(testUser);
         testEntityManager.persist(group);
         String path = "/groups/{groupId}";
         RequestSpecification givenRequest = RestAssured.given(this.spec)
@@ -319,7 +321,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                                                  .as("그룹 수정: %s", description)
                                                  .usingRecursiveComparison()
                                                  .ignoringFields(ignoringFieldsForResponseWithId)
-                                                 .ignoringFields("owner")
+                                                 .ignoringFields("owner", "members")
                                                  .isEqualTo(expectedGroup)
         );
     }
