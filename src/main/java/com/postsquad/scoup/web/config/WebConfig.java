@@ -23,18 +23,6 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final String[] SIGNIN_PATH_TO_EXCLUDE = {
-            "/sign-in/**",
-            "/users/**",
-            "/oauth/**",
-            "/h2-console/**",
-            "/swagger-ui.html",
-            "/v2/api-docs",
-            "/swagger-resources/**",
-            "/webjars/**",
-            "/docs/**"
-    };
-
     private final SignInInterceptor signInInterceptor;
 
     private final RequestParameterArgumentResolver requestParameterArgumentResolver;
@@ -68,7 +56,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(signInInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns(SIGNIN_PATH_TO_EXCLUDE);
+                .addPathPatterns(signInInterceptor.pathToInclude())
+                .excludePathPatterns(signInInterceptor.pathToExclude());
     }
 }
