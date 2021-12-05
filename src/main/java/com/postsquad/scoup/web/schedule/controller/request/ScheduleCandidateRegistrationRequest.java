@@ -1,11 +1,14 @@
 package com.postsquad.scoup.web.schedule.controller.request;
 
-import lombok.Getter;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Builder
 public class ScheduleCandidateRegistrationRequest {
 
     @NotNull

@@ -5,17 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class ScheduleModificationRequest {
+public class ConfirmedSchedulePeriodReadAllRequest {
 
-    @NotEmpty
-    private String title;
+    private LocalDateTime startDateTime;
 
-    @NotEmpty
-    private String description;
+    private LocalDateTime endDateTime;
 }

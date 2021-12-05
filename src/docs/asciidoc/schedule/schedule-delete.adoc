@@ -1,0 +1,7 @@
+== 스케줄 삭제
+
+=== `DELETE /api/groups/{groupId}/schedules/{scheduleId}`
+
+=== `204 No Content`
+
+operation::schedule_acceptance_test/delete[snippets='path-parameters,http-request,http-response']

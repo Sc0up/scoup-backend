@@ -5,13 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Data
-public class UnconfirmedScheduleResponses {
+@Builder
+public class ConfirmedSchedulePeriodReadAllResponse {
 
-    private List<UnconfirmedScheduleResponse> unconfirmedSchedules;
+    private LocalDateTime startDateTime;
+
+    private LocalDateTime endDateTime;
 }
