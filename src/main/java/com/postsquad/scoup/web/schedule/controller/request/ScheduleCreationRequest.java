@@ -29,5 +29,5 @@ public class ScheduleCreationRequest {
     @Builder.Default
     private Boolean isConfirmedImmediately = false;
 
-    private List<ScheduleCandidateRegistrationRequest> scheduleCandidates;
+    private List<ScheduleCandidateCreationRequest> scheduleCandidates;
 }

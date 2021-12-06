@@ -5,6 +5,7 @@ import com.postsquad.scoup.web.TestEntityManager;
 import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateReadRequest;
+import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateCreationRequest;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponse;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponses;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
@@ -17,6 +18,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -33,8 +35,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
@@ -86,6 +87,31 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
                     .description("색상 코드")
                     // TODO: #197 반영 시 optional 제거해야함
                     .optional()
+    );
+
+    private static final Snippet SCHEDULE_CANDIDATE_CREATION_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID"),
+            parameterWithName("scheduleId")
+                    .description("스케줄 ID")
+    );
+
+    private static final Snippet SCHEDULE_CANDIDATE_CREATION_REQUEST_FIELDS = requestFields(
+            fieldWithPathAndConstraints("start_date_time", ScheduleCandidateCreationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("스케줄 시작 날짜"),
+            fieldWithPathAndConstraints("end_date_time", ScheduleCandidateCreationRequest.class)
+                    .type(JsonFieldType.STRING)
+                    .description("스케줄 종료 날짜")
+    );
+
+    private static final Snippet SCHEDULE_CANDIDATE_DELETION_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID"),
+            parameterWithName("scheduleId")
+                    .description("스케줄 ID"),
+            parameterWithName("candidateId")
+                    .description("스케줄 후보 ID")
     );
 
     @Autowired
@@ -215,5 +241,76 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
                         )
                 )
         );
+    }
+
+    @Test
+    void create() {
+        // given
+        ScheduleCandidateCreationRequest scheduleCandidateCreationRequest = ScheduleCandidateCreationRequest.builder()
+                                                                                                            .startDateTime(LocalDateTime.of(2021, 11, 25, 0, 0))
+                                                                                                            .endDateTime(LocalDateTime.of(2021, 11, 26, 0, 0))
+                                                                                                            .build();
+
+        String path = "/groups/{groupId}/schedules/{scheduleId}/candidates";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", 1L)
+                                                       .pathParam("scheduleId", 1L)
+                                                       .body(scheduleCandidateCreationRequest);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      SCHEDULE_CANDIDATE_CREATION_PATH_PARAMETERS,
+                                                      SCHEDULE_CANDIDATE_CREATION_REQUEST_FIELDS,
+                                                      DEFAULT_POST_RESPONSE_FIELDS
+                                              ))
+                                              .log().all()
+                                              .post(path);
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.CREATED.value());
+
+        // TODO: id로 조회하여 검증
+    }
+
+    @Test
+    void delete() {
+        // given
+        String path = "/groups/{groupId}/schedules/{scheduleId}/candidates/{candidateId}";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", 1L)
+                                                       .pathParam("scheduleId", 1L)
+                                                       .pathParam("candidateId", 1L);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      SCHEDULE_CANDIDATE_DELETION_PATH_PARAMETERS
+                                              ))
+                                              .log().all()
+                                              .delete(path);
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.NO_CONTENT.value());
+
+        // TODO: id로 조회하여 검증
     }
 }

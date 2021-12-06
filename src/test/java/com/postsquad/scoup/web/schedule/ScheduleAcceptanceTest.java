@@ -3,7 +3,7 @@ package com.postsquad.scoup.web.schedule;
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
 import com.postsquad.scoup.web.common.DefaultPostResponse;
-import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateRegistrationRequest;
+import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateCreationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleConfirmationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCreationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleModificationRequest;
@@ -255,10 +255,10 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                                                                                       .isPollAnonymous(true)
                                                                                       .isConfirmedImmediately(true)
                                                                                       .scheduleCandidates(List.of(
-                                                                                              ScheduleCandidateRegistrationRequest.builder()
-                                                                                                                                  .startDateTime(LocalDateTime.of(21, 11, 25, 0, 0))
-                                                                                                                                  .endDateTime(LocalDateTime.of(21, 11, 26, 0, 0))
-                                                                                                                                  .build()
+                                                                                              ScheduleCandidateCreationRequest.builder()
+                                                                                                                              .startDateTime(LocalDateTime.of(21, 11, 25, 0, 0))
+                                                                                                                              .endDateTime(LocalDateTime.of(21, 11, 26, 0, 0))
+                                                                                                                              .build()
                                                                                       ))
                                                                                       .build();
 

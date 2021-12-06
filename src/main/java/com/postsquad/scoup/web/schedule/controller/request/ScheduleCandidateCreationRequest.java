@@ -9,8 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @Builder
-public class ScheduleCandidateRegistrationRequest {
-
+public class ScheduleCandidateCreationRequest {
     @NotNull
     private LocalDateTime startDateTime;
 

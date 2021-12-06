@@ -1,0 +1,7 @@
+== 스케줄 후보 등록
+
+=== `GET /groups/{groupId}/schedules/{scheduleId}/candidates`
+
+=== `201 Created`
+
+operation::schedule_candidate_acceptance_test/create[snippets='path-parameters,request-fields,response-fields,http-request,http-response']

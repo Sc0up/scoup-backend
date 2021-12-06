@@ -1,0 +1,7 @@
+== 스케줄 투표 취소
+
+=== `DELETE /groups/{groupId}/schedules/{scheduleId}/poll`
+
+=== `200 OK`
+
+operation::schedule_poll_acceptance_test/cancel_poll_schedule[snippets='path-parameters,request-fields,response-fields,http-request,http-response']
