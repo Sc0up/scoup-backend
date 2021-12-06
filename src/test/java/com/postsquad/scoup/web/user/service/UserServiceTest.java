@@ -1,5 +1,6 @@
 package com.postsquad.scoup.web.user.service;
 
+import com.postsquad.scoup.web.user.controller.request.EmailValidationRequest;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
 import com.postsquad.scoup.web.user.controller.response.EmailValidationResponse;
 import com.postsquad.scoup.web.user.domain.User;
@@ -62,9 +63,9 @@ public class UserServiceTest {
 
     @ParameterizedTest
     @MethodSource("validateEmailProvider")
-    public void validateEmail(String email, EmailValidationResponse expected) {
+    public void validateEmail(EmailValidationRequest emailValidationRequest, EmailValidationResponse expected) {
         // when
-        EmailValidationResponse response = userService.validateEmail(email);
+        EmailValidationResponse response = userService.validateEmail(emailValidationRequest);
 
         // then
         then(response).usingRecursiveComparison()
@@ -73,8 +74,18 @@ public class UserServiceTest {
 
     static Stream<Arguments> validateEmailProvider() {
         return Stream.of(
-                Arguments.of("email@email.com", EmailValidationResponse.valueOf(true)),
-                Arguments.of("notExistingEmail@email.com", EmailValidationResponse.valueOf(false))
+                Arguments.of(
+                        EmailValidationRequest.builder()
+                                              .email("email@email.com")
+                                              .build(),
+                        EmailValidationResponse.valueOf(true)
+                ),
+                Arguments.of(
+                        EmailValidationRequest.builder()
+                                              .email("notExistingEmail@email.com")
+                                              .build(),
+                        EmailValidationResponse.valueOf(false)
+                )
         );
     }
 }

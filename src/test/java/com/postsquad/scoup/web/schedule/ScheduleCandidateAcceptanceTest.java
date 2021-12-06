@@ -47,9 +47,9 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
     );
 
     private static final Snippet SCHEDULE_CANDIDATE_READ_ALL_REQUEST_FIELDS = requestParameters(
-            parameterWithName("start_date")
+            parameterWithNameAndConstraints("start_date", ScheduleCandidateReadRequest.class)
                     .description("스케줄 후보 조회 범위 시작점"),
-            parameterWithName("end_date")
+            parameterWithNameAndConstraints("end_date", ScheduleCandidateReadRequest.class)
                     .description("스케줄 후보 조회 범위 종료시점")
     );
 

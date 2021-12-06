@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class ScheduleCandidateCreationRequest {
-
     @NotNull
     private LocalDateTime startDateTime;
 

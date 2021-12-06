@@ -1,10 +1,11 @@
 package com.postsquad.scoup.web.group.controller.response;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Builder
-@Getter
 public class GroupValidationResponse {
 
     @Builder.Default

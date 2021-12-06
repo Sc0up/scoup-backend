@@ -1,0 +1,7 @@
+== 그룹 멤버 역할 수정
+
+=== `DELETE /api/groups/{groupId}/members/{memberId}`
+
+=== `204 No Content`
+
+operation::group_member_acceptance_test/modify_role[snippets='path-parameters,request-fields,http-request,http-response']

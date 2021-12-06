@@ -4,6 +4,7 @@ import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
 import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.group.domain.Group;
+import com.postsquad.scoup.web.schedule.controller.response.ConfirmedSchedulePeriodReadAllResponse;
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleReadAllResponses;
 import com.postsquad.scoup.web.schedule.domain.ConfirmedSchedule;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
@@ -11,10 +12,12 @@ import com.postsquad.scoup.web.schedule.provider.ConfirmedScheduleReadAllProvide
 import com.postsquad.scoup.web.user.domain.OAuthUser;
 import com.postsquad.scoup.web.user.domain.User;
 import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +33,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
@@ -69,17 +71,36 @@ class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
                     .description("확정된 스케줄의 참가자 이름")
     );
 
+    private static final Snippet CONFIRMED_SCHEDULE_PERIOD_PATH_PARAMETERS = pathParameters(
+            parameterWithName("groupId")
+                    .description("그룹 ID")
+    );
+
+    private static final Snippet CONFIRMED_SCHEDULE_PERIOD_REQUEST_PARAMS = requestParameters(
+            parameterWithName("start_date_time").description("조회 시작 시간"),
+            parameterWithName("end_date_time").description("조회 종료 시간")
+    );
+
+    private static final Snippet CONFIRMED_SCHEDULE_PERIOD_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("[].start_date_time")
+                    .type(JsonFieldType.STRING)
+                    .description("일정 시작 시간"),
+            fieldWithPath("[].end_date_time")
+                    .type(JsonFieldType.STRING)
+                    .description("일정 종료 시간")
+    );
+
     @Autowired
     TestEntityManager testEntityManager;
 
     protected User testUser2 = User.builder()
-                                  .nickname("nickname2")
-                                  .email("email2@email.com")
-                                  .password("password2")
-                                  .avatarUrl("url2")
-                                  .username("username2")
-                                  .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "")))
-                                  .build();
+                                   .nickname("nickname2")
+                                   .email("email2@email.com")
+                                   .password("password2")
+                                   .avatarUrl("url2")
+                                   .username("username2")
+                                   .oAuthUsers(List.of(OAuthUser.of(OAuthType.NONE, "")))
+                                   .build();
 
     @ParameterizedTest
     @ArgumentsSource(ConfirmedScheduleReadAllProvider.class)
@@ -142,5 +163,48 @@ class ConfirmedScheduleAcceptanceTest extends AcceptanceTestBase {
                 .as("확정 일정 조회 : %s", description)
                 .usingRecursiveComparison()
                 .isEqualTo(expectedConfirmedScheduleReadAllResponses);
+    }
+
+    @Test
+    void readConfirmedSchedulePeriods() {
+        // given
+        testEntityManager.persist(testUser);
+        List<ConfirmedSchedulePeriodReadAllResponse> expectedConfirmedSchedulePeriodReadAllRespons = List.of(
+                ConfirmedSchedulePeriodReadAllResponse.builder()
+                                                      .startDateTime(LocalDateTime.of(2021, 11, 25, 0, 0))
+                                                      .endDateTime(LocalDateTime.of(2021, 11, 26, 0, 0))
+                                                      .build()
+        );
+        String path = "/groups/{groupId}/existing-schedules";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .pathParam("groupId", 1L)
+                                                       .contentType(ContentType.JSON)
+                                                       .header(AUTHORIZATION, TEST_TOKEN)
+                                                       .queryParam("start_date_time", LocalDateTime.of(2021, 11, 25, 0, 0).toString())
+                                                       .queryParam("end_date_time", LocalDateTime.of(2021, 11, 26, 0, 0).toString());
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      CONFIRMED_SCHEDULE_PERIOD_PATH_PARAMETERS,
+                                                      CONFIRMED_SCHEDULE_PERIOD_REQUEST_PARAMS,
+                                                      CONFIRMED_SCHEDULE_PERIOD_RESPONSE_FIELDS
+                                              ))
+                                              .log().all()
+                                              .get(path);
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
+
+        then(actualResponse.as(new TypeRef<List<ConfirmedSchedulePeriodReadAllResponse>>() {
+        })).usingRecursiveComparison()
+           .isEqualTo(expectedConfirmedSchedulePeriodReadAllRespons);
     }
 }

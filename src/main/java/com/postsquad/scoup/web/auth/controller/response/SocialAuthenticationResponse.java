@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 public class SocialAuthenticationResponse {
 
-    private OAuthType oAuthType;
+    private OAuthType oauthType;
 
     private String socialServiceId;
 
