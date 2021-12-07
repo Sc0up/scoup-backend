@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.test.restdocs;
 import com.postsquad.scoup.web.common.FieldDescription;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.restdocs.snippet.Snippet;
 
 import javax.validation.constraints.NotEmpty;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.snippet.Attributes.key;
 
 class SnippetGeneratorTest {
@@ -77,5 +79,27 @@ class SnippetGeneratorTest {
         assertThat(actualRequestFieldsSnippet)
                 .usingRecursiveComparison()
                 .isEqualTo(expectedRequestFieldsSnippet);
+    }
+
+    @Test
+    void requestParameters() {
+        SnippetGenerator<TestDto> testDtoSnippetGenerator = new SnippetGenerator<>(TestDto.class);
+        Snippet expectedRequestParametersSnippet = RequestDocumentation.requestParameters(
+                parameterWithName("id")
+                        .description("description for id")
+                        .attributes(key("constraints").value(List.of())),
+                parameterWithName("name")
+                        .description("description for name")
+                        .attributes(key("constraints").value(List.of(
+                                "Must not be empty",
+                                "Size must be between 1 and 5 inclusive"
+                        )))
+                        .optional()
+        );
+
+        Snippet actualRequestParametersSnippet = testDtoSnippetGenerator.requestParameters();
+        assertThat(actualRequestParametersSnippet)
+                .usingRecursiveComparison()
+                .isEqualTo(expectedRequestParametersSnippet);
     }
 }

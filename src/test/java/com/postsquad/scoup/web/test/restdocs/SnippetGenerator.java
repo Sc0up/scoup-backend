@@ -5,6 +5,8 @@ import com.postsquad.scoup.web.common.FieldDescription;
 import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.restdocs.request.ParameterDescriptor;
+import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.restdocs.snippet.Snippet;
 
@@ -15,6 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.snippet.Attributes.key;
 
 public class SnippetGenerator<T> {
@@ -37,8 +40,16 @@ public class SnippetGenerator<T> {
         List<Field> fields = fieldsFrom();
 
         return fields.stream()
-                     .map(this::fieldToDescriptor)
+                     .map(this::fieldDescriptorFrom)
                      .collect(Collectors.toList());
+    }
+
+    public Snippet requestParameters() {
+        return RequestDocumentation.requestParameters(
+                fieldsFrom().stream()
+                            .map(this::parameterDescriptorFrom)
+                            .collect(Collectors.toList())
+        );
     }
 
     private List<Field> fieldsFrom() {
@@ -53,7 +64,7 @@ public class SnippetGenerator<T> {
         return fields;
     }
 
-    private FieldDescriptor fieldToDescriptor(Field field) {
+    private FieldDescriptor fieldDescriptorFrom(Field field) {
         String path = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName());
         FieldDescriptor fieldWithPath = fieldWithPath(path);
 
@@ -68,6 +79,21 @@ public class SnippetGenerator<T> {
         fieldWithPath.attributes(constraintAttributeFrom(field));
 
         return fieldWithPath;
+    }
+
+    private ParameterDescriptor parameterDescriptorFrom(Field field) {
+        String path = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName());
+        ParameterDescriptor parameterWithName = parameterWithName(path);
+
+        parameterWithName.description(descriptionFrom(field, path));
+
+        if (isOptional(field)) {
+            parameterWithName.optional();
+        }
+
+        parameterWithName.attributes(constraintAttributeFrom(field));
+
+        return parameterWithName;
     }
 
     private String typeFrom(Field field) {
