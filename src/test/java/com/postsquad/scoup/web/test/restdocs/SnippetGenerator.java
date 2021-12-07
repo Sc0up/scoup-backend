@@ -2,7 +2,6 @@ package com.postsquad.scoup.web.test.restdocs;
 
 import com.google.common.base.CaseFormat;
 import com.postsquad.scoup.web.common.FieldDescription;
-import com.postsquad.scoup.web.signin.controller.request.SignInRequest;
 import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.PayloadDocumentation;
