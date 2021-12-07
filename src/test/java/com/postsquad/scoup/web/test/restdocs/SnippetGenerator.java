@@ -12,6 +12,7 @@ import org.springframework.restdocs.snippet.Snippet;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -22,10 +23,28 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 
 public class SnippetGenerator<T> {
 
-    private Class<T> clazz;
+    private final Class<T> clazz;
+    private final List<Field> fields;
 
-    public SnippetGenerator(Class<T> clazz) {
+    public SnippetGenerator(Class<T> clazz, List<Field> fields) {
         this.clazz = clazz;
+        this.fields = fields;
+    }
+
+    public static <T> SnippetGenerator<T> from(Class<T> clazz) {
+        return new SnippetGenerator<>(clazz, fieldsFrom(clazz));
+    }
+
+    private static List<Field> fieldsFrom(Class<?> clazz) {
+        List<Field> fields = new ArrayList<>();
+
+        for (Class<?> superClass = clazz.getSuperclass(); superClass != Object.class; superClass = superClass.getSuperclass()) {
+            fields.addAll(List.of(superClass.getDeclaredFields()));
+        }
+
+        fields.addAll(List.of(clazz.getDeclaredFields()));
+
+        return Collections.unmodifiableList(fields);
     }
 
     public Snippet requestFields() {
@@ -37,31 +56,9 @@ public class SnippetGenerator<T> {
     }
 
     private List<FieldDescriptor> fieldDescriptors() {
-        List<Field> fields = fieldsFrom();
-
         return fields.stream()
                      .map(this::fieldDescriptorFrom)
                      .collect(Collectors.toList());
-    }
-
-    public Snippet requestParameters() {
-        return RequestDocumentation.requestParameters(
-                fieldsFrom().stream()
-                            .map(this::parameterDescriptorFrom)
-                            .collect(Collectors.toList())
-        );
-    }
-
-    private List<Field> fieldsFrom() {
-        List<Field> fields = new ArrayList<>();
-
-        for (Class<?> superClass = clazz.getSuperclass(); superClass != Object.class; superClass = superClass.getSuperclass()) {
-            fields.addAll(List.of(superClass.getDeclaredFields()));
-        }
-
-        fields.addAll(List.of(clazz.getDeclaredFields()));
-
-        return fields;
     }
 
     private FieldDescriptor fieldDescriptorFrom(Field field) {
@@ -79,6 +76,14 @@ public class SnippetGenerator<T> {
         fieldWithPath.attributes(constraintAttributeFrom(field));
 
         return fieldWithPath;
+    }
+
+    public Snippet requestParameters() {
+        return RequestDocumentation.requestParameters(
+                fields.stream()
+                      .map(this::parameterDescriptorFrom)
+                      .collect(Collectors.toList())
+        );
     }
 
     private ParameterDescriptor parameterDescriptorFrom(Field field) {

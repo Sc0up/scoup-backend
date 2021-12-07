@@ -33,7 +33,7 @@ class SnippetGeneratorTest {
 
     @Test
     void requestFields() {
-        SnippetGenerator<TestDto> testDtoSnippetGenerator = new SnippetGenerator<>(TestDto.class);
+        SnippetGenerator<TestDto> testDtoSnippetGenerator = SnippetGenerator.from(TestDto.class);
         Snippet expectedRequestFieldsSnippet = PayloadDocumentation.requestFields(
                 fieldWithPath("id")
                         .type("int")
@@ -58,7 +58,7 @@ class SnippetGeneratorTest {
 
     @Test
     void responseFields() {
-        SnippetGenerator<TestDto> testDtoSnippetGenerator = new SnippetGenerator<>(TestDto.class);
+        SnippetGenerator<TestDto> testDtoSnippetGenerator = SnippetGenerator.from(TestDto.class);
         Snippet expectedRequestFieldsSnippet = PayloadDocumentation.responseFields(
                 fieldWithPath("id")
                         .type("int")
@@ -83,7 +83,7 @@ class SnippetGeneratorTest {
 
     @Test
     void requestParameters() {
-        SnippetGenerator<TestDto> testDtoSnippetGenerator = new SnippetGenerator<>(TestDto.class);
+        SnippetGenerator<TestDto> testDtoSnippetGenerator = SnippetGenerator.from(TestDto.class);
         Snippet expectedRequestParametersSnippet = RequestDocumentation.requestParameters(
                 parameterWithName("id")
                         .description("description for id")
