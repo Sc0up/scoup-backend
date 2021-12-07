@@ -102,4 +102,26 @@ class SnippetGeneratorTest {
                 .usingRecursiveComparison()
                 .isEqualTo(expectedRequestParametersSnippet);
     }
+
+    @Test
+    void pathParameters() {
+        SnippetGenerator<TestDto> testDtoSnippetGenerator = SnippetGenerator.from(TestDto.class);
+        Snippet expectedRequestParametersSnippet = RequestDocumentation.pathParameters(
+                parameterWithName("id")
+                        .description("description for id")
+                        .attributes(key("constraints").value(List.of())),
+                parameterWithName("name")
+                        .description("description for name")
+                        .attributes(key("constraints").value(List.of(
+                                "Must not be empty",
+                                "Size must be between 1 and 5 inclusive"
+                        )))
+                        .optional()
+        );
+
+        Snippet actualRequestParametersSnippet = testDtoSnippetGenerator.pathParameters();
+        assertThat(actualRequestParametersSnippet)
+                .usingRecursiveComparison()
+                .isEqualTo(expectedRequestParametersSnippet);
+    }
 }

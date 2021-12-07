@@ -86,6 +86,14 @@ public class SnippetGenerator<T> {
         );
     }
 
+    public Snippet pathParameters() {
+        return RequestDocumentation.pathParameters(
+                fields.stream()
+                      .map(this::parameterDescriptorFrom)
+                      .collect(Collectors.toList())
+        );
+    }
+
     private ParameterDescriptor parameterDescriptorFrom(Field field) {
         String path = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName());
         ParameterDescriptor parameterWithName = parameterWithName(path);
