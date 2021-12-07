@@ -79,19 +79,17 @@ public class SnippetGenerator<T> {
     }
 
     public Snippet requestParameters() {
-        return RequestDocumentation.requestParameters(
-                fields.stream()
-                      .map(this::parameterDescriptorFrom)
-                      .collect(Collectors.toList())
-        );
+        return RequestDocumentation.requestParameters(parameterDescriptors());
     }
 
     public Snippet pathParameters() {
-        return RequestDocumentation.pathParameters(
-                fields.stream()
-                      .map(this::parameterDescriptorFrom)
-                      .collect(Collectors.toList())
-        );
+        return RequestDocumentation.pathParameters(parameterDescriptors());
+    }
+
+    private List<ParameterDescriptor> parameterDescriptors() {
+        return fields.stream()
+                     .map(this::parameterDescriptorFrom)
+                     .collect(Collectors.toList());
     }
 
     private ParameterDescriptor parameterDescriptorFrom(Field field) {
