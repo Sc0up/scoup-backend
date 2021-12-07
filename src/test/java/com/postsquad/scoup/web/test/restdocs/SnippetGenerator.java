@@ -29,6 +29,10 @@ public class SnippetGenerator<T> {
         return PayloadDocumentation.requestFields(fieldDescriptors());
     }
 
+    public Snippet responseFields() {
+        return PayloadDocumentation.responseFields(fieldDescriptors());
+    }
+
     private List<FieldDescriptor> fieldDescriptors() {
         List<Field> fields = fieldsFrom();
 

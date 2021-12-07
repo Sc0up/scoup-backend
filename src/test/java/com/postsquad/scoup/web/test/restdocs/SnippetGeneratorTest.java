@@ -53,4 +53,29 @@ class SnippetGeneratorTest {
                 .usingRecursiveComparison()
                 .isEqualTo(expectedRequestFieldsSnippet);
     }
+
+    @Test
+    void responseFields() {
+        SnippetGenerator<TestDto> testDtoSnippetGenerator = new SnippetGenerator<>(TestDto.class);
+        Snippet expectedRequestFieldsSnippet = PayloadDocumentation.responseFields(
+                fieldWithPath("id")
+                        .type("int")
+                        .description("description for id")
+                        .attributes(key("constraints").value(List.of())),
+                fieldWithPath("name")
+                        .type("String")
+                        .description("description for name")
+                        .attributes(key("constraints").value(List.of(
+                                "Must not be empty",
+                                "Size must be between 1 and 5 inclusive"
+                        )))
+                        .optional()
+        );
+
+        Snippet actualRequestFieldsSnippet = testDtoSnippetGenerator.responseFields();
+
+        assertThat(actualRequestFieldsSnippet)
+                .usingRecursiveComparison()
+                .isEqualTo(expectedRequestFieldsSnippet);
+    }
 }
