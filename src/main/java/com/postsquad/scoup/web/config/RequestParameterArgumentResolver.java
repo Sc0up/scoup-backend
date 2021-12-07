@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web.config;
 
 import com.postsquad.scoup.web.common.ObjectMapperUtils;
+import com.postsquad.scoup.web.common.QueryParam;
 import org.springframework.core.Conventions;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -14,6 +15,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 리퀘스트 파라미터(@RequestParam으로 바인딩)에 사용되는 객체를 ServletRequestDataBinder 대신 처리한다.
@@ -38,7 +40,7 @@ public class RequestParameterArgumentResolver extends RequestResponseBodyMethodP
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return !parameter.getParameterType().isPrimitive();
+        return Objects.nonNull(parameter.getParameterAnnotation(QueryParam.class));
     }
 
     @Override

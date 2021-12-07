@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web.user.controller;
 
 import com.postsquad.scoup.web.common.DefaultPostResponse;
+import com.postsquad.scoup.web.common.QueryParam;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.user.controller.request.EmailValidationRequest;
 import com.postsquad.scoup.web.user.controller.request.NicknameValidationRequest;
@@ -36,12 +37,12 @@ public class UserController {
     }
 
     @GetMapping("/validate/email")
-    public EmailValidationResponse validateEmail(@Valid EmailValidationRequest emailValidationRequest) {
+    public EmailValidationResponse validateEmail(@QueryParam @Valid EmailValidationRequest emailValidationRequest) {
         return userService.validateEmail(emailValidationRequest);
     }
 
     @GetMapping("/validate/nickname")
-    public NicknameValidationResponse validateNickname(@Valid NicknameValidationRequest nicknameValidationRequest) {
+    public NicknameValidationResponse validateNickname(@QueryParam @Valid NicknameValidationRequest nicknameValidationRequest) {
         return userService.validateNickname(nicknameValidationRequest);
     }
 }

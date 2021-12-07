@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web.schedule.controller;
 
 import com.postsquad.scoup.web.common.DefaultPostResponse;
+import com.postsquad.scoup.web.common.QueryParam;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateCreationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateReadRequest;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateReadAllResponses;
@@ -16,7 +17,7 @@ public class ScheduleCandidateController {
     private final ScheduleCandidateService scheduleCandidateService;
 
     @GetMapping("/groups/{groupId}/schedule-candidates")
-    public ScheduleCandidateReadAllResponses readAll(@PathVariable long groupId, ScheduleCandidateReadRequest givenScheduleCandidateReadRequest) {
+    public ScheduleCandidateReadAllResponses readAll(@PathVariable long groupId, @QueryParam ScheduleCandidateReadRequest givenScheduleCandidateReadRequest) {
         return scheduleCandidateService.readAll(groupId, givenScheduleCandidateReadRequest);
     }
 
