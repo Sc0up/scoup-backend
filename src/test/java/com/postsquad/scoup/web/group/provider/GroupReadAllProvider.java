@@ -17,7 +17,7 @@ public class GroupReadAllProvider implements ArgumentsProvider {
                 Arguments.of(
                         "성공",
                         GroupReadAllResponses.builder()
-                                             .groupReadAllResponse(
+                                             .groupReadAllResponses(
                                                      List.of(
                                                              GroupReadAllResponse.builder().name("name").description("").build(),
                                                              GroupReadAllResponse.builder().name("group2").description("group2").build())

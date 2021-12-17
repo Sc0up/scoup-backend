@@ -10,5 +10,5 @@ import java.util.List;
 @Data
 public class GroupReadAllResponses {
 
-    private List<GroupReadAllResponse> groupReadAllResponse;
+    private List<GroupReadAllResponse> groupReadAllResponses;
 }
