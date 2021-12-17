@@ -14,6 +14,6 @@ public class GroupReadAllResponse extends GroupBaseResponse {
     }
 
     public static GroupReadAllResponse from(Group group) {
-        return new GroupReadAllResponse(group.getId(), group.getName(), group.getDescription());
+        return GroupReadAllResponse.builder().id(group.getId()).name(group.getName()).description(group.getDescription()).build();
     }
 }
