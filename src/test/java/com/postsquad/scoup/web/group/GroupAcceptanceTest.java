@@ -55,16 +55,16 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
     );
 
     private static final Snippet GROUP_READ_ALL_RESPONSE_FIELDS = responseFields(
-            fieldWithPath("group_read_all_response[]")
+            fieldWithPath("group_read_all_responses[]")
                     .type(JsonFieldType.ARRAY)
                     .description("그룹 목록"),
-            fieldWithPath("group_read_all_response[].id")
+            fieldWithPath("group_read_all_responses[].id")
                     .type(JsonFieldType.NUMBER)
                     .description("그룹 id"),
-            fieldWithPath("group_read_all_response[].name")
+            fieldWithPath("group_read_all_responses[].name")
                     .type(JsonFieldType.STRING)
                     .description("그룹 이름"),
-            fieldWithPath("group_read_all_response[].description")
+            fieldWithPath("group_read_all_responses[].description")
                     .type(JsonFieldType.STRING)
                     .description("그룹 설명")
     );
@@ -469,7 +469,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
         then(actualResponse.as(GroupReadAllResponses.class))
                 .as("그룹 조회 : %s", description)
                 .usingRecursiveComparison()
-                .ignoringFields("groupReadAllResponse.id")
+                .ignoringFields("groupReadAllResponses.id")
                 .isEqualTo(expectedGroupReadAllResponses);
     }
 }
