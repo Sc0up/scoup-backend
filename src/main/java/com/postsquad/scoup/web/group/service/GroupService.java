@@ -54,7 +54,7 @@ public class GroupService {
         User loggedInUser = userService.findById(user.getId());
         return GroupReadAllResponses
                 .builder()
-                .groupReadAllResponse(
+                .groupReadAllResponses(
                         loggedInUser.getJoinedGroups().stream()
                                 .map(GroupMapper.INSTANCE::map)
                                 .collect(Collectors.toList()))
