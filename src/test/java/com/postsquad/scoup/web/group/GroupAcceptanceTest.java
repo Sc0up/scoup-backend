@@ -472,4 +472,38 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                 .ignoringFields("groupReadAllResponses.id")
                 .isEqualTo(expectedGroupReadAllResponses);
     }
+
+    @ParameterizedTest
+    @ArgumentsSource(GroupReadOneProvider.class)
+    @DisplayName("그룹 id로 그룹을 조회할 수 있다.")
+    void readOne(String description, GroupReadOneResponse expectedGroupReadOneResponse) {
+        // given
+        String path = "/groups/1";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Accept-Language", "en-US")
+                                                       .header("Authorization", TEST_TOKEN);
+
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_READ_ONE_RESPONSE_FIELDS
+                                              ))
+                                              .log().all()
+                                              .get(path);
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
+        then(actualResponse.as(GroupReadOneResponse.class))
+                .as("그룹 상세 조회: %s", description)
+                .usingRecursiveComparison()
+                .ignoringFields("groupReadOneResponse.id")
+                .isEqualTo(expectedGroupReadOneResponse);
+    }
 }
