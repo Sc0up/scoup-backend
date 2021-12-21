@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web.user.service;
 
 import com.postsquad.scoup.web.common.DefaultPostResponse;
+import com.postsquad.scoup.web.signin.exception.UserNotFoundException;
 import com.postsquad.scoup.web.user.controller.request.EmailValidationRequest;
 import com.postsquad.scoup.web.user.controller.request.NicknameValidationRequest;
 import com.postsquad.scoup.web.user.controller.request.SignUpRequest;
@@ -50,5 +51,9 @@ public class UserService {
             return NicknameValidationResponse.valueOf(true);
         }
         return NicknameValidationResponse.valueOf(false);
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 }

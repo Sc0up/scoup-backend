@@ -8,6 +8,7 @@ import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
 import com.postsquad.scoup.web.group.controller.response.GroupReadOneResponse;
 import com.postsquad.scoup.web.group.controller.response.GroupValidationResponse;
+import com.postsquad.scoup.web.group.controller.response.GroupReadAllResponses;
 import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.group.provider.*;
 import io.restassured.RestAssured;
@@ -51,6 +52,21 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
             fieldWithPath("image")
                     .type(JsonFieldType.STRING)
                     .description("이미지")
+    );
+
+    private static final Snippet GROUP_READ_ALL_RESPONSE_FIELDS = responseFields(
+            fieldWithPath("group_read_all_responses[]")
+                    .type(JsonFieldType.ARRAY)
+                    .description("그룹 목록"),
+            fieldWithPath("group_read_all_responses[].id")
+                    .type(JsonFieldType.NUMBER)
+                    .description("그룹 id"),
+            fieldWithPath("group_read_all_responses[].name")
+                    .type(JsonFieldType.STRING)
+                    .description("그룹 이름"),
+            fieldWithPath("group_read_all_responses[].description")
+                    .type(JsonFieldType.STRING)
+                    .description("그룹 설명")
     );
 
     private static final Snippet GROUP_CREATION_REQUEST_FIELDS = requestFields(
@@ -189,11 +205,12 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                                                      .as("그룹 생성: %s", description)
                                                      .usingRecursiveComparison()
                                                      .ignoringFields(ignoringFieldsForResponseWithId)
-                                                     .ignoringFields("owner")
+                                                     .ignoringFields("owner", "members")
                                                      .isEqualTo(expectedGroup);
                                              then(actualGroup.getOwner())
                                                      .usingRecursiveComparison()
                                                      .ignoringFields(ignoringFieldsForResponseWithId)
+                                                     .ignoringFields("joinedGroups")
                                                      .isEqualTo(expectedGroup.getOwner());
                                          }
         );
@@ -272,6 +289,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
     void modifyGroup(String description, Long givenGroupId, GroupModificationRequest givenGroupModificationRequest, Group expectedGroup) {
         // given
         Group group = Group.builder().name("name").description("").owner(testUser).schedules(new ArrayList<>()).build();
+        group.addMember(testUser);
         testEntityManager.persist(group);
         String path = "/groups/{groupId}";
         RequestSpecification givenRequest = RestAssured.given(this.spec)
@@ -303,7 +321,7 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                                                  .as("그룹 수정: %s", description)
                                                  .usingRecursiveComparison()
                                                  .ignoringFields(ignoringFieldsForResponseWithId)
-                                                 .ignoringFields("owner")
+                                                 .ignoringFields("owner", "members")
                                                  .isEqualTo(expectedGroup)
         );
     }
@@ -412,5 +430,46 @@ public class GroupAcceptanceTest extends AcceptanceTestBase {
                       .statusCode(HttpStatus.NO_CONTENT.value());
 
         // TODO: id로 조회하여 검증
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(GroupReadAllProvider.class)
+    @DisplayName("사용자가 가입한 모든 그룹을 조회할 수 있다.")
+    void readGroup(String description, GroupReadAllResponses expectedGroupReadAllResponses) {
+        // given
+        Group group = Group.builder().name("name").description("").owner(testUser).schedules(new ArrayList<>()).build();
+        Group group2 = Group.builder().name("group2").description("group2").owner(testUser).schedules(new ArrayList<>()).build();
+        group.addMember(testUser);
+        group2.addMember(testUser);
+        testEntityManager.persist(group);
+        testEntityManager.persist(group2);
+
+        String path = "/groups";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Accept-Language", "en-US")
+                                                       .header("Authorization", TEST_TOKEN);
+        // when
+        Response actualResponse = givenRequest.when()
+                                              .accept(ContentType.JSON)
+                                              .filter(document(
+                                                      DEFAULT_RESTDOCS_PATH,
+                                                      GROUP_READ_ALL_RESPONSE_FIELDS
+                                              ))
+                                              .log().all()
+                                              .get(path);
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.OK.value());
+        then(actualResponse.as(GroupReadAllResponses.class))
+                .as("그룹 조회 : %s", description)
+                .usingRecursiveComparison()
+                .ignoringFields("groupReadAllResponses.id")
+                .isEqualTo(expectedGroupReadAllResponses);
     }
 }

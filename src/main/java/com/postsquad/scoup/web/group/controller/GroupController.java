@@ -5,6 +5,7 @@ import com.postsquad.scoup.web.common.QueryParam;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
+import com.postsquad.scoup.web.group.controller.response.GroupReadAllResponses;
 import com.postsquad.scoup.web.group.controller.request.GroupValidationRequest;
 import com.postsquad.scoup.web.group.controller.response.GroupReadOneResponse;
 import com.postsquad.scoup.web.group.controller.response.GroupValidationResponse;
@@ -71,5 +72,10 @@ public class GroupController {
     @DeleteMapping("/{groupId}/leave")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void leaveGroup(@PathVariable long groupId) {
+    }
+
+    @GetMapping
+    public GroupReadAllResponses readAll(@LoggedInUser User user) {
+        return groupService.readAllByUser(user);
     }
 }

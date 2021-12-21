@@ -2,6 +2,7 @@ package com.postsquad.scoup.web.user.domain;
 
 import com.postsquad.scoup.web.auth.OAuthType;
 import com.postsquad.scoup.web.common.BaseEntity;
+import com.postsquad.scoup.web.group.domain.Group;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,6 +36,9 @@ public class User extends BaseEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "oauth_user", joinColumns = @JoinColumn(name = "user_id"))
     private List<OAuthUser> oAuthUsers = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "members")
+    private List<Group> joinedGroups = new ArrayList<>();
 
     protected User(String nickname, String username, String email, String avatarUrl, String password, List<OAuthUser> oAuthUsers) {
         this.nickname = nickname;
