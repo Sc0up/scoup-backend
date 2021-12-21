@@ -1,6 +1,7 @@
 package com.postsquad.scoup.web.group.controller;
 
 import com.postsquad.scoup.web.common.DefaultPostResponse;
+import com.postsquad.scoup.web.common.QueryParam;
 import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.controller.request.GroupCreationRequest;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
@@ -61,7 +62,7 @@ public class GroupController {
     }
 
     @GetMapping("/validate/group-name")
-    public GroupValidationResponse validateGroupName(@Valid GroupValidationRequest groupValidationRequest) {
+    public GroupValidationResponse validateGroupName(@QueryParam @Valid GroupValidationRequest groupValidationRequest) {
         return GroupValidationResponse.builder()
                                       .isExistingName(true)
                                       .build();
