@@ -8,6 +8,8 @@ import com.postsquad.scoup.web.schedule.controller.response.ConfirmedParticipant
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleReadOneResponse;
+import com.postsquad.scoup.web.schedule.service.ScheduleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +17,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class ScheduleController {
+
+    private final ScheduleService scheduleService;
 
     @GetMapping("/groups/{groupId}/schedules/{scheduleId}")
     public ScheduleReadOneResponse readOne(@PathVariable long groupId, @PathVariable long scheduleId) {
@@ -56,10 +61,8 @@ public class ScheduleController {
 
     @PostMapping("/groups/{groupId}/schedules")
     @ResponseStatus(HttpStatus.CREATED)
-    public DefaultPostResponse create(@PathVariable long groupId, ScheduleCreationRequest scheduleCreationRequest) {
-        return DefaultPostResponse.builder()
-                                  .id(1L)
-                                  .build();
+    public DefaultPostResponse create(@PathVariable long groupId, @RequestBody ScheduleCreationRequest scheduleCreationRequest) {
+        return scheduleService.create(groupId, scheduleCreationRequest);
     }
 
     @PatchMapping("/groups/{groupId}/schedules/{scheduleId}")

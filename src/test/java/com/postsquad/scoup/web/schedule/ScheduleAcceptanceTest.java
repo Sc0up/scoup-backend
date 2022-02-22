@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.schedule;
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
 import com.postsquad.scoup.web.common.DefaultPostResponse;
+import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateCreationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleConfirmationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCreationRequest;
@@ -11,6 +12,7 @@ import com.postsquad.scoup.web.schedule.controller.response.ConfirmedParticipant
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleReadOneResponse;
+import com.postsquad.scoup.web.schedule.domain.Schedule;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -24,6 +26,7 @@ import org.springframework.restdocs.snippet.Snippet;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -241,6 +244,12 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
     void create() {
         //given
         testEntityManager.persist(testUser);
+        Group givenGroup = Group.builder()
+                                .name("name")
+                                .build();
+
+        testEntityManager.persist(givenGroup);
+
         ScheduleCreationRequest givenScheduleCreationRequest = ScheduleCreationRequest.builder()
                                                                                       .title("title")
                                                                                       .description("description")
@@ -261,7 +270,7 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                                                        .basePath("/api")
                                                        .contentType(ContentType.JSON)
                                                        .header("Authorization", TEST_TOKEN)
-                                                       .pathParam("groupId", 1L)
+                                                       .pathParam("groupId", givenGroup.getId())
                                                        .body(givenScheduleCreationRequest);
         //when
         Response actualResponse = givenRequest.when()
@@ -276,15 +285,17 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                                               .post(path);
 
         //then
-        actualResponse.then()
-                      .log().all()
-                      .statusCode(HttpStatus.CREATED.value());
+        long actualId = actualResponse.then()
+                                      .log().all()
+                                      .statusCode(HttpStatus.CREATED.value())
+                                      .extract()
+                                      .jsonPath()
+                                      .getInt("id");
 
-        then(actualResponse.as(DefaultPostResponse.class))
-                // TODO: Add description
-                .usingRecursiveComparison()
-                // TODO: id로 db 조회하여 확인
-                .isEqualTo(DefaultPostResponse.builder().id(1L).build());
+        testEntityManager.findAndConsume(Schedule.class, actualId, schedule -> {
+            assertThat(schedule).hasFieldOrPropertyWithValue("title", "title")
+                                .hasFieldOrPropertyWithValue("description", "description");
+        });
     }
 
     @Test
