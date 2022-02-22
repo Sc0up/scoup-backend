@@ -11,4 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class DefaultPostResponse {
     private long id;
+
+    public static DefaultPostResponse from(BaseEntity entity) {
+        return new DefaultPostResponse(entity.getId());
+    }
 }
