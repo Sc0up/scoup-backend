@@ -114,15 +114,9 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
             fieldWithPathAndConstraints("poll_due_date_time", ScheduleCreationRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("일정 투표 마감 기한"),
-            fieldWithPathAndConstraints("can_poll_multiple", ScheduleCreationRequest.class)
-                    .type(JsonFieldType.BOOLEAN)
-                    .description("투표 복수 선택 가능 여부"),
             fieldWithPathAndConstraints("is_poll_anonymous", ScheduleCreationRequest.class)
                     .type(JsonFieldType.BOOLEAN)
                     .description("익명 투표 여부"),
-            fieldWithPathAndConstraints("is_confirmed_immediately", ScheduleCreationRequest.class)
-                    .type(JsonFieldType.BOOLEAN)
-                    .description("즉시 확정 여부"),
             fieldWithPathAndConstraints("schedule_candidates[]", ScheduleCreationRequest.class)
                     .type(JsonFieldType.ARRAY)
                     .description("일정 후보 목록"),
@@ -251,9 +245,7 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                                                                                       .title("title")
                                                                                       .description("description")
                                                                                       .pollDueDateTime(LocalDateTime.of(21, 11, 27, 0, 0))
-                                                                                      .canPollMultiple(true)
                                                                                       .isPollAnonymous(true)
-                                                                                      .isConfirmedImmediately(true)
                                                                                       .scheduleCandidates(List.of(
                                                                                               ScheduleCandidateCreationRequest.builder()
                                                                                                                               .startDateTime(LocalDateTime.of(21, 11, 25, 0, 0))
