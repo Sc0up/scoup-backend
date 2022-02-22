@@ -21,8 +21,6 @@ public interface ScheduleMapper {
 
     @Named("group")
     default Group group(long groupId) {
-        Group group = Group.builder().build();
-        group.setId(groupId);
-        return group;
+        return Group.from(groupId);
     }
 }
