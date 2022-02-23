@@ -5,7 +5,6 @@ import com.postsquad.scoup.web.schedule.controller.request.ScheduleCreationReque
 import com.postsquad.scoup.web.schedule.domain.Schedule;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
@@ -14,9 +13,7 @@ public interface ScheduleMapper {
 
     ScheduleMapper INSTANCE = Mappers.getMapper(ScheduleMapper.class);
 
-    @Mappings({ // mapping으로 변경
-            @Mapping(target = "group", source = "groupId", qualifiedByName = "group")
-    })
+    @Mapping(target = "group", source = "groupId", qualifiedByName = "group")
     Schedule map(Long groupId, ScheduleCreationRequest scheduleCreationRequest);
 
     @Named("group")
