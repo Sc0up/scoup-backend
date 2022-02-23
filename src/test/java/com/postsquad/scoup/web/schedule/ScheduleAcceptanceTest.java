@@ -3,6 +3,7 @@ package com.postsquad.scoup.web.schedule;
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
 import com.postsquad.scoup.web.common.DefaultPostResponse;
+import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateCreationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleConfirmationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCreationRequest;
@@ -11,6 +12,7 @@ import com.postsquad.scoup.web.schedule.controller.response.ConfirmedParticipant
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleReadOneResponse;
+import com.postsquad.scoup.web.schedule.domain.Schedule;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -24,6 +26,7 @@ import org.springframework.restdocs.snippet.Snippet;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -114,15 +117,9 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
             fieldWithPathAndConstraints("poll_due_date_time", ScheduleCreationRequest.class)
                     .type(JsonFieldType.STRING)
                     .description("일정 투표 마감 기한"),
-            fieldWithPathAndConstraints("can_poll_multiple", ScheduleCreationRequest.class)
-                    .type(JsonFieldType.BOOLEAN)
-                    .description("투표 복수 선택 가능 여부"),
             fieldWithPathAndConstraints("is_poll_anonymous", ScheduleCreationRequest.class)
                     .type(JsonFieldType.BOOLEAN)
                     .description("익명 투표 여부"),
-            fieldWithPathAndConstraints("is_confirmed_immediately", ScheduleCreationRequest.class)
-                    .type(JsonFieldType.BOOLEAN)
-                    .description("즉시 확정 여부"),
             fieldWithPathAndConstraints("schedule_candidates[]", ScheduleCreationRequest.class)
                     .type(JsonFieldType.ARRAY)
                     .description("일정 후보 목록"),
@@ -247,13 +244,17 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
     void create() {
         //given
         testEntityManager.persist(testUser);
+        Group givenGroup = Group.builder()
+                                .name("name")
+                                .build();
+
+        testEntityManager.persist(givenGroup);
+
         ScheduleCreationRequest givenScheduleCreationRequest = ScheduleCreationRequest.builder()
                                                                                       .title("title")
                                                                                       .description("description")
                                                                                       .pollDueDateTime(LocalDateTime.of(21, 11, 27, 0, 0))
-                                                                                      .canPollMultiple(true)
                                                                                       .isPollAnonymous(true)
-                                                                                      .isConfirmedImmediately(true)
                                                                                       .scheduleCandidates(List.of(
                                                                                               ScheduleCandidateCreationRequest.builder()
                                                                                                                               .startDateTime(LocalDateTime.of(21, 11, 25, 0, 0))
@@ -269,7 +270,7 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                                                        .basePath("/api")
                                                        .contentType(ContentType.JSON)
                                                        .header("Authorization", TEST_TOKEN)
-                                                       .pathParam("groupId", 1L)
+                                                       .pathParam("groupId", givenGroup.getId())
                                                        .body(givenScheduleCreationRequest);
         //when
         Response actualResponse = givenRequest.when()
@@ -284,15 +285,17 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                                               .post(path);
 
         //then
-        actualResponse.then()
-                      .log().all()
-                      .statusCode(HttpStatus.CREATED.value());
+        long actualId = actualResponse.then()
+                                      .log().all()
+                                      .statusCode(HttpStatus.CREATED.value())
+                                      .extract()
+                                      .jsonPath()
+                                      .getInt("id");
 
-        then(actualResponse.as(DefaultPostResponse.class))
-                // TODO: Add description
-                .usingRecursiveComparison()
-                // TODO: id로 db 조회하여 확인
-                .isEqualTo(DefaultPostResponse.builder().id(1L).build());
+        testEntityManager.findAndConsume(Schedule.class, actualId, schedule -> {
+            assertThat(schedule).hasFieldOrPropertyWithValue("title", "title")
+                                .hasFieldOrPropertyWithValue("description", "description");
+        });
     }
 
     @Test

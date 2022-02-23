@@ -21,13 +21,7 @@ public class ScheduleCreationRequest {
     private LocalDateTime pollDueDateTime;
 
     @Builder.Default
-    private Boolean canPollMultiple = false;
-
-    @Builder.Default
     private Boolean isPollAnonymous = false;
-
-    @Builder.Default
-    private Boolean isConfirmedImmediately = false;
 
     private List<ScheduleCandidateCreationRequest> scheduleCandidates;
 }

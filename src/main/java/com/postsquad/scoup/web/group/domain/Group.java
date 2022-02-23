@@ -2,21 +2,13 @@ package com.postsquad.scoup.web.group.domain;
 
 import com.postsquad.scoup.web.common.BaseEntity;
 import com.postsquad.scoup.web.group.controller.request.GroupModificationRequest;
-import com.postsquad.scoup.web.schedule.domain.ConfirmedSchedule;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
-import com.postsquad.scoup.web.schedule.domain.ScheduleCandidate;
 import com.postsquad.scoup.web.user.domain.User;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -43,6 +35,13 @@ public class Group extends BaseEntity {
         this.name = name;
         this.description = description;
         this.owner = owner;
+    }
+
+    public static Group from(long id) {
+        Group group = new Group();
+        group.id = id;
+
+        return group;
     }
 
     @Builder
