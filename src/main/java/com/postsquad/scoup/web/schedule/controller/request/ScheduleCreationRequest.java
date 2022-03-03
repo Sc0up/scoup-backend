@@ -5,8 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +17,7 @@ import java.util.List;
 @Builder
 public class ScheduleCreationRequest {
 
+    @NotEmpty
     private String title;
 
     private String description;
@@ -23,5 +27,6 @@ public class ScheduleCreationRequest {
     @Builder.Default
     private Boolean isPollAnonymous = false;
 
+    @Size(min = 1, max = 20)
     private List<ScheduleCandidateCreationRequest> scheduleCandidates;
 }
