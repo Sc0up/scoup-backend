@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class ScheduleController {
 
     @PostMapping("/groups/{groupId}/schedules")
     @ResponseStatus(HttpStatus.CREATED)
-    public DefaultPostResponse create(@PathVariable long groupId, @RequestBody ScheduleCreationRequest scheduleCreationRequest) {
+    public DefaultPostResponse create(@PathVariable long groupId, @Valid @RequestBody ScheduleCreationRequest scheduleCreationRequest) {
         return scheduleService.create(groupId, scheduleCreationRequest);
     }
 

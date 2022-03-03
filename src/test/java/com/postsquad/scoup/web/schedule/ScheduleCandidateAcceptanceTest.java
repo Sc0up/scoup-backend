@@ -102,7 +102,10 @@ class ScheduleCandidateAcceptanceTest extends AcceptanceTestBase {
                     .description("스케줄 시작 날짜"),
             fieldWithPathAndConstraints("end_date_time", ScheduleCandidateCreationRequest.class)
                     .type(JsonFieldType.STRING)
-                    .description("스케줄 종료 날짜")
+                    .description("스케줄 종료 날짜"),
+            fieldWithPathAndConstraints("dates_valid", ScheduleCandidateCreationRequest.class)
+                    .type(JsonFieldType.BOOLEAN)
+                    .description("스케줄 후보 날짜 유효 여부")
     );
 
     private static final Snippet SCHEDULE_CANDIDATE_DELETION_PATH_PARAMETERS = pathParameters(
