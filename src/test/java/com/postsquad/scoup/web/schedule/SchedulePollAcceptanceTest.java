@@ -2,8 +2,11 @@ package com.postsquad.scoup.web.schedule;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
+import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.schedule.controller.request.SchedulePollRequest;
 import com.postsquad.scoup.web.schedule.controller.response.SchedulePollResponse;
+import com.postsquad.scoup.web.schedule.domain.Schedule;
+import com.postsquad.scoup.web.schedule.domain.ScheduleCandidate;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -13,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.snippet.Snippet;
+
+import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -48,8 +53,22 @@ public class SchedulePollAcceptanceTest extends AcceptanceTestBase {
     void pollSchedule() {
         // given
         testEntityManager.persist(testUser);
+        Group group = Group.builder()
+                           .name("group")
+                           .build();
+        ScheduleCandidate givenScheduleCandidate = ScheduleCandidate.builder()
+                                                                    .build();
+        Schedule givenSchedule = Schedule.builder()
+                                         .title("title")
+                                         .group(group)
+                                         .scheduleCandidate(givenScheduleCandidate)
+                                         .build();
+        givenScheduleCandidate.setSchedule(givenSchedule);
+        group.addSchedule(givenSchedule);
+        testEntityManager.persist(group);
+
         SchedulePollRequest givenSchedulePollRequest = SchedulePollRequest.builder()
-                                                                          .scheduleCandidateId(1L)
+                                                                          .scheduleCandidateId(givenScheduleCandidate.getId())
                                                                           .build();
         SchedulePollResponse expectedSchedulePollResponse = SchedulePollResponse.builder()
                                                                                 .pollCount(1)
