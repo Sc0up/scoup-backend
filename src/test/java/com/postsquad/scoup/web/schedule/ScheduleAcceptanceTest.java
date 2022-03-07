@@ -131,10 +131,7 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
                     .description("일정 후보 시작 시간"),
             fieldWithPathAndConstraints("schedule_candidates[].end_date_time", ScheduleCreationRequest.class)
                     .type(JsonFieldType.STRING)
-                    .description("일정 후보 종료 시간"),
-            fieldWithPathAndConstraints("schedule_candidates[].dates_valid", ScheduleCreationRequest.class)
-                    .type(JsonFieldType.BOOLEAN)
-                    .description("일정 후보 시간 유효 여부")
+                    .description("일정 후보 종료 시간")
     );
 
     private static final Snippet SCHEDULE_UPDATE_PATH_PARAMETERS = pathParameters(
