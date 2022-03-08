@@ -1,7 +1,9 @@
 package com.postsquad.scoup.web.schedule.controller.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -15,5 +17,10 @@ public class ScheduleCandidateCreationRequest {
 
     @NotNull
     private LocalDateTime endDateTime;
-    //TODO: startDateTime이 endDateTime 이전이어야 함.
+
+    @JsonIgnore
+    @AssertTrue
+    public boolean isDatesValid() {
+        return startDateTime.isBefore(endDateTime);
+    }
 }

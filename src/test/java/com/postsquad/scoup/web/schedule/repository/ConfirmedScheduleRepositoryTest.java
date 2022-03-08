@@ -37,7 +37,7 @@ class ConfirmedScheduleRepositoryTest {
         // given
         givenGroups.forEach(group -> entityManager.persist(group));
 
-        Group group = entityManager.find(Group.class, 2L);
+        Group group = entityManager.find(Group.class, givenGroups.get(1).getId());
         Schedule schedule = givenConfirmedSchedule.getSchedule();
         schedule.setGroup(group);
         schedule.confirmSchedule(givenConfirmedSchedule);

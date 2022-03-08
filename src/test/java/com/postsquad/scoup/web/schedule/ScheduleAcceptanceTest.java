@@ -2,7 +2,7 @@ package com.postsquad.scoup.web.schedule;
 
 import com.postsquad.scoup.web.AcceptanceTestBase;
 import com.postsquad.scoup.web.TestEntityManager;
-import com.postsquad.scoup.web.common.DefaultPostResponse;
+import com.postsquad.scoup.web.error.controller.response.ErrorResponse;
 import com.postsquad.scoup.web.group.domain.Group;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCandidateCreationRequest;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleConfirmationRequest;
@@ -13,11 +13,14 @@ import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleRes
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleReadOneResponse;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
+import com.postsquad.scoup.web.schedule.provider.ValidateScheduleCreationRequestProvider;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -296,6 +299,44 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
             assertThat(schedule).hasFieldOrPropertyWithValue("title", "title")
                                 .hasFieldOrPropertyWithValue("description", "description");
         });
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(ValidateScheduleCreationRequestProvider.class)
+    void validateScheduleCreateRequest(String description, ScheduleCreationRequest givenScheduleCreationRequest, ErrorResponse expectedResponse) {
+        // given
+        testEntityManager.persist(testUser);
+        Group givenGroup = Group.builder()
+                                .name("name")
+                                .build();
+
+        testEntityManager.persist(givenGroup);
+
+        String path = "/groups/{groupId}/schedules";
+        RequestSpecification givenRequest = RestAssured.given(this.spec)
+                                                       .baseUri(BASE_URL)
+                                                       .port(port)
+                                                       .basePath("/api")
+                                                       .contentType(ContentType.JSON)
+                                                       .header("Authorization", TEST_TOKEN)
+                                                       .pathParam("groupId", givenGroup.getId())
+                                                       .body(givenScheduleCreationRequest);
+
+        //when
+        Response actualResponse = givenRequest.when()
+                                              .accept(ContentType.JSON)
+                                              .log().all()
+                                              .post(path);
+
+        // then
+        actualResponse.then()
+                      .log().all()
+                      .statusCode(HttpStatus.BAD_REQUEST.value());
+        then(actualResponse.as(ErrorResponse.class))
+                .as(description)
+                .usingRecursiveComparison()
+                .ignoringFields(ignoringFieldsForErrorResponse)
+                .isEqualTo(expectedResponse);
     }
 
     @Test
