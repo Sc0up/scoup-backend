@@ -37,7 +37,7 @@ public class GroupService {
         }
 
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException(groupId));
-        if (group.verifyOwner(user)) {
+        if (!group.verifyOwner(user)) {
             throw new UnauthorizedUserException();
         }
         return groupRepository.save(group.update(groupModificationRequest)).getId();

@@ -1,12 +1,12 @@
 package com.postsquad.scoup.web.schedule.domain;
 
 import com.postsquad.scoup.web.common.BaseEntity;
+import com.postsquad.scoup.web.user.domain.User;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -22,6 +22,9 @@ public class ScheduleCandidate extends BaseEntity {
 
     private LocalDateTime endDateTime;
 
+    @OneToMany
+    private Set<User> polledUser;
+
     public ScheduleCandidate(Schedule schedule, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.schedule = schedule;
         this.startDateTime = startDateTime;
@@ -31,5 +34,13 @@ public class ScheduleCandidate extends BaseEntity {
     @Builder
     public static ScheduleCandidate of(Schedule schedule, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         return new ScheduleCandidate(schedule, startDateTime, endDateTime);
+    }
+
+    public void poll(User user) {
+        polledUser.add(user);
+    }
+
+    public int pollCount() {
+        return polledUser.size();
     }
 }
