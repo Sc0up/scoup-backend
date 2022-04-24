@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,7 +24,7 @@ public class ScheduleCandidate extends BaseEntity {
     private LocalDateTime endDateTime;
 
     @OneToMany
-    private Set<User> polledUser;
+    private Set<User> polledUser = new HashSet<>();
 
     public ScheduleCandidate(Schedule schedule, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.schedule = schedule;

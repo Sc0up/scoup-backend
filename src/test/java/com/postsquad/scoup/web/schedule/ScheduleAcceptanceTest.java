@@ -12,7 +12,9 @@ import com.postsquad.scoup.web.schedule.controller.response.ConfirmedParticipant
 import com.postsquad.scoup.web.schedule.controller.response.ConfirmedScheduleResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleCandidateResponseForReadOneSchedule;
 import com.postsquad.scoup.web.schedule.controller.response.ScheduleReadOneResponse;
+import com.postsquad.scoup.web.schedule.domain.ConfirmedSchedule;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
+import com.postsquad.scoup.web.schedule.domain.ScheduleCandidate;
 import com.postsquad.scoup.web.schedule.provider.ValidateScheduleCreationRequestProvider;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -176,51 +178,79 @@ public class ScheduleAcceptanceTest extends AcceptanceTestBase {
     @Test
     void readOne() {
         //given
-        testEntityManager.persist(testUser);
 
-        ScheduleReadOneResponse expectedScheduleReadOneResponse = ScheduleReadOneResponse.builder()
-                                                                                         .id(1L)
-                                                                                         .title("schedule title")
-                                                                                         .description("schedule description")
-                                                                                         .pollDueDateTime(LocalDateTime.of(2021, 11, 24, 0, 0))
-                                                                                         .confirmedSchedule(
-                                                                                                 ConfirmedScheduleResponseForReadOneSchedule.builder()
-                                                                                                                                            .id(1L)
-                                                                                                                                            .startDateTime(LocalDateTime.of(2021, 11, 22, 0, 0))
-                                                                                                                                            .endDateTime(LocalDateTime.of(2021, 11, 23, 0, 0))
-                                                                                                                                            .confirmedParticipants(List.of(
-                                                                                                                                                    ConfirmedParticipantResponse.builder()
-                                                                                                                                                                                .nickname("nickname")
-                                                                                                                                                                                .username("username")
-                                                                                                                                                                                .build()
-                                                                                                                                            ))
-                                                                                                                                            .build()
-                                                                                         )
-                                                                                         .scheduleCandidates(List.of(
-                                                                                                 ScheduleCandidateResponseForReadOneSchedule.builder()
-                                                                                                                                            .id(1L)
-                                                                                                                                            .startDateTime(LocalDateTime.of(2021, 11, 22, 0, 0))
-                                                                                                                                            .endDateTime(LocalDateTime.of(2021, 11, 23, 0, 0))
-                                                                                                                                            .pollCount(1)
-                                                                                                                                            .confirmedParticipants(List.of(
-                                                                                                                                                    ConfirmedParticipantResponse.builder()
-                                                                                                                                                                                .nickname("nickname")
-                                                                                                                                                                                .username("username")
-                                                                                                                                                                                .build()
-                                                                                                                                            ))
-                                                                                                                                            .build()
-                                                                                         ))
-                                                                                         .build();
+        ConfirmedSchedule confirmedSchedule = ConfirmedSchedule.builder()
+                                                               .startDateTime(LocalDateTime.of(2021, 11, 22, 0, 0))
+                                                               .endDateTime(LocalDateTime.of(2021, 11, 23, 0, 0))
+                                                               .confirmedParticipant(testUser)
+                                                               .build();
+        ScheduleCandidate scheduleCandidate = ScheduleCandidate.builder()
+                                                               .startDateTime(LocalDateTime.of(2021, 11, 22, 0, 0))
+                                                               .endDateTime(LocalDateTime.of(2021, 11, 23, 0, 0))
+                                                               .build();
+        scheduleCandidate.poll(testUser);
+
+        Schedule schedule = Schedule.builder()
+                                    .title("schedule title")
+                                    .description("schedule description")
+                                    .dueDateTime(LocalDateTime.of(2021, 11, 24, 0, 0))
+                                    .confirmedSchedule(confirmedSchedule)
+                                    .scheduleCandidate(scheduleCandidate)
+                                    .build();
+        scheduleCandidate.setSchedule(schedule);
+        testEntityManager.persist(testUser);
+        testEntityManager.persist(schedule);
+
+        ScheduleReadOneResponse expectedScheduleReadOneResponse =
+                ScheduleReadOneResponse
+                        .builder()
+                        .id(schedule.getId())
+                        .title("schedule title")
+                        .description("schedule description")
+                        .pollDueDateTime(LocalDateTime.of(2021, 11, 24, 0, 0))
+                        .confirmedSchedule(
+                                ConfirmedScheduleResponseForReadOneSchedule
+                                        .builder()
+                                        .id(confirmedSchedule.getId())
+                                        .startDateTime(LocalDateTime.of(2021, 11, 22, 0, 0))
+                                        .endDateTime(LocalDateTime.of(2021, 11, 23, 0, 0))
+                                        .confirmedParticipants(List.of(
+                                                ConfirmedParticipantResponse
+                                                        .builder()
+                                                        .nickname("nickname")
+                                                        .username("username")
+                                                        .build()
+                                        ))
+                                        .build()
+                        )
+                        .scheduleCandidates(List.of(
+                                ScheduleCandidateResponseForReadOneSchedule
+                                        .builder()
+                                        .id(scheduleCandidate.getId())
+                                        .startDateTime(LocalDateTime.of(2021, 11, 22, 0, 0))
+                                        .endDateTime(LocalDateTime.of(2021, 11, 23, 0, 0))
+                                        .pollCount(1)
+                                        .confirmedParticipants(List.of(
+                                                ConfirmedParticipantResponse
+                                                        .builder()
+                                                        .nickname("nickname")
+                                                        .username("username")
+                                                        .build()
+                                        ))
+                                        .build()
+                        ))
+                        .build();
 
         String path = "/groups/{groupId}/schedules/{scheduleId}";
-        RequestSpecification givenRequest = RestAssured.given(this.spec)
-                                                       .baseUri(BASE_URL)
-                                                       .port(port)
-                                                       .basePath("/api")
-                                                       .contentType(ContentType.JSON)
-                                                       .header("Authorization", TEST_TOKEN)
-                                                       .pathParam("groupId", 1L)
-                                                       .pathParam("scheduleId", 1L);
+        RequestSpecification givenRequest = RestAssured
+                                                    .given(this.spec)
+                                                    .baseUri(BASE_URL)
+                                                    .port(port)
+                                                    .basePath("/api")
+                                                    .contentType(ContentType.JSON)
+                                                    .header("Authorization", TEST_TOKEN)
+                                                    .pathParam("groupId", 1L)
+                                                    .pathParam("scheduleId", 1L);
         //when
         Response actualResponse = givenRequest.when()
                                               .accept(ContentType.JSON)
