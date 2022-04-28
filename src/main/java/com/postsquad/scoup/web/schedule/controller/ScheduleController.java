@@ -25,39 +25,7 @@ public class ScheduleController {
 
     @GetMapping("/groups/{groupId}/schedules/{scheduleId}")
     public ScheduleReadOneResponse readOne(@PathVariable long groupId, @PathVariable long scheduleId) {
-        return ScheduleReadOneResponse.builder()
-                                      .id(1L)
-                                      .title("schedule title")
-                                      .description("schedule description")
-                                      .pollDueDateTime(LocalDateTime.of(2021, 11, 24, 0, 0))
-                                      .confirmedSchedule(
-                                              ConfirmedScheduleResponseForReadOneSchedule.builder()
-                                                                                         .id(1L)
-                                                                                         .startDateTime(LocalDateTime.of(2021, 11, 22, 0, 0))
-                                                                                         .endDateTime(LocalDateTime.of(2021, 11, 23, 0, 0))
-                                                                                         .confirmedParticipants(List.of(
-                                                                                                 ConfirmedParticipantResponse.builder()
-                                                                                                                             .nickname("nickname")
-                                                                                                                             .username("username")
-                                                                                                                             .build()
-                                                                                         ))
-                                                                                         .build()
-                                      )
-                                      .scheduleCandidates(List.of(
-                                              ScheduleCandidateResponseForReadOneSchedule.builder()
-                                                                                         .id(1L)
-                                                                                         .startDateTime(LocalDateTime.of(2021, 11, 22, 0, 0))
-                                                                                         .endDateTime(LocalDateTime.of(2021, 11, 23, 0, 0))
-                                                                                         .pollCount(1)
-                                                                                         .confirmedParticipants(List.of(
-                                                                                                 ConfirmedParticipantResponse.builder()
-                                                                                                                             .nickname("nickname")
-                                                                                                                             .username("username")
-                                                                                                                             .build()
-                                                                                         ))
-                                                                                         .build()
-                                      ))
-                                      .build();
+        return scheduleService.readOne(scheduleId);
     }
 
     @PostMapping("/groups/{groupId}/schedules")

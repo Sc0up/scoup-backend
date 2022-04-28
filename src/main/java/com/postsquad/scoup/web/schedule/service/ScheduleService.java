@@ -2,7 +2,9 @@ package com.postsquad.scoup.web.schedule.service;
 
 import com.postsquad.scoup.web.common.DefaultPostResponse;
 import com.postsquad.scoup.web.schedule.controller.request.ScheduleCreationRequest;
+import com.postsquad.scoup.web.schedule.controller.response.ScheduleReadOneResponse;
 import com.postsquad.scoup.web.schedule.domain.Schedule;
+import com.postsquad.scoup.web.schedule.domain.ScheduleCandidate;
 import com.postsquad.scoup.web.schedule.mapper.ScheduleMapper;
 import com.postsquad.scoup.web.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,14 @@ import org.springframework.stereotype.Service;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+
+    public ScheduleReadOneResponse readOne(long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                          // TODO NotFoundError 만들어주기
+                .orElseThrow(IllegalArgumentException::new);
+
+        return ScheduleMapper.INSTANCE.toScheduleReadOneResponse(schedule);
+    }
 
     public DefaultPostResponse create(long groupId, ScheduleCreationRequest scheduleCreationRequest) {
         Schedule scheduleToSave = ScheduleMapper.INSTANCE.map(groupId, scheduleCreationRequest);
